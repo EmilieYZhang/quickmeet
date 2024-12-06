@@ -1,0 +1,39 @@
+README for the Quickmeet API
+This API is solely for the purpose of using the Quickmeet application developed by scriptSquad.
+Will accept json by default.
+
+There exists the following API Endpoints, organized by the db tables names
+Format: (tablename) Fields: Field_1, Field_2, ..., Field_n
+Fields syntax: 
+-fieldname- indicates unique primary key
+~fieldname~ indicates reference to another table
+/fieldname/ indicates unique
+|fieldname| indicates nullable
+
+(Bookings) Fields: -bookingid-, /bookingurl/, ~userid~, startdatetime, enddatetime, bookingtitle, |bookingdescription|
+GET /quickmeetapi/bookings/{bookingid}: fetch a booking by id, return a specific instance of booking
+GET /quickmeetapi/bookings/{userid}: fetch all bookings by creator id, return a specific instance of booking
+GET /quickmeetapi/bookings/{bookingurl}: fetch a booking by url, return a specific instance of booking
+POST /quickmeetapi/bookings: create a new instance of booking url with a body containing the fields, return bookingid and bookingurl
+POST /quickmeetapi/bookings/{bookingurl}/edit: edit the details of the booking with body containing all fields
+DELETE /quickmeetapi/bookings/{bookingid}: delete a specific instance of booking
+
+(Timeslot) Fields: -slotid-, ~bookingurl~, slottitle, hostname, location, startdatetime, enddatetime, numopenslots, maxslots
+GET /quickmeetapi/bookings/{slotid}: fetch a timeslot by id
+POST /quickmeetapi/bookings: create a specific instance of timeslot with body containing all fields, return slotid
+POST /quickmeetapi/bookings/{slotid}/edit: edit the details of the timeslot with body containing all fields
+DELETE /quickmeetapi/bookings/{slotid}: delete a specific instance of timeslot
+
+
+(Registrations) Fields: -registrationurl-, ~slotid~, |notes|
+GET /quickmeetapi/bookings/{registrationid}: fetch all registration fields/details through url
+POST /quickmeetapi/bookings: create a new registration instance with body containing slotid, return registrationurl
+POST /quickmeetapi/bookings/{registrationid}/notes: edit the notes of a registration
+DELETE /quickmeetapi/bookings/{registrationid}: delete a specific instance of registration
+
+(AvailabilityRequests) Fields: -requestid-, ~bookingurl~, startdatetime, enddatetime
+GET /quickmeetapi/availability/{bookingurl}: return list of all pending availability requests for a bookingurl
+POST /quickmeetapi/availability/{bookingurl}: post availability request with a body containing all fields, return requestid
+DELETE /quickmeetapi/availability/{requestID}: delete a specific instance of availability request id
+
+(Members) -userid-, /username/, userpassword, firstname, lastname, mcgillemail
