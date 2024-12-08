@@ -126,18 +126,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             echo json_encode(array("error" => "Availability requests with this bookingurl was not found"));
         }
-    } else if ($resource == 'users' && $param) {
-        $sql = "SELECT * FROM Users WHERE uid = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $param);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->num_rows > 0) {
-            $userres = $result->fetch_assoc();
-            echo json_encode($userres);
-        } else {
-            echo json_encode(array("error" => "A user with this uid was not found"));
-        }
     } else {
         echo json_encode(array("error" => "Invalid endpoint"));
     }

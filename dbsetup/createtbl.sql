@@ -1,4 +1,5 @@
 -- Create Users table
+-- TODO: Hudanur to edit below
 CREATE TABLE Users (
     uid INT AUTO_INCREMENT PRIMARY KEY,            -- Primary Key
     username VARCHAR(255) UNIQUE,        -- Unique constraint

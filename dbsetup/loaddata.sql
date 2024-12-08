@@ -1,4 +1,4 @@
--- Insert dummy data into Users table
+-- TODO: Hudanur to edit below, Insert dummy data into Users table
 INSERT INTO Users (uid, username, userpassword, firstname, lastname, mcgillemail)
 VALUES
     (1, 'john_doe', 'password123', 'John', 'Doe', 'john.doe@mcgill.ca'),
