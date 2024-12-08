@@ -17,7 +17,7 @@ CREATE TABLE Booking (
     startdatetime DATETIME NOT NULL,     -- Not nullable
     enddatetime DATETIME NOT NULL,       -- Not nullable
     bookingtitle VARCHAR(255) NOT NULL,  -- Not nullable
-    bookingdescription TEXT              -- Nullable field
+    bookingdescription TEXT,              -- Nullable field
     FOREIGN KEY (uid) REFERENCES Users(uid)
 );
 

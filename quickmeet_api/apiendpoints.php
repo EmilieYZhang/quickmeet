@@ -22,8 +22,10 @@ $uriSegments = explode('/', $request);
 // check endpoint
 if (isset($uriSegments[4])) {
     $resource = $uriSegments[4]; // 'users', 'booking', 'timeslot', 'reservations' or 'availability'
+    $param ="";
+    $paramname = "";
     if(isset($uriSegments[5])){
-       $param = $uriSegments[5];
+        $param = $uriSegments[5];
     }
     if(isset($uriSegments[6])){
         $paramname = $uriSegments[6];
@@ -50,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             echo json_encode(array("error" => "Invalid resource"));
         }
-    } else if ($resource == 'booking' && $param) {
+    } else if ($resource == 'booking' && $param != "") {
         if ($paramname == 'bookingid' || $paramname == 'default') {
             $sql = "SELECT * FROM Booking WHERE bid = ?";
             $stmt = $conn->prepare($sql);
@@ -70,9 +72,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $stmt->bind_param("i", $param);
             $stmt->execute();
             $result = $stmt->get_result();
+            $bookings = array();
+
             if ($result->num_rows > 0) {
-                $bookingres = $result->fetch_assoc();
-                echo json_encode($bookingres);
+                while ($row = $result->fetch_assoc()) {
+                    $bookings[] = $row;
+                }
+                echo json_encode($bookings);
             } else {
                 echo json_encode(array("error" => "A booking with this user id was not found"));
             }
@@ -90,19 +96,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode(array("error" => "A booking with this booking url was not found"));
             }
         }
-    } else if ($resource == 'timeslot' && $param) {
-        $sql = "SELECT * FROM Timeslot WHERE sid = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $param);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->num_rows > 0) {
-            $timeslotres = $result->fetch_assoc();
-            echo json_encode($timeslotres);
-        } else {
-            echo json_encode(array("error" => "A timeslot with this sid was not found"));
+    } else if ($resource == 'timeslot' && $param != "") {
+        if ($paramname == 'bookingurl') {
+            $sql = "SELECT * FROM Timeslot WHERE bookingurl = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("s", $param);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $slots = array();
+
+            if ($result->num_rows > 0) {
+                // Output data of each row
+                while ($row = $result->fetch_assoc()) {
+                    $slots[] = $row;
+                }
+                echo json_encode($slots);
+            } else {
+                echo json_encode(array("error" => "A timeslot with this booking url was not found"));
+            }
+        } else{
+            $sql = "SELECT * FROM Timeslot WHERE sid = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $param);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
+                $timeslotres = $result->fetch_assoc();
+                echo json_encode($timeslotres);
+            } else {
+                echo json_encode(array("error" => "A timeslot with this sid was not found"));
+            }
         }
-    } else if ($resource == 'reservation' && $param) {
+    } else if ($resource == 'reservation' && $param != "") {
         $sql = "SELECT * FROM Reservation WHERE reservationurl = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $param);
@@ -114,15 +139,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             echo json_encode(array("error" => "A reservation with this url was not found"));
         }
-    } else if ($resource == 'availability' && $param) {
+    } else if ($resource == 'availability' && $param != "") {
         $sql = "SELECT * FROM AvailabilityRequests WHERE bookingurl = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $param);
         $stmt->execute();
         $result = $stmt->get_result();
+        $availabilityres = array();
         if ($result->num_rows > 0) {
-            $requestres = $result->fetch_assoc();
-            echo json_encode($requestres);
+            // Output data of each row
+            while ($row = $result->fetch_assoc()) {
+                $availabilityres[] = $row;
+            }
+            echo json_encode($availabilityres);
         } else {
             echo json_encode(array("error" => "Availability requests with this bookingurl was not found"));
         }
@@ -149,32 +178,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             bookingdescription='$description',
             WHERE bookingurl = '$url';";
 
-            if ($conn->query($sql) === TRUE) {
+            if ($conn->query($sql) == TRUE) {
                 echo json_encode(array("message" => "The booking with this url was updated successfully."));
             } else {
                 echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));
             }
         }
         else {
-            $url = $input['bookingurl'];
+            $url = uniqid('booking_', true);
             $uid = $input['uid'];
             $start = $input['startdatetime'];
             $end = $input['enddatetime'];
             $title = $input['bookingtitle'];
             $description = $input['bookingdescription'];
+
             $sql = "INSERT INTO Booking (bookingurl, uid, startdatetime, enddatetime, bookingtitle, bookingdescription)
             VALUES ('$url', '$uid', '$start', '$end', '$title', '$description');";
             
-            if ($conn->query($sql) === TRUE) {
-                $sqlGetLastId = "SELECT LAST_INSERT_ID() AS bid;";
-                $result = $conn->query($sqlGetLastId);
+            if ($conn->query($sql)) {
+                $booking_id = $conn->insert_id;
 
-                if ($result->num_rows > 0) {
-                    $row = $result->fetch_assoc();
+                if($booking_id){
                     echo json_encode(array(
-                    "message" => "The booking was created successfully",
-                    "booking_id" => $row['bid']
-                ));
+                        "message" => "The booking was created successfully",
+                        "booking_id" => $booking_id,
+                        "booking_url" => "http://localhost/quickmeet/quickmeet_api/booking.php?url=" . urlencode($url)
+                    ));
                 } else {
                     echo json_encode(array(
                         "error" => "Error: Unable to retrieve booking ID after update."
@@ -205,7 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             maxslots='$maxslots',
             WHERE sid = '$sid';";
 
-            if ($conn->query($sql) === TRUE) {
+            if ($conn->query($sql) == TRUE) {
                 echo json_encode(array("message" => "The timeslot with this sid " . $sid . " was updated successfully."));
             } else {
                 echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));
@@ -223,7 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $sql = "INSERT INTO Timeslot (bookingurl, slottitle, hostname, location, startdatetime, enddatetime, numopenslots, maxslots)
             VALUES ('$url', '$title', '$host', '$location', '$start', '$end', '$numslots', '$maxslots');";
             
-            if ($conn->query($sql) === TRUE) {
+            if ($conn->query($sql) == TRUE) {
                 $sqlGetLastId = "SELECT LAST_INSERT_ID() AS sid;";
                 $result = $conn->query($sqlGetLastId);
 
@@ -253,7 +282,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             notes='$notes',
             WHERE reservationurl = '$url';";
 
-            if ($conn->query($sql) === TRUE) {
+            if ($conn->query($sql) == TRUE) {
                 echo json_encode(array("message" => "The reservation with this url was updated successfully."));
             } else {
                 echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));
@@ -267,7 +296,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $sql = "INSERT INTO Reservation (reservationurl, sid, notes)
             VALUES ('$url', '$sid', '$notes');";
             
-            if ($conn->query($sql) === TRUE) {
+            if ($conn->query($sql) == TRUE) {
                 echo json_encode(array(
                     "message" => "The reservation was created successfully",
                     "reservation_url" => $url
@@ -283,7 +312,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         $sql = "INSERT INTO AvailabilityRequests (bookingurl, startdatetime, enddatetime)
         VALUES ('$url', '$start', '$end');";
         
-        if ($conn->query($sql) === TRUE) {
+        if ($conn->query($sql) == TRUE) {
             $sqlGetLastId = "SELECT LAST_INSERT_ID() AS rid;";
             $result = $conn->query($sqlGetLastId);
 
@@ -307,31 +336,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 }
 
 // Handle DELETE request
-if ($_SERVER['REQUEST_METHOD'] == 'DELETE' && $param){
-    if ($resource == 'booking' && $param) {
+if ($_SERVER['REQUEST_METHOD'] == 'DELETE'){
+    if ($resource == 'booking' && $param != "") {
         $sql = "DELETE FROM Booking WHERE bid = '$param'";
-        if ($conn->query($sql) === TRUE) {
+        if ($conn->query($sql) == TRUE) {
             echo json_encode(array("message" => "Booking with bid " . $param . " deleted successfully"));
         } else {
             echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));
         }
-    } else if ($resource == 'timeslot' && $param) {
+    } else if ($resource == 'timeslot' && $param != "") {
         $sql = "DELETE FROM Timeslot WHERE sid = '$param'";
-        if ($conn->query($sql) === TRUE) {
+        if ($conn->query($sql) == TRUE) {
             echo json_encode(array("message" => "Timeslot with sid " . $param . " deleted successfully"));
         } else {
             echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));
         }
-    } else if ($resource == 'reservation' && $param) {
+    } else if ($resource == 'reservation' && $param != "") {
         $sql = "DELETE FROM Reservation WHERE reservationurl = '$param'";
-        if ($conn->query($sql) === TRUE) {
+        if ($conn->query($sql) == TRUE) {
             echo json_encode(array("message" => "Reservation with url " . $param . " deleted successfully"));
         } else {
             echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));
         }
-    } else if ($resource == 'availability' && $param) {
+    } else if ($resource == 'availability' && $param != "") {
         $sql = "DELETE FROM AvailabilityRequests WHERE rid = '$param'";
-        if ($conn->query($sql) === TRUE) {
+        if ($conn->query($sql) == TRUE) {
             echo json_encode(array("message" => "Availability request with rid " . $param . " deleted successfully"));
         } else {
             echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));

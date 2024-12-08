@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<head>
+    <title>API funs</title>
+</head>
+<body>
+    <h1>welcome</h1>
+    <form id="newbookingform">
+        <h3>Booking Information</h3>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="description">Description</label>
+        <input type="text" id="description" name="description" required><br><br>
+        
+        <br><br>
+        <input type="button" onclick="myFunction()" value="Submit form">
+    </form>
+
+    <ul id="user-list"></ul>
+
+    <script>
+        //document.getElementById("myForm").addEventListener('click', myFunction);
+        
+        function myFunction() {
+            fetch('./apiendpoints.php/booking', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    uid: 1, // User ID
+                    startdatetime: "2024-12-10 10:00:00",
+                    enddatetime: "2024-12-10 12:00:00",
+                    bookingtitle: "Tester Meeting 3",
+                    bookingdescription: "Discussing comp307 goals."
+                })
+            })
+            .then(response => {
+                    // Check if the response is successful
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(newbooking => {
+                    console.log("execute POST booking"); 
+                    const bookingList = document.getElementById('user-list');
+                    bookingList.innerHTML = '';
+                    const li = document.createElement('li');
+                    li.textContent = `${newbooking.booking_id} - ${newbooking.booking_url}`;
+                    bookingList.appendChild(li);
+                })
+                .catch(error => console.error('Error fetching booking:', error));
+        }
+    </script>
+</body>
