@@ -1,6 +1,6 @@
--- Create Members table
-CREATE TABLE Members (
-    userid INT PRIMARY KEY,              -- Primary Key
+-- Create Users table
+CREATE TABLE Users (
+    uid INT AUTO_INCREMENT PRIMARY KEY,            -- Primary Key
     username VARCHAR(255) UNIQUE,        -- Unique constraint
     userpassword VARCHAR(255) NOT NULL,  -- Not nullable
     firstname VARCHAR(255) NOT NULL,     -- Not nullable
@@ -8,22 +8,22 @@ CREATE TABLE Members (
     mcgillemail VARCHAR(255) NOT NULL    -- Not nullable
 );
 
--- Create Bookings table
-CREATE TABLE Bookings (
-    bookingid INT PRIMARY KEY,           -- Primary Key
+-- Create Booking table
+CREATE TABLE Booking (
+    bid INT AUTO_INCREMENT PRIMARY KEY,           -- Primary Key
     bookingurl VARCHAR(255) UNIQUE,      -- Unique constraint
-    userid INT,                          -- Foreign Key reference to Members table
+    uid INT,                          -- Foreign Key reference to Users table
     startdatetime DATETIME NOT NULL,     -- Not nullable
     enddatetime DATETIME NOT NULL,       -- Not nullable
     bookingtitle VARCHAR(255) NOT NULL,  -- Not nullable
     bookingdescription TEXT              -- Nullable field
-    FOREIGN KEY (userid) REFERENCES Members(userid)
+    FOREIGN KEY (uid) REFERENCES Users(uid)
 );
 
 -- Create Timeslot table
 CREATE TABLE Timeslot (
-    slotid INT PRIMARY KEY,              -- Primary Key
-    bookingurl VARCHAR(255),             -- Foreign Key reference to Bookings table
+    sid INT AUTO_INCREMENT PRIMARY KEY,             -- Primary Key
+    bookingurl VARCHAR(255),             -- Foreign Key reference to Booking table
     slottitle VARCHAR(255) NOT NULL,      -- Not nullable
     hostname VARCHAR(255) NOT NULL,       -- Not nullable
     location VARCHAR(255) NOT NULL,       -- Not nullable
@@ -31,22 +31,22 @@ CREATE TABLE Timeslot (
     enddatetime DATETIME NOT NULL,       -- Not nullable
     numopenslots INT NOT NULL,            -- Not nullable
     maxslots INT NOT NULL,                -- Not nullable
-    FOREIGN KEY (bookingurl) REFERENCES Bookings(bookingurl)
+    FOREIGN KEY (bookingurl) REFERENCES Booking(bookingurl)
 );
 
--- Create Registrations table
-CREATE TABLE Registrations (
-    registrationurl VARCHAR(255) PRIMARY KEY, -- Primary Key
-    slotid INT,                               -- Foreign Key reference to Timeslot table
+-- Create Reservation table
+CREATE TABLE Reservation (
+    reservationurl VARCHAR(255) PRIMARY KEY, -- Primary Key
+    sid INT,                               -- Foreign Key reference to Timeslot table
     notes TEXT,                               -- Nullable field
-    FOREIGN KEY (slotid) REFERENCES Timeslot(slotid)
+    FOREIGN KEY (sid) REFERENCES Timeslot(sid)
 );
 
 -- Create AvailabilityRequests table
 CREATE TABLE AvailabilityRequests (
-    requestid INT PRIMARY KEY,             -- Primary Key
-    bookingurl VARCHAR(255),               -- Foreign Key reference to Bookings table
+    rid INT AUTO_INCREMENT PRIMARY KEY,             -- Primary Key
+    bookingurl VARCHAR(255),               -- Foreign Key reference to Booking table
     startdatetime DATETIME NOT NULL,       -- Not nullable
     enddatetime DATETIME NOT NULL,         -- Not nullable
-    FOREIGN KEY (bookingurl) REFERENCES Bookings(bookingurl)
+    FOREIGN KEY (bookingurl) REFERENCES Booking(bookingurl)
 );

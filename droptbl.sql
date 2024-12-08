@@ -1,5 +1,5 @@
--- Drop the Registrations table
-DROP TABLE IF EXISTS Registrations;
+-- Drop the Reservation table
+DROP TABLE IF EXISTS Reservation;
 
 -- Drop the Timeslot table
 DROP TABLE IF EXISTS Timeslot;
@@ -7,8 +7,8 @@ DROP TABLE IF EXISTS Timeslot;
 -- Drop the AvailabilityRequests table
 DROP TABLE IF EXISTS AvailabilityRequests;
 
--- Drop the Bookings table
-DROP TABLE IF EXISTS Bookings;
+-- Drop the Booking table
+DROP TABLE IF EXISTS Booking;
 
--- Drop the Members table
-DROP TABLE IF EXISTS Members;
+-- Drop the Users table
+DROP TABLE IF EXISTS Users;
