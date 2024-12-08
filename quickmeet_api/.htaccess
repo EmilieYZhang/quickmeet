@@ -3,3 +3,6 @@ RewriteEngine On
 
 # Route URLs to booking.php
 RewriteRule ^booking/([a-zA-Z0-9_\-]+)$ booking.php?url=$1 [L,QSA]
+
+# Route URLs to reservation.php
+RewriteRule ^reservation/([a-zA-Z0-9_\-]+)$ reservation.php?url=$1 [L,QSA]

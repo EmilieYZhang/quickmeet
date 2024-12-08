@@ -297,7 +297,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             if ($conn->query($sql)) {
                 echo json_encode(array(
                     "message" => "The reservation was created successfully",
-                    "reservation_url" => $url
+                    "reservation_url" => "http://localhost/quickmeet/quickmeet_api/reservation.php?url=" . urlencode($url)
                 ));
             } else {
                 echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));
