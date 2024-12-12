@@ -22,11 +22,15 @@
             const password = document.forms["Form"]["password"].value;
             
             // Check if any field is empty
-            if (fname.length === 0 || lname.length === 0  || username.length === 0  || email.length === 0  || password.length === 0) {
-                alert("Please fill in all fields.");
+            if (fname.length === 0 || lname.length === 0  || email.length === 0  || password.length === 0) {
+                alert("Please fill in all required fields.");
                 return false; // Prevent form submission
             }
-            return true; // Proceed with form submission if validation passes
+
+	    else {
+		return true;
+	    }
+
         }
     </script>
 </head>
@@ -74,16 +78,16 @@
 
     <div class = "fromDivImgDiv">
         <div class = "divForForm">
-            <form name = "Form" action="xxx.php" method="POST" onsubmit="return checkForm();">
+            <form name = "Form" action="../backend/register.php" method="POST" onsubmit="return checkForm();">
                     <h1 class="title">Plan your bookings effortlessly with us!</h1>
                     <div class="subtitle">Let's get started.</div>
                     <input type="text" name="fname" placeholder="First name">
 
                     <input type="text" name="lname" placeholder="last name">
 
-                    <input type="text" name="username" placeholder="(Optional) Udername - defaults to first name">
+                    <input type="text" name="username" placeholder="(Optional) Username - defaults to first name">
     
-                    <input type="text" name="email" placeholder="Student email jhon.durant@mail.mcgill.ca" >
+                    <input type="text" name="email" pattern=".+@mcgill\.ca|.+@mail\.mcgill\.ca" placeholder="Student email jhon.durant@mail.mcgill.ca" >
 
                     <input type="text" name="password" placeholder="Password" >
     
