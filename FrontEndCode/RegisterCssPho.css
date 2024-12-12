@@ -82,6 +82,17 @@
 
     }
 
+    input[type="email"] {
+        color: white;
+        width: 93%;
+        padding: 10px;
+        margin: 10px 0px;
+        border: none;
+        border-radius: 6px;
+        background-color: #303346;
+
+    }
+
     input[type="submit"] {
         margin: 10px 0px;
         width: 100%;
