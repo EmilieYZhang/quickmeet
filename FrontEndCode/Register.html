@@ -18,7 +18,7 @@
             const fname = document.forms["Form"]["fname"].value;
             const lname = document.forms["Form"]["lname"].value;
             const username = document.forms["Form"]["username"].value;
-            const email = document.forms["Form"]["email"].value;
+            const email = document.forms["Form"]["email"];
             const password = document.forms["Form"]["password"].value;
             
             // Check if any field is empty
@@ -27,9 +27,14 @@
                 return false; // Prevent form submission
             }
 
-	    else {
-		return true;
-	    }
+	    //Validate McGill email address
+	    const mcgillEmailRegex = /.+@mcgill\.ca|.+@mail\.mcgill\.ca/;
+    	    if (!mcgillEmailRegex.test(email.value)) {
+        	alert("Please enter a valid McGill email address (e.g., john.durant@mail.mcgill.ca).");
+        	return false; // Prevent form submission
+    	    }
+
+ 	    return true;
 
         }
     </script>
@@ -87,7 +92,7 @@
 
                     <input type="text" name="username" placeholder="(Optional) Username - defaults to first name">
     
-                    <input type="email" name="email" pattern=".+@mcgill\.ca|.+@mail\.mcgill\.ca" placeholder="Student email jhon.durant@mail.mcgill.ca" >
+                    <input type="email" name="email" placeholder="Student email jhon.durant@mail.mcgill.ca" >
 
                     <input type="text" name="password" placeholder="Password" >
     

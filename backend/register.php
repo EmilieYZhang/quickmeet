@@ -20,28 +20,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error_message = "Invalid McGill email address.";
     }
 
-    // Default username to first name if not provided
-    if (empty($username)) {
-        $username = $fname;
+    // Check if email is already registered
+    if (!isset($error_message)) { // only check email if no previous errors
+        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            // Email already exists, return error and redirect to login page
+            $error_message = "Email address is already registered. Please go to Login page.";
+        }
+        
+        $stmt->close();
     }
 
-    // Hash the password for security
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    // If no errors, proceed with registration
+    if (!isset($error_message)) {
+        // Default username to first name if not provided
+        if (empty($username)) {
+            $username = $fname;
+        }
 
-    // Insert user into the database
-    $stmt = $conn->prepare("INSERT INTO users (fname, lname, username, email, password) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssss", $fname, $lname, $username, $email, $hashedPassword);
+        // Hash the password for security
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    if ($stmt->execute()) {
-        // Redirect to the login page after successful registration
-        header("Location: ../FrontEndCode/Login.html");
-        exit();
+        // Insert user into the database
+        $stmt = $conn->prepare("INSERT INTO users (fname, lname, username, email, password) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $fname, $lname, $username, $email, $hashedPassword);
+
+        if ($stmt->execute()) {
+            // Redirect to the login page after successful registration
+            header("Location: ../FrontEndCode/Login.html");
+            exit();
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+
+        // Close statement
+        $stmt->close();
     } else {
-        echo "Error: " . $stmt->error;
+        // If there's an error (email already exists or other), show the error
+        echo "<script>alert('$error_message'); window.location.href = '../FrontEndCode/Register.html';</script>";
     }
-    // Close statement and connection
-    $stmt->close();
+
+    // Close the connection
     $conn->close();
 }
 ?>
-
