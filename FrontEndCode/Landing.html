@@ -75,19 +75,33 @@
 
         .BOOKimg{
             margin-top: 5%;
-            width: 30vw;
+            width: 400px;
         }
         .Links {
             position: absolute;
             top: 6vh;
             right: 0vh;
         }
+
+        .hamUnderline{
+            display: none;
+
+        }
+        .LinksForPhone{
+            display: none;
+        }
+        .logoForPhone{
+            display: none;
+        }
+
+        
     </style>
+    <link href="Landing.css" rel="stylesheet">
 </head>
 <body style="background-color: #0C3D65;">
 
     
-    <div class="header"> 
+    <!-- <div class="header"> 
             <img src="NewLogoGoodColor.jpg" style="height: 8vw;">
             <div class="Links">
                 <a href="Register.html"> Register </a>
@@ -97,24 +111,63 @@
                 <a href="#"> Book now </a>
             </div>
         </div>
+    </div> -->
+
+    <div class="hamburger" onclick="dropDownMenu()">
+        <div style ="display: flex;">
+            <a href="Landing.html"><img class = "logoForPhone" src="NewLogoGoodColor.jpg" style="height: 80px;"><a></a>
+            <a class = "hamUnderline" href = "#">☰</a> 
+        
+        </div>
+
+        <div class = "LinksForPhone">
+            <a href="Register.html"> Register </a> 
+            <a href="Login.html"> Login </a> 
+            <a href="#"> Q&A </a> 
+            <a href="#"> Tutorial </a> 
+            <a href="#"> Book now </a>
+        </div>
     </div>
 
 
-    <h1 class = "BookingMessageHeader"> Booking made easy.</h1>
-    <div class="messageUnder"> Just choose the time and day, and we'll take care of the rest</div>
-
-    <img class = "BOOKimg" src="BOOKCoolcolor.jpg"> 
-
-    <div class="calendar">
-            <div class="day">Mon</div>
-            <div class="day">Tue</div>
-            <div class="day">Wed</div>
-            <div class="day">Thu</div>
-            <div class="day">Fri</div>
-            <div class="day">Sat</div>
-            <div class="day">Sun</div>
+    <div class="header"> 
+        <a href="Landing.html"><img src="NewLogoGoodColor.jpg" style="height: 8vw;"><a>
+            <div class="Links">
+                <a href="Register.html"> Register </a>
+                <a href="Login.html"> Login </a>
+                <a href="#"> Q&A </a>
+                <a href="#"> Tutorial </a>
+                <a href="#"> Book now </a>
+            </div>
     </div>
+
+
+    <div class = "allBesideCalendar">
+        <h1 class = "BookingMessageHeader"> Booking made easy.</h1>
+        <div class="messageUnder"> Just choose the time and day, and we'll take care of the rest</div>
+
+        <img class = "BOOKimg" src="BOOKCoolcolor.jpg"> 
+    </div>
+
+
+
+        <div class="calendar">
+                <div class="day">Mon</div>
+                <div class="day">Tue</div>
+                <div class="day">Wed</div>
+                <div class="day">Thu</div>
+                <div class="day">Fri</div>
+                <div class="day">Sat</div>
+                <div class="day">Sun</div>
+        </div>
+
 
     <script src="Landing.js"></script>
+    <script>
+        function dropDownMenu() {
+            const linksForPhone = document.querySelector(".LinksForPhone");
+            linksForPhone.classList.toggle('show');
+        }
+    </script>
 </body>
 </html>
