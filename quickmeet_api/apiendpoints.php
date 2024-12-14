@@ -202,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     echo json_encode(array(
                         "message" => "The booking was created successfully",
                         "booking_id" => $booking_id,
-                        "booking_url" => "http://localhost/quickmeet/quickmeet_api/booking.php?url=" . urlencode($url)
+                        "booking_url" => "http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url)
                     ));
                 } else {
                     echo json_encode(array(
