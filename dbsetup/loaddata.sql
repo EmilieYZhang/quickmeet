@@ -16,6 +16,9 @@ VALUES
 INSERT INTO Timeslot (bookingurl, slottitle, hostname, location, startdatetime, enddatetime, numopenslots, maxslots)
 VALUES
     ('booking1-url', 'Slot 1 - Morning', 'Host 1', 'Room A', '2024-12-10 09:00:00', '2024-12-10 12:00:00', 10, 20),
+    ('booking1-url', 'Slot 2 - Morning', 'Host 2', 'Room A', '2024-12-11 09:00:00', '2024-12-10 12:00:00', 10, 20),
+    ('booking1-url', 'Slot 3 - Afternoon', 'Host 2', 'Room D', '2024-12-13 09:00:00', '2024-12-10 12:00:00', 10, 20),
+    ('booking1-url', 'Slot 4 - Night', 'Host 14', 'Room B', '2024-12-14 09:00:00', '2024-12-10 12:00:00', 10, 20),
     ('booking2-url', 'Slot 2 - Afternoon', 'Host 2', 'Room B', '2024-12-11 10:00:00', '2024-12-11 12:00:00', 5, 10),
     ('booking3-url', 'Slot 3 - Evening', 'Host 3', 'Room C', '2024-12-12 14:00:00', '2024-12-12 16:00:00', 3, 5);
 

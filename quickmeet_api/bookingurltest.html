@@ -1,26 +1,15 @@
 <!DOCTYPE html>
 <head>
-    <title>API funs</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a Booking Popup</title>
+    <link href="../FrontEndCode/RegisterCssPho.css" rel="stylesheet">
+    <link href="../FrontEndCode/RegisterCssLap.css" rel="stylesheet">
 </head>
 <body>
-    <h1>welcome</h1>
-    <form id="newbookingform">
-        <h3>Booking Information</h3>
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required><br><br>
-
-        <label for="description">Description</label>
-        <input type="text" id="description" name="description" required><br><br>
-        
-        <br><br>
-        <input type="button" onclick="myFunction()" value="Submit form">
-    </form>
-
-    <ul id="user-list"></ul>
+    <h2>style the below as a popup or otherwise to create a booking</h2>
 
     <script>
-        //document.getElementById("myForm").addEventListener('click', myFunction);
-        
         function myFunction() {
             fetch('./apiendpoints.php/booking', {
                 method: 'POST',
@@ -29,8 +18,8 @@
                     uid: 1, // User ID
                     startdatetime: "2024-12-10 10:00:00",
                     enddatetime: "2024-12-10 12:00:00",
-                    bookingtitle: "Tester Meeting 3",
-                    bookingdescription: "Discussing comp307 goals."
+                    bookingtitle: document.forms["Form"]["btitle"].value,
+                    bookingdescription: document.forms["Form"]["bdescription"].value
                 })
             })
             .then(response => {
@@ -41,14 +30,43 @@
                     return response.json();
                 })
                 .then(newbooking => {
+                    // make post request to db
                     console.log("execute POST booking"); 
+                    // default, ugly alert
+                    alert(`${newbooking.booking_id} - ${newbooking.booking_url}`);
+
+                    // display as text, remove if decide to redirect to a new php
                     const bookingList = document.getElementById('user-list');
                     bookingList.innerHTML = '';
                     const li = document.createElement('li');
                     li.textContent = `${newbooking.booking_id} - ${newbooking.booking_url}`;
                     bookingList.appendChild(li);
+
+                    // redirection to the new booking url;
+                    console.log("New Booking Object:", newbooking);
+                    if (!newbooking.booking_url) {
+                        throw new Error("Booking URL is missing");
+                    }
+                    window.location.href = newbooking.booking_url;
                 })
                 .catch(error => console.error('Error fetching booking:', error));
+                return false;
         }
     </script>
+    
+    <div class = "divForForm">
+        <form name="Form" onsubmit="return myFunction();">
+                <h1 class="title">Create a booking URL</h1>
+                <div class="subtitle">Let's get started.</div>
+                <input type="text" name="btitle" placeholder="Booking Title" required>
+
+                <input type="text" name="bdescription" placeholder="Booking Description" required>
+
+                <input style="background-color: #0088DC;" class="registerButton" type="submit" value="Submit">
+
+                <div class = "bottomText">Share the booking URL with anyone!</div>
+        </form>
+    </div>
+
+    <ul id="user-list"></ul>
 </body>
