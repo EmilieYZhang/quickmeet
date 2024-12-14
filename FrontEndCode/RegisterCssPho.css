@@ -1,0 +1,238 @@
+@media screen and (max-width: 768px){
+
+    /* .hamburger{
+        
+
+    }
+    .cross {
+        display: none;
+    }
+
+    .hamUnderline{
+        font-size: 35px;
+        text-decoration: none;
+
+    }
+
+    .LinksForPhone.show {
+        display: block;
+ 
+
+    }
+    .hamUnderline:hover{
+        color: aqua;
+    }
+
+    .header {
+        display: none;
+    }
+
+
+    .Links {
+        position: absolute;
+        top: 6vh;
+        right: 0vh;
+    }
+
+    
+    .LinksForPhone{
+        display: none;
+        width: 100%;
+        margin: auto;
+        background-color: #15182B;
+        
+    }
+    .LP{
+        display: block;
+        width: 20%;
+        margin: auto;
+        font-size: 18px;
+
+
+    }
+
+    .LP:hover{
+        display: block;
+        width: 20%;
+        margin: auto;
+
+
+    }
+
+    a {
+        display: block;
+        color: #808998;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 18px;
+        text-decoration: none;
+        
+    } */
+
+    /*END OF HEADER CSS*/
+
+
+    input[type="text"] {
+        color: white;
+        width: 93%;
+        padding: 10px;
+        margin: 10px 0px;
+        border: none;
+        border-radius: 6px;
+        background-color: #303346;
+
+    }
+
+    input[type="email"] {
+        color: white;
+        width: 93%;
+        padding: 10px;
+        margin: 10px 0px;
+        border: none;
+        border-radius: 6px;
+        background-color: #303346;
+
+    }
+
+    input[type="submit"] {
+        margin: 10px 0px;
+        width: 100%;
+        background-color: #0088DC; /* bluish*/
+        color: white;              
+        padding: 10px 20px;        
+        border: none;             
+        border-radius: 5px;        
+        cursor: pointer;           
+        font-size: 16px; 
+
+    }
+
+
+    .title {
+        color: white;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 18px;
+    }
+    .subtitle {
+        color: white;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 15px;
+    }
+
+
+    .fromDivImgDiv {
+        display:flex;
+        width: 100%;
+        height: 100%;
+
+    }
+
+    .divForForm {
+        width: 100%;
+        background-color: #0C3D65;
+        max-width: none; 
+    }
+
+    form{
+        margin: auto;
+        margin-top: 70px;
+        width: 300px;
+        height: 430px;
+        background-color: #15182B;
+        border-radius: 10px;
+        padding: 10px 15px;
+
+    }
+
+
+    .divForSittingPers{
+        display: none;
+    }
+
+    .bottomText{
+        display: none;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 10px;
+        font-size: 15px;
+        color: white;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+
+    }
+
+    /*New css //////////////////////////////////////////////////////////////////////*/
+
+    form.show{
+        margin: auto;
+        margin-top: 250px;
+        width: 300px;
+        height: 430px;
+        background-color: #15182B;
+        border-radius: 10px;
+        padding: 10px 15px;
+
+
+    }
+
+    .LinksForPhone {
+        display: none;
+        flex-direction: column; /* Stack links vertically */
+        background-color: #15182B;
+        position: absolute;
+        top: 90px;
+        right: 10px;
+        width: 82%;
+        border-radius: 5px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    
+    .LinksForPhone.show {
+        display: flex;
+    }
+    
+
+    .LinksForPhone a {
+        text-decoration: none;
+        color: white;
+        padding: 10px 15px;
+        border-bottom: 1px solid #303346;
+    }
+    
+
+    .LinksForPhone a:last-child {
+        border-bottom: none;
+    }
+    
+
+    .LinksForPhone a:hover {
+        background-color: #303346;
+    }
+    
+  
+    .hamUnderline {
+        display: block;
+        width: 10%;
+        cursor: pointer;
+        position: absolute;
+        right: 0px;
+        padding: 10px;
+        color: white;
+        font-size: 35px;
+        text-decoration: none;
+    }
+    
+
+    .hamUnderline:hover {
+        color: #0088DC;
+    }
+    
+
+    .header {
+        display: none;
+    }
+
+
+
+}
