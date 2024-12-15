@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <!-- Shared CSS for consistency -->
+    <link href="RegisterCssPho.css" rel="stylesheet">
+    <link href="RegisterCssLap.css" rel="stylesheet">
+    <link href="RegisterCssDesk.css" rel="stylesheet">
+
+    <!-- Dashboard-specific styling -->
+    <style>
+        .dashboard-container {
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            max-width: 800px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #FFFFFF;
+            margin: 40px auto;
+            padding-left: 20px;
+            max-width: 800px;
+            text-align: left;
+        }
+
+        h2 {
+            font-size: 20px;
+            color: #456288;
+            margin: 40px auto;
+            padding-left: 20px;
+            max-width: 800px;
+            text-decoration: underline;
+            text-align: left;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table thead {
+            background-color: #456288;
+            color: #fff;
+        }
+
+        table thead th {
+            background-color: #456288;
+            color: #fff;
+            text-align: left;
+            padding: 10px;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tbody td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            font-size: 16px;
+            color: #555;
+        }
+
+        table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .toggle-section {
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            color: #0088DC;
+        }
+
+        .toggle-section:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Correct button alignment with previous width */
+        button {
+            background-color: #456288;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 40px auto;
+            display: block; /* Ensure the button is a block-level element */
+            text-align: left;
+            max-width: 800px; /* Same width as the dashboard-container */
+        }
+
+        button:hover {
+            background-color: #2c4568;
+        }
+    </style>
+</head>
+
+<body style="background-color: #0C3D65;">
+
+    <!-- Navbar Section -->
+    <div class="hamburger" onclick="dropDownMenu()">
+        <div style="display: flex;">
+            <a href="Landing.html"><img src="NewLogoGoodColor.jpg" style="height: 80px;"></a>
+            <a class="hamUnderline" href="#">☰</a>
+        </div>
+
+        <div class="LinksForPhone">
+            <a href="Register.html">Register</a>
+            <a href="Login.html">Login</a>
+            <a href="FAQ.html">FAQ</a>
+            <a href="#">Tutorial</a>
+            <a href="BookNow.html">Book now</a>
+        </div>
+    </div>
+
+    <div class="header">
+        <a href="Landing.html"><img src="NewLogoGoodColor.jpg" style="height: 8vw;"></a>
+        <div class="Links">
+            <a href="Register.html">Register</a>
+            <a href="Login.html">Login</a>
+            <a href="FAQ.html">FAQ</a>
+            <a href="#">Tutorial</a>
+            <a href="BookNow.html">Book now</a>
+        </div>
+    </div>
+
+    <h1>My Active Bookings</h1>
+    <div class="dashboard-container">
+        <!-- Active Bookings Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Booking Title</th>
+                    <th>Booking URL</th>
+                </tr>
+            </thead>
+            <tbody id="current-user-list">
+                <!-- Active bookings will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <button onclick="createBooking()">Create Booking</button>
+
+    <!-- Toggle Section for Past Bookings -->
+    <div class="toggle-section" onclick="togglePastBookings()"><h2>My Past Bookings</h2></div>
+    <div id="past-bookings-section" class="hidden">
+        <div class="dashboard-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Booking Title</th>
+                        <th>Booking URL</th>
+                    </tr>
+                </thead>
+                <tbody id="past-user-list">
+                    <!-- Past bookings will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- JavaScript for Dynamic Content -->
+    <script>
+        const userId = 3; // Hardcoded user ID, replace this with session-based user ID
+        const apiEndpoint = `../quickmeet_api/apiendpoints.php/booking/${userId}/userid`;
+
+        console.log(apiEndpoint);
+
+        // Fetch and display user bookings
+        fetch(apiEndpoint, { method: 'GET' })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(bookings => {
+                const activeBookingList = document.getElementById('current-user-list');
+                const pastBookingList = document.getElementById('past-user-list');
+                activeBookingList.innerHTML = '';
+                pastBookingList.innerHTML = '';
+
+                bookings.forEach((booking, index) => {
+                    const startDate = new Date(booking.startdatetime.replace(' ', 'T'));
+                    const targetDate = new Date(booking.enddatetime.replace(' ', 'T'));
+                    const currentDate = new Date();
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `\
+                        <td>${index + 1}</td>\
+                        <td>${booking.bookingtitle}</td>\
+                        <td><a href="${booking.bookingurl}" target="_blank">${booking.bookingurl}</a></td>\
+                    `;
+
+                    if (targetDate >= currentDate) {
+                        activeBookingList.appendChild(row);
+                    } else {
+                        pastBookingList.appendChild(row);
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching bookings:', error));
+
+        // Toggle visibility of past bookings
+        function togglePastBookings() {
+            const pastBookingsSection = document.getElementById('past-bookings-section');
+            pastBookingsSection.classList.toggle('hidden');
+        }
+
+        // Redirect to booking creation page
+        function createBooking() {
+            window.location.href = '../quickmeet_api/createbooking.html';
+        }
+    </script>
+
+    <!-- Navbar JavaScript -->
+    <script>
+        function dropDownMenu() {
+            const linksForPhone = document.querySelector(".LinksForPhone");
+            linksForPhone.classList.toggle('show');
+        }
+    </script>
+
+</body>
+</html>
+
