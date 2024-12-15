@@ -1,16 +1,28 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "mysql";
+// $servername = "localhost";
+// $username = "root";
+// $password = "";
+// $dbname = "mysql";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+// // Create connection
+// $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
+// // Check connection
+// if ($conn->connect_error) {
+//     die("Connection failed: " . $conn->connect_error);
+// }
+
+require_once '../config/config.php';
+
+// create a database connection
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+// check the connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
@@ -20,15 +32,15 @@ $request = $_SERVER['REQUEST_URI'];
 $uriSegments = explode('/', $request);
 
 // check endpoint
-if (isset($uriSegments[4])) {
-    $resource = $uriSegments[4]; // 'users', 'booking', 'timeslot', 'reservations' or 'availability'
+if (isset($uriSegments[5])) {
+    $resource = $uriSegments[5]; // 'users', 'booking', 'timeslot', 'reservations' or 'availability'
     $param ="";
     $paramname = "";
-    if(isset($uriSegments[5])){
-        $param = $uriSegments[5];
-    }
     if(isset($uriSegments[6])){
-        $paramname = $uriSegments[6];
+        $param = $uriSegments[6];
+    }
+    if(isset($uriSegments[7])){
+        $paramname = $uriSegments[7];
     } else {
         $paramname = "default";
     }
@@ -202,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     echo json_encode(array(
                         "message" => "The booking was created successfully",
                         "booking_id" => $booking_id,
-                        "booking_url" => "http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url)
+                        "booking_url" => "https://www.cs.mcgill.ca/~hkacma/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url)
                     ));
                 } else {
                     echo json_encode(array(
@@ -297,7 +309,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             if ($conn->query($sql)) {
                 echo json_encode(array(
                     "message" => "The reservation was created successfully",
-                    "reservation_url" => "http://localhost/quickmeet/quickmeet_api/reservation.php?url=" . urlencode($url)
+                    "reservation_url" => "https://www.cs.mcgill.ca/~hkacma/quickmeet/quickmeet_api/reservation.php?url=" . urlencode($url)
                 ));
             } else {
                 echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));

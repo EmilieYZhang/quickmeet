@@ -6,3 +6,7 @@ RewriteRule ^booking/([a-zA-Z0-9_\-]+)$ bookingurl.php?url=$1 [L,QSA]
 
 # Route URLs to reservationurl.php
 RewriteRule ^reservation/([a-zA-Z0-9_\-]+)$ reservationurl.php?url=$1 [L,QSA]
+
+<LimitExcept GET POST DELETE>
+    Require all granted
+</LimitExcept>

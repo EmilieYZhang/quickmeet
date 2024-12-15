@@ -2,15 +2,12 @@
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: text/html; charset=utf-8');
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "mysql";
+require_once '../config/config.php';
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+// create a database connection
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-// Check connection
+// check the connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
