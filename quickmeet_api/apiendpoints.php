@@ -32,15 +32,15 @@ $request = $_SERVER['REQUEST_URI'];
 $uriSegments = explode('/', $request);
 
 // check endpoint
-if (isset($uriSegments[5])) {
-    $resource = $uriSegments[5]; // 'users', 'booking', 'timeslot', 'reservations' or 'availability'
+if (isset($uriSegments[7])) {
+    $resource = $uriSegments[7]; // 'users', 'booking', 'timeslot', 'reservations' or 'availability'
     $param ="";
     $paramname = "";
-    if(isset($uriSegments[6])){
-        $param = $uriSegments[6];
+    if(isset($uriSegments[8])){
+        $param = $uriSegments[8];
     }
-    if(isset($uriSegments[7])){
-        $paramname = $uriSegments[7];
+    if(isset($uriSegments[9])){
+        $paramname = $uriSegments[9];
     } else {
         $paramname = "default";
     }
