@@ -60,7 +60,7 @@ if ($bookingUrl) {
                     slotList.innerHTML = '';
                     slots.forEach(slot => {
                         const li = document.createElement('li');
-                        li.textContent = `${slot.slottile} - ${slot.location} - ${slot.hostname}`;
+                        li.textContent = `${slot.slottitle} - ${slot.location} - ${slot.hostname} - Start: ${slot.startdatetime} - End: ${slot.enddatetime} - Availability ${slot.numopenslots}`;
                         slotList.appendChild(li);
                     });
                 })
