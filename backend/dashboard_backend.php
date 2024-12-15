@@ -3,7 +3,7 @@ header('Access-Control-Allow-Origin: *');
 header('Content-Type: text/html; charset=utf-8');
 
 require 'db_connect.php';
-$userid=3; // hardcoded for now, should be == userid from the current session ticket
+$userid=24; // hardcoded for now, should be == userid from the current session ticket
 ?>
 
 <!DOCTYPE html>
