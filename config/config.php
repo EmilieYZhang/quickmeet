@@ -1,9 +1,9 @@
 <?php
 // database settings
 define('DB_HOST', 'mysql.cs.mcgill.ca');
-define('DB_USER', 'comp307-ezhang19');
-define('DB_PASS', '8CoeQKv6wuXblTY');
-define('DB_NAME', 'fall2024-comp307-ezhang19');
+define('DB_USER', 'comp307-hkacma');
+define('DB_PASS', '772MnV0gk6UqmrK');
+define('DB_NAME', 'fall2024-comp307-hkacma');
 
 // email settings (for sending emails)
 define('MAIL_HOST', 'smtp.gmail.com');
