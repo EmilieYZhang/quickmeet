@@ -9,33 +9,23 @@
     
     <link href="RegisterCssPho.css" rel="stylesheet">
     <link href="RegisterCssLap.css" rel="stylesheet">
-    <link href="RegisterCssDesk.css" rel="stylesheet">
     
 
 
     <script>
-        function checkForm() {
-            const fname = document.forms["Form"]["fname"].value;
-            const lname = document.forms["Form"]["lname"].value;
-            const username = document.forms["Form"]["username"].value;
-            const email = document.forms["Form"]["email"];
-            const password = document.forms["Form"]["password"].value;
+        function checkSearchForm() {
+            const burl = document.forms["Form"]["burl"];
+            //Validate McGill email address
+
+            const bURLRegex = /http:\/\/localhost\/quickmeet\/quickmeet_api\/bookingurl\.php\?url=.+$/;
             
-            // Check if any field is empty
-            if (fname.length === 0 || lname.length === 0  || email.length === 0  || password.length === 0) {
-                alert("Please fill in all required fields.");
+            if (!bURLRegex.test(burl.value)) {
+                alert("Please enter a valid Booking URL (e.g., starting with http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=).");
                 return false; // Prevent form submission
             }
 
-	    //Validate McGill email address
-	    const mcgillEmailRegex = /.+@mcgill\.ca|.+@mail\.mcgill\.ca/;
-    	    if (!mcgillEmailRegex.test(email.value)) {
-        	alert("Please enter a valid McGill email address (e.g., john.durant@mail.mcgill.ca).");
-        	return false; // Prevent form submission
-    	    }
-
- 	    return true;
-
+            window.location.href = burl.value;
+            return false;
         }
     </script>
 </head>
@@ -60,15 +50,6 @@
             </div>
         </div>
 
-        <!-- <div class = "LinksForPhone">
-            <a class = "LP" href="#"> Register </a> 
-            <a class = "LP" href="Login.html"> Login </a> 
-            <a class = "LP" href="#"> Q&A </a> 
-            <a class = "LP" href="#"> Tutorial </a> 
-            <a class = "LP" href="#"> Book now </a>
-        </div> -->
-
-
         <div class="header"> 
             <a href="Landing.html"><img src="NewLogoGoodColor.jpg" style="height: 8vw;"><a>
                 <div class="Links">
@@ -83,18 +64,10 @@
 
     <div class = "fromDivImgDiv">
         <div class = "divForForm">
-            <form name = "Form" action="../backend/register.php" method="POST" onsubmit="return checkForm();">
-                    <h1 class="title">Plan your bookings effortlessly with us!</h1>
-                    <div class="subtitle">Let's get started.</div>
-                    <input type="text" name="fname" placeholder="First name">
-
-                    <input type="text" name="lname" placeholder="last name">
-
-                    <input type="text" name="username" placeholder="(Optional) Username - defaults to first name">
-    
-                    <input type="email" name="email" placeholder="Student email jhon.durant@mail.mcgill.ca" >
-
-                    <input type="text" name="password" placeholder="Password" >
+            <form name = "Form" onsubmit="return checkSearchForm();">
+                    <h1 class="title">Search for your booking!</h1>
+                    <div class="subtitle">Paste the booking url you want to search for:</div>
+                    <input type="text" name="burl" placeholder="Booking URL" required>
     
                     <input style="background-color: #0088DC;" class="registerButton" type="submit" value="Submit">
 
@@ -115,8 +88,6 @@
 
             const form = document.querySelector("form");
             form.classList.toggle('show');
-
-
         }
     </script>
 
