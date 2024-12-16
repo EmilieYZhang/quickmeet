@@ -2,6 +2,21 @@
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: text/html; charset=utf-8');
 
+// ** THIS IS FOR MIMI SERVER HOST **//
+// require_once '../config/config.php';
+
+// // create a connection to the MySQL database
+// $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+// // check the connection
+// if ($conn->connect_error) {
+//     die("Connection failed: " . $conn->connect_error);
+// } else {
+//     echo "Database connected successfully!";
+// }
+// ** ----------------  **//
+
+// ** THIS IS FOR LOCAL HOST **//
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -14,6 +29,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+// ** ---------------- **//
 
 $resUrl = $_GET['url'] ?? null;
 
@@ -63,7 +79,6 @@ if ($resUrl) {
                 e.preventDefault();
             }
             else {
-                document.getElementById("demo").innerHTML = "Hello World";
                 console.log('./apiendpoints.php/reservation/<?php echo $resUrl ?>');
                 fetch('./apiendpoints.php/reservation/<?php echo $resUrl ?>', { method: 'DELETE' })
                     .then(response => {

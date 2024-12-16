@@ -1,16 +1,33 @@
 <?php
 
-require_once '../config/config.php';
+// ** THIS IS FOR MIMI SERVER HOST **//
+// require_once '../config/config.php';
 
-// create a connection to the MySQL database
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+// // create a connection to the MySQL database
+// $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-// check the connection
+// // check the connection
+// if ($conn->connect_error) {
+//     die("Connection failed: " . $conn->connect_error);
+// } else {
+//     echo "Database connected successfully!";
+// }
+// ** ----------------  **//
+
+// ** THIS IS FOR LOCAL HOST **//
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "mysql";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
-} else {
-    echo "Database connected successfully!";
 }
+// ** ---------------- **//
 
 $query = "SELECT * FROM users";
 $result = $conn->query($query);
