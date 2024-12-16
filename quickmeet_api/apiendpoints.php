@@ -32,15 +32,15 @@ $request = $_SERVER['REQUEST_URI'];
 $uriSegments = explode('/', $request);
 
 // check endpoint
-if (isset($uriSegments[7])) {
-    $resource = $uriSegments[7]; // 'users', 'booking', 'timeslot', 'reservations' or 'availability'
+if (isset($uriSegments[4])) {
+    $resource = $uriSegments[4]; // 'users', 'booking', 'timeslot', 'reservations' or 'availability'
     $param ="";
     $paramname = "";
-    if(isset($uriSegments[8])){
-        $param = $uriSegments[8];
+    if(isset($uriSegments[5])){
+        $param = $uriSegments[5];
     }
-    if(isset($uriSegments[9])){
-        $paramname = $uriSegments[9];
+    if(isset($uriSegments[6])){
+        $paramname = $uriSegments[6];
     } else {
         $paramname = "default";
     }
@@ -214,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     echo json_encode(array(
                         "message" => "The booking was created successfully",
                         "booking_id" => $booking_id,
-                        "booking_url" => "https://www.cs.mcgill.ca/~hkacma/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url)
+                        "booking_url" => "http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url)
                     ));
                 } else {
                     echo json_encode(array(
@@ -309,7 +309,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             if ($conn->query($sql)) {
                 echo json_encode(array(
                     "message" => "The reservation was created successfully",
-                    "reservation_url" => "https://www.cs.mcgill.ca/~hkacma/quickmeet/quickmeet_api/reservation.php?url=" . urlencode($url)
+                    "reservation_url" => "http://localhost/quickmeet/quickmeet_api/reservation.php?url=" . urlencode($url)
                 ));
             } else {
                 echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));

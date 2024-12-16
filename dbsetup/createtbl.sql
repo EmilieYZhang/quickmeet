@@ -5,7 +5,7 @@ CREATE TABLE users (
     lname VARCHAR(255) NOT NULL,      -- Not nullable
     username VARCHAR(255) DEFAULT NULL,        -- Unique constraint
     email VARCHAR(255) NOT NULL,    -- Not nullable
-    password VARCHAR(255) NOT NULL  -- Not nullable
+    password VARCHAR(255) NOT NULL,  -- Not nullable
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -18,7 +18,7 @@ CREATE TABLE Booking (
     enddatetime DATETIME NOT NULL,       -- Not nullable
     bookingtitle VARCHAR(255) NOT NULL,  -- Not nullable
     bookingdescription TEXT,              -- Nullable field
-    FOREIGN KEY (uid) REFERENCES users(uid)
+    FOREIGN KEY (uid) REFERENCES users(id)
 );
 
 -- Create Timeslot table
@@ -53,7 +53,7 @@ CREATE TABLE AvailabilityRequests (
 );
 
 CREATE TABLE user_tickets (
-    id INT(11) AUTO_INCREMENT PRIMARY KEY;
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
     user_id INT(11) NOT NULL, 
     ticket VARCHAR(64) NOT NULL, 
     expiry INT(11) NOT NULL,
