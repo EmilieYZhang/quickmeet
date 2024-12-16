@@ -384,7 +384,7 @@ $conn->close();
     </div>
 
     <script>
-        const userId = 24; // Hardcoded user ID, replace this with session-based user ID
+        const userId = <?php echo htmlspecialchars($userId); ?>; // Hardcoded user ID, replace this with session-based user ID
         const apiEndpoint = `../quickmeet_api/apiendpoints.php/booking/${userId}/userid`;
 
         // Function to show the modal for booking
@@ -412,7 +412,7 @@ $conn->close();
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    uid: 1,  // Replace with actual user ID
+                    uid: userId,  // Replace with actual user ID
                     startdatetime: "2024-12-10 10:00:00",
                     enddatetime: "2024-12-10 12:00:00",
                     bookingtitle: bookingTitle,
