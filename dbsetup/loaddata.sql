@@ -13,11 +13,16 @@ VALUES
     ('Julia', 'Davis', 'julia.d', 'julia.davis@mail.mcgill.ca', 'Secure*Pass');
 
 -- Insert dummy data into Booking table
-INSERT INTO Booking (bookingurl, uid, startdatetime, enddatetime, bookingtitle, bookingdescription)
+INSERT INTO Booking (bookingurl, editbookingurl, uid, startdatetime, enddatetime, bookingtitle, bookingdescription)
 VALUES
-    ('booking1-url', 1, '2024-12-10 09:00:00', '2024-12-10 17:00:00', 'Meeting with Team', 'Discuss project updates'),
-    ('booking2-url', 2, '2024-12-11 10:00:00', '2024-12-11 12:00:00', 'Doctor Appointment', 'Regular check-up'),
-    ('booking3-url', 3, '2024-12-12 14:00:00', '2024-12-12 16:00:00', 'Workshop on SQL', 'Learn advanced SQL techniques');
+    ('booking1-url', 'edbooking1-url', 1, '2024-12-10 09:00:00', '2024-12-10 17:00:00', 'Meeting with Team', 'Discuss project updates'),
+    ('booking2-url', 'edbooking2-url', 1, '2024-12-11 10:00:00', '2024-12-11 12:00:00', 'Doctor Appointment', 'Regular check-up'),
+    ('booking3-url', 'edbooking3-url', 1, '2024-12-12 14:00:00', '2024-12-12 16:00:00', 'Workshop on SQL', 'Learn advanced SQL techniques'),
+    ('booking4-url', 'edbooking4-url', 2, '2024-12-13 09:30:00', '2024-12-13 11:30:00', 'Client Call', 'Discuss project requirements'),
+    ('booking5-url', 'edbooking5-url', 2, '2024-12-14 13:00:00', '2024-12-14 15:00:00', 'Team Workshop', 'Brainstorming session for marketing strategies'),
+    ('booking6-url', 'edbooking6-url', 3, '2024-12-15 08:00:00', '2024-12-15 10:00:00', 'Morning Yoga Session', 'Guided yoga class for relaxation'),
+    ('booking7-url', 'edbooking7-url', 3, '2024-12-16 15:00:00', '2024-12-16 17:00:00', 'Coding Bootcamp', 'Learn JavaScript fundamentals'),
+    ('booking8-url', 'edbooking8-url', 3, '2024-12-17 12:00:00', '2024-12-17 14:00:00', 'Lunch Meeting', 'Meet with investor to discuss funding opportunities');
 
 -- Insert dummy data into Timeslot table
 INSERT INTO Timeslot (bookingurl, slottitle, hostname, location, startdatetime, enddatetime, numopenslots, maxslots)

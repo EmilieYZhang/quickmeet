@@ -142,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else if ($resource == 'availability' && $param != "") {
         $sql = "SELECT * FROM AvailabilityRequests WHERE bookingurl = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $param);
+        $stmt->bind_param("s", $param);
         $stmt->execute();
         $result = $stmt->get_result();
         $availabilityres = array();
@@ -186,14 +186,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         }
         else {
             $url = uniqid('booking_', true);
+            $editurl = uniqid('editbooking_', true);
             $uid = $input['uid'];
             $start = $input['startdatetime'];
             $end = $input['enddatetime'];
             $title = $input['bookingtitle'];
             $description = $input['bookingdescription'];
 
-            $sql = "INSERT INTO Booking (bookingurl, uid, startdatetime, enddatetime, bookingtitle, bookingdescription)
-            VALUES ('$url', '$uid', '$start', '$end', '$title', '$description');";
+            $sql = "INSERT INTO Booking (bookingurl, editbookingurl, uid, startdatetime, enddatetime, bookingtitle, bookingdescription)
+            VALUES ('$url', '$editurl', '$uid', '$start', '$end', '$title', '$description');";
             
             if ($conn->query($sql)) {
                 $booking_id = $conn->insert_id;
@@ -202,7 +203,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     echo json_encode(array(
                         "message" => "The booking was created successfully",
                         "booking_id" => $booking_id,
-                        "booking_url" => "http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url)
+                        "booking_url" => "http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url),
+                        "editbooking_url" => "http://localhost/quickmeet/quickmeet_api/editbookingurl.php?url=" . urlencode($editurl)
                     ));
                 } else {
                     echo json_encode(array(

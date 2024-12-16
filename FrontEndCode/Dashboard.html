@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <link href="RegisterCssPho.css" rel="stylesheet">
+    <link href="RegisterCssLap.css" rel="stylesheet">
+    <link href="RegisterCssDesk.css" rel="stylesheet">
+    
+    <style>
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Styling for form and bottom text */
+        .bottomText {
+            font-size: 14px;
+            color: #555;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .registerButton {
+            background-color: #0088DC;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .registerButton:hover {
+            background-color: #006f99;
+        }
+
+        /* Dashboard container */
+        .dashboard-container {
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            max-width: 800px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #FFFFFF;
+            margin: 40px auto;
+            padding-left: 20px;
+            max-width: 800px;
+            text-align: left;
+        }
+
+        h2 {
+            font-size: 20px;
+            color: #456288;
+            margin: 40px auto;
+            padding-left: 20px;
+            max-width: 800px;
+            text-decoration: underline;
+            text-align: left;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table thead {
+            background-color: #456288;
+            color: #fff;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tbody td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            font-size: 16px;
+            color: #555;
+        }
+
+        table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        button {
+            background-color: #456288;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 40px auto;
+            display: block;
+            text-align: left;
+            max-width: 800px;
+        }
+
+        button:hover {
+            background-color: #2c4568;
+        }
+
+        .toggle-section {
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            color: #0088DC;
+        }
+
+        .toggle-section:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body style="background-color: #0C3D65;">
+
+    <!-- Navbar Section -->
+    <div class="header">
+        <a href="Landing.html"><img src="NewLogoGoodColor.jpg" style="height: 8vw;"></a>
+        <div class="Links">
+            <a href="Register.html">Register</a>
+            <a href="Login.html">Login</a>
+            <a href="FAQ.html">FAQ</a>
+            <a href="#">Tutorial</a>
+            <a href="BookNow.html">Book now</a>
+        </div>
+    </div>
+
+    <h1>My Active Bookings</h1>
+
+    <!-- Active Bookings Table -->
+    <div class="dashboard-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Booking Title</th>
+                    <th>Booking URL</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody id="current-user-list">
+                <!-- Active bookings will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Create Booking Button -->
+    <button onclick="showModal()">Create Booking</button>
+
+    <!-- Toggle Section for Past Bookings -->
+    <div class="toggle-section" onclick="togglePastBookings()"><h2>My Past Bookings</h2></div>
+    <div id="past-bookings-section" class="hidden">
+        <div class="dashboard-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Booking Title</th>
+                        <th>Booking URL</th>
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody id="past-user-list">
+                    <!-- Past bookings will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- The Modal for Creating Booking -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Create a Booking</h2>
+            <form name="Form" onsubmit="return createBooking();">
+                <input type="text" name="btitle" placeholder="Booking Title" required><br><br>
+                <input type="text" name="bdescription" placeholder="Booking Description" required><br><br>
+                <input style="background-color: #0088DC;" class="registerButton" type="submit" value="Submit">
+            </form>
+            <div class="bottomText">Share the booking URL with anyone!</div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Dynamic Content -->
+    <script>
+        const userId = 1; // Hardcoded user ID, replace this with session-based user ID
+
+        const apiEndpoint = `../quickmeet_api/apiendpoints.php/booking/${userId}/userid`;
+
+        // Fetch and display user bookings
+        fetch(apiEndpoint, { method: 'GET' })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(bookings => {
+                const activeBookingList = document.getElementById('current-user-list');
+                const pastBookingList = document.getElementById('past-user-list');
+                activeBookingList.innerHTML = ''; // Clear any existing bookings
+                pastBookingList.innerHTML = ''; // Clear any past bookings
+
+                bookings.forEach((booking, index) => {
+                    const startDate = new Date(booking.startdatetime.replace(' ', 'T'));
+                    const targetDate = new Date(booking.enddatetime.replace(' ', 'T'));
+                    const currentDate = new Date();
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `\
+                        <td>${index + 1}</td>\
+                        <td>${booking.bookingtitle}</td>\
+                        <td><a href="http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=${booking.bookingurl}" target="_blank">${booking.bookingurl}</a></td>\
+                        <td><a href="http://localhost/quickmeet/quickmeet_api/editbookingurl.php?url=${booking.editbookingurl}" target="_blank">EDIT</td>
+                    `;
+
+                    const rowPast = document.createElement('tr');
+                    rowPast.innerHTML = `\
+                        <td>${index + 1}</td>\
+                        <td>${booking.bookingtitle}</td>\
+                        <td><a href="http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=${booking.bookingurl}" target="_blank">${booking.bookingurl}</a></td>\
+                    `;
+
+                    // Append row based on active or past booking date
+                    if (targetDate >= currentDate) {
+                        activeBookingList.appendChild(row);
+                    } else {
+                        pastBookingList.appendChild(rowPast);
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching bookings:', error));
+
+        // Function to show the modal for booking
+        function showModal() {
+            document.getElementById("bookingModal").style.display = "block";
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById("bookingModal").style.display = "none";
+        }
+
+        // Function to handle form submission and create booking
+        function createBooking() {
+            const bookingTitle = document.forms["Form"]["btitle"].value;
+            const bookingDescription = document.forms["Form"]["bdescription"].value;
+
+            // Check if data exists before proceeding
+            if (!bookingTitle || !bookingDescription) {
+                alert("Please fill in all fields.");
+                return false;
+            }
+
+            fetch('../quickmeet_api/apiendpoints.php/booking', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    uid: 1,  // Replace with actual user ID
+                    startdatetime: "2024-12-10 10:00:00",
+                    enddatetime: "2024-12-19 12:00:00",
+                    bookingtitle: bookingTitle,
+                    bookingdescription: bookingDescription
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(newBooking => {
+                alert(`Booking created: ${newBooking.booking_id} - ${newBooking.booking_url}`);
+                window.location.href = newBooking.booking_url; // Redirect to the booking URL
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Failed to create booking.");
+            });
+
+            return false; // Prevent form submission from refreshing the page
+        }
+
+        // Toggle visibility of past bookings
+        function togglePastBookings() {
+            const pastBookingsSection = document.getElementById('past-bookings-section');
+            pastBookingsSection.classList.toggle('hidden');
+        }
+    </script>
+
+</body>
+</html>
+

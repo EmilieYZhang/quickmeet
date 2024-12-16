@@ -13,6 +13,7 @@ CREATE TABLE users (
 CREATE TABLE Booking (
     bid INT AUTO_INCREMENT PRIMARY KEY,           -- Primary Key
     bookingurl VARCHAR(255) UNIQUE,      -- Unique constraint
+    editbookingurl VARCHAR(255) UNIQUE,      -- Unique constraint
     uid INT,                          -- Foreign Key reference to users table
     startdatetime DATETIME NOT NULL,     -- Not nullable
     enddatetime DATETIME NOT NULL,       -- Not nullable
