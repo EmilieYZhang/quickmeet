@@ -7,7 +7,7 @@
     <link href="../FrontEndCode/RegisterCssLap.css" rel="stylesheet">
 </head>
 <body>
-    <h2>style the below as a popup or otherwise to create a booking</h2>
+    <h2>style the below as a popup or otherwise to create a booking; also the following doesn't capture all required fields</h2>
 
     <script>
         function myFunction() {
@@ -15,6 +15,7 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    //MAKE SURE THE FORM SUBMITS THE FOLLOWING INFO
                     uid: 1, // User ID
                     startdatetime: "2024-12-10 10:00:00",
                     enddatetime: "2024-12-10 12:00:00",
