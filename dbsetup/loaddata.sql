@@ -1,9 +1,16 @@
 -- TODO: Hudanur to edit below, Insert dummy data into Users table
-INSERT INTO Users (username, userpassword, firstname, lastname, mcgillemail)
+INSERT INTO users (fname, lname, username, email, password)
 VALUES
-    ('john_doe', 'password123', 'John', 'Doe', 'john.doe@mcgill.ca'),
-    ('jane_smith', 'password456', 'Jane', 'Smith', 'jane.smith@mcgill.ca'),
-    ('mark_jones', 'password789', 'Mark', 'Jones', 'mark.jones@mcgill.ca');
+    ('Alice', 'Smith', 'alice123', 'alice.smith@mail.mcgill.ca', 'password123'),
+    ('Bob', 'Johnson', 'bobbyJ', 'bob.johnson@mail.mcgill.ca', 'securePass!'),
+    ('Charlie', 'Brown', 'charlie_b', 'charlie.brown@mail.mcgill.ca', 'pass@word1'),
+    ('Diana', 'White', 'dianaW', 'diana.white@mail.mcgill.ca', 'Diana12345'),
+    ('Ethan', 'Taylor', 'ethan.t', 'ethan.taylor@mail.mcgill.ca', 'Taylor$789'),
+    ('Fiona', 'Moore', 'fiona_m', 'fiona.moore@mail.mcgill.ca', 'Moore@2023'),
+    ('George', 'Hill', 'georgeH', 'george.hill@mail.mcgill.ca', 'Hill!345'),
+    ('Hannah', 'Clark', 'hannah.c', 'hannah.clark@mail.mcgill.ca', 'Clark#001'),
+    ('Ian', 'Adams', 'ian.adams', 'ian.adams@mail.mcgill.ca', 'Adams@MCG1'),
+    ('Julia', 'Davis', 'julia.d', 'julia.davis@mail.mcgill.ca', 'Secure*Pass');
 
 -- Insert dummy data into Booking table
 INSERT INTO Booking (bookingurl, uid, startdatetime, enddatetime, bookingtitle, bookingdescription)

@@ -11,4 +11,4 @@ DROP TABLE IF EXISTS AvailabilityRequests;
 DROP TABLE IF EXISTS Booking;
 
 -- Drop the Users table
-DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS users;
