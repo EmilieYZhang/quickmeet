@@ -2,9 +2,10 @@
 require 'db_connect.php';
 session_start();
 
+// Check if the session ticket exists
 if (!isset($_SESSION['ticket'])) {
-    // No ticket in session, redirect to login
-    header("Location: login.php");
+    // No ticket, redirect to login
+    header("Location: ../FrontEndCode/Login.html");
     exit();
 }
 
@@ -25,26 +26,26 @@ $stmt->fetch();
 
 // Check if the ticket is valid and not expired
 if (!$userId || time() > $expiry) {
-    // Invalid or expired ticket, redirect to login
+    // Invalid or expired ticket, destroy session and redirect to login
     session_destroy();
-    header("Location: login.php");
+    header("Location: ../FrontEndCode/Login.html");
     exit();
 }
 
-// Welcome message
-echo "Welcome, User ID: $userId";
-
 // Refresh the ticket expiry time by extending it (1 hour from now)
-$newExpiry = time() + 3600;  // 3600 seconds = 1 hour
+$newExpiry = time() + 3600;  // 1-hour extension
 $updateStmt = $conn->prepare("UPDATE user_tickets SET expiry = ? WHERE ticket = ?");
 if ($updateStmt === false) {
-    // If the update query fails, handle it
     echo "Database update failed.";
     exit();
 }
 
 $updateStmt->bind_param("is", $newExpiry, $ticket);
 $updateStmt->execute();
+
+// Output a welcome message or include Dashboard.html
+echo "Welcome, User ID: $userId";
+include "../FrontEndCode/Dashboard.html";
 
 // Close the prepared statements and database connection
 $updateStmt->close();
