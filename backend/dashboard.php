@@ -41,7 +41,7 @@ $updateStmt->close();
 
 // Fetch user bookings
 $bookings = [];
-$bookingStmt = $conn->prepare("SELECT bookingtitle, bookingurl, startdatetime, enddatetime, bookingdescription FROM Booking WHERE uid = ?");
+$bookingStmt = $conn->prepare("SELECT * FROM Booking WHERE uid = ?");
 if ($bookingStmt === false) {
     die("Database query failed.");
 }
@@ -302,6 +302,7 @@ $conn->close();
                     <th>#</th>
                     <th>Booking Title</th>
                     <th>Booking URL</th>
+                    <th> </th>
                 </tr>
             </thead>
             <tbody>
@@ -316,8 +317,9 @@ $conn->close();
                         echo "<tr>
                             <td>" . ($index + 1) . "</td>
                             <td>" . htmlspecialchars($booking['bookingtitle']) . "</td>
-                            <td><a href='" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>" . htmlspecialchars($booking['bookingurl']) . "</a></td>
-                        </tr>";
+                            <td><a href='http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>" . htmlspecialchars($booking['bookingurl']) . "</a></td>
+                            <td><a href='http://localhost/quickmeet/backend/editbookingurl.php?url=" . htmlspecialchars($booking['editbookingurl']) . "' target='_blank'> EDIT</td>
+                            </tr>";
                     }
                 }
 
@@ -374,7 +376,7 @@ $conn->close();
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Create a Booking</h2>
-            <form name="Form" onsubmit="return myFunction();">
+            <form name="Form" onsubmit="return createBooking();">
                 <input type="text" name="btitle" placeholder="Booking Title" required><br><br>
                 <input type="text" name="bdescription" placeholder="Booking Description" required><br><br>
                 <input style="background-color: #0088DC;" class="registerButton" type="submit" value="Submit">
@@ -398,7 +400,7 @@ $conn->close();
         }
 
         // Function to handle form submission and create booking
-        function myFunction() {
+        function createBooking() {
             const bookingTitle = document.forms["Form"]["btitle"].value;
             const bookingDescription = document.forms["Form"]["bdescription"].value;
 
@@ -414,7 +416,7 @@ $conn->close();
                 body: JSON.stringify({
                     uid: userId,  // Replace with actual user ID
                     startdatetime: "2024-12-10 10:00:00",
-                    enddatetime: "2024-12-10 12:00:00",
+                    enddatetime: "2024-12-19 12:00:00",
                     bookingtitle: bookingTitle,
                     bookingdescription: bookingDescription
                 })
