@@ -1,12 +1,12 @@
 -- Create users table
--- TODO: Hudanur to edit below
 CREATE TABLE users (
-    uid INT AUTO_INCREMENT PRIMARY KEY,            -- Primary Key
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,            -- Primary Key
     fname VARCHAR(255) NOT NULL,     -- Not nullable
     lname VARCHAR(255) NOT NULL,      -- Not nullable
-    username VARCHAR(255) UNIQUE,        -- Unique constraint
+    username VARCHAR(255) DEFAULT NULL,        -- Unique constraint
     email VARCHAR(255) NOT NULL,    -- Not nullable
-    password VARCHAR(255) NOT NULL  -- Not nullable
+    password VARCHAR(255) NOT NULL,  -- Not nullable
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create Booking table
@@ -18,7 +18,7 @@ CREATE TABLE Booking (
     enddatetime DATETIME NOT NULL,       -- Not nullable
     bookingtitle VARCHAR(255) NOT NULL,  -- Not nullable
     bookingdescription TEXT,              -- Nullable field
-    FOREIGN KEY (uid) REFERENCES users(uid)
+    FOREIGN KEY (uid) REFERENCES users(id)
 );
 
 -- Create Timeslot table
@@ -53,8 +53,10 @@ CREATE TABLE AvailabilityRequests (
 );
 
 CREATE TABLE user_tickets (
-    user_id INT, 
-    ticket VARCHAR(255), 
-    expiry INT,
-    FOREIGN KEY (user_id) REFERENCES users(uid)
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    user_id INT(11) NOT NULL, 
+    ticket VARCHAR(64) NOT NULL, 
+    expiry INT(11) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );

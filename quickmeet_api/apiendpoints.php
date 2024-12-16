@@ -1,7 +1,24 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
+// ** THIS IS FOR MIMI SERVER HOST **//
+// require_once '../config/config.php';
+
+// // create a connection to the MySQL database
+// $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+// // check the connection
+// if ($conn->connect_error) {
+//     die("Connection failed: " . $conn->connect_error);
+// } else {
+//     echo "Database connected successfully!";
+// }
+// ** ----------------  **//
+
+// ** THIS IS FOR LOCAL HOST **//
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -14,6 +31,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+// ** ---------------- **//
 
 // read the api endpoint
 $request = $_SERVER['REQUEST_URI'];
