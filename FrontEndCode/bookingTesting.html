@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Bookings</title>
+</head>
+<body>
+    <div id="output"></div>
+
+    <!-- <script>
+        async function fetchBookings() {
+            try {
+                const response = await fetch('../quickmeet_api/apiendpoints.php/booking');
+                const bookings = await response.json();
+    
+                const outputDiv = document.getElementById('output');
+                bookings.forEach(booking => {
+                    outputDiv.innerHTML += `
+                        <p>
+                            <strong>${booking.bookingtitle}</strong><br>
+                            Start: ${booking.startdatetime} - End: ${booking.enddatetime}<br>
+                            Description: ${booking.bookingdescription} <br>
+                            url: ${booking.bookingurl}
+                        </p>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error fetching bookings:", error);
+            }
+        }
+    
+        fetchBookings();
+    </script> -->
+
+    <script>
+        async function fetchBookings() {
+            try {
+                const response = await fetch('../quickmeet_api/apiendpoints.php/booking');
+                const bookings = await response.json();
+                const outputDiv = document.getElementById('output');
+    
+                for (const booking of bookings) {
+                    // Display basic booking info
+                    const bookingDiv = document.createElement('div');
+                    bookingDiv.innerHTML = `
+                        <h3>${booking.bookingtitle}</h3>
+                        <p>
+                            Start: ${booking.startdatetime} - End: ${booking.enddatetime} <br>
+                            Description: ${booking.bookingdescription} <br>
+                        </p>
+                    `;
+    
+                    // Fetch time slots for this booking
+                    const timeslotResponse = await fetch(`../quickmeet_api/apiendpoints.php/timeslot/${booking.bookingurl}/bookingurl`);
+                    const timeslots = await timeslotResponse.json();
+    
+                    if (timeslots.length > 0) {
+                        timeslots.forEach(slot => {
+                            bookingDiv.innerHTML += `
+                                <p>
+                                    Time: ${slot.startdatetime} to ${slot.enddatetime} <br>
+                                    Max People: ${slot.maxslots} <br>
+                                    <button onclick="reserveSlot('${slot.sid}')">Reserve</button>
+                                </p>
+                            `;
+                        });
+                    } else {
+                        bookingDiv.innerHTML += "<p>No time slots available yet.</p>";
+                    }
+    
+                    outputDiv.appendChild(bookingDiv);
+                }
+            } catch (error) {
+                console.error("Error fetching bookings:", error);
+            }
+        }
+    
+        // Function to reserve a slot
+        async function reserveSlot(sid) {
+            try {
+                const response = await fetch('../quickmeet_api/apiendpoints.php/reservation', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sid: sid })
+                });
+    
+                if (response.ok) {
+                    alert("You have successfully reserved this time slot!");
+                } else {
+                    alert("Failed to reserve the slot.");
+                }
+            } catch (error) {
+                console.error("Error reserving slot:", error);
+                alert("An error occurred while reserving the slot.");
+            }
+        }
+    
+        fetchBookings();
+    </script>
+    
+</body>
+</html>

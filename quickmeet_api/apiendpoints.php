@@ -173,7 +173,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             echo json_encode(array("error" => "Availability requests with this bookingurl was not found"));
         }
-    } else {
+    }
+    //////////////////here new code starts
+    else if ($resource == 'booking' && $param == "") {
+            // Fetch all bookings
+            $sql = "SELECT * FROM Booking";
+            $result = $conn->query($sql);
+            $bookings = array();
+        
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $bookings[] = $row;
+                }
+                echo json_encode($bookings);
+            } else {
+                echo json_encode(array("error" => "No bookings found"));
+            }
+        }
+    ///////////////////here new code ends
+    else {
         echo json_encode(array("error" => "Invalid endpoint"));
     }
 }
