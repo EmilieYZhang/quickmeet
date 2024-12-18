@@ -47,6 +47,8 @@ if ($bookingUrl) {
         echo "<p>" . htmlspecialchars($booking['bookingdescription']) . "</p>";
         echo "<p>Start: " . htmlspecialchars($booking['startdatetime']) . "</p>";
         echo "<p>End: " . htmlspecialchars($booking['enddatetime']) . "</p>";
+        //echo "<p> full booking URL" . "http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=".htmlspecialchars($booking['bookingurl']) . "</p>"
+        echo "<p>Full Booking URL: <a href='http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "</a></p>";
         // Add logic to display timeslot options and handle reservations
     } else {
         echo "<h1>Booking not found</h1>";
