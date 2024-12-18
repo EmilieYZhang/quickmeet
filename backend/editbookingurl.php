@@ -70,10 +70,72 @@ if ($bookingUrl) {
         $booking = $result->fetch_assoc();
         $ogbookingurl = $booking['bookingurl'];
         // Render the booking page
-        echo "<h1>" . htmlspecialchars($booking['bookingtitle']) . "</h1>";
-        echo "<p>" . htmlspecialchars($booking['bookingdescription']) . "</p>";
-        echo "<p>Start: " . htmlspecialchars($booking['startdatetime']) . "</p>";
-        echo "<p>End: " . htmlspecialchars($booking['enddatetime']) . "</p>";
+
+        // echo "<h1>" . htmlspecialchars($booking['bookingtitle']) . "</h1>";
+        // echo "<p>" . htmlspecialchars($booking['bookingdescription']) . "</p>";
+        // echo "<p>Start: " . htmlspecialchars($booking['startdatetime']) . "</p>";
+        // echo "<p>End: " . htmlspecialchars($booking['enddatetime']) . "</p>";
+
+        echo "
+        <!DOCTYPE html>
+        <html lang='en'>
+        <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <title>Booking Details</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f5f5f5;
+                    margin: 20px;
+                    color: #333;
+                }
+                .booking-container {
+                    max-width: 600px;
+                    margin: auto;
+                    padding: 20px;
+                    background-color: #ffffff;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+                h1 {
+                    color: #444;
+                    font-size: 24px;
+                    text-align: center;
+                }
+                p {
+                    margin: 10px 0;
+                    line-height: 1.6;
+                }
+
+                .bolder {
+                    font-weight: bold;
+                }
+
+                a{
+                    color: #007BFF;
+                    text-decoration: none;
+                    font-weight: bold;
+                }
+
+                a:hover {
+                    text-decoration: underline;
+                }
+            </style>
+        </head>
+        <body style='background-color: #0C3D65'>
+            <div class='booking-container'>
+                <h1>" . htmlspecialchars($booking['bookingtitle']) . "</h1>
+                <p><span class = 'bolder'>Description:</span> " . htmlspecialchars($booking['bookingdescription']) . "</p>
+           
+                <p><span class = 'bolder'>Start:</span> " . htmlspecialchars($booking['startdatetime']) . "</p>
+                <p><span class = 'bolder'>End: </span>" . htmlspecialchars($booking['enddatetime']) . "</p>
+                
+                <p><span class = 'bolder'>Full Booking URL:</span> <a href='http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "</a></p>
+                
+            </div>
+        </body>
+        </html>"; 
         // Add logic to display timeslot options and handle reservations
     } else {
         echo "<h1>Booking not found</h1>";
@@ -89,12 +151,39 @@ $conn->close();
 <html>
 <head>
     <title>Booking Details</title>
+
+    <style>
+        .buttons{
+            text-align: center;
+        }
+
+        button{
+            border-radius: 10px;
+            width: 210px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;    
+        }
+
+        button:hover {
+        background-color: #38C4DB;
+    }
+
+
+
+    </style>
+
+
 </head>
 <body>
+
 <ul id="user-list"></ul>
-<button onclick="AddNewTimeslot()">Add New Timeslot</button>
-<button onclick="EditBooking()">Edit Booking</button>
-<button onclick="ViewAvailability()">View Availability Requests</button>
+    <div class = buttons>
+        <button  onclick="AddNewTimeslot()">Add New Timeslot</button>
+        <button  onclick="EditBooking()">Edit Booking</button>
+        <button  onclick="ViewAvailability()">View Availability Requests</button>
+    </div>
 <ul id="availability-list"></ul>
 <script>
     function AddNewTimeslot(){
