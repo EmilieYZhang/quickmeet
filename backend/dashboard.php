@@ -229,6 +229,27 @@ $conn->close();
             cursor: pointer;
         }
 
+        .dropdown {
+                width: 50%;
+                padding: 10px;
+                font-size: 18px;
+                background-color: #303245;
+                border: none;
+                color: #eee;
+                border-radius: 12px;
+                margin-right: 5px;
+                box-sizing: border-box;
+                margin-top: 10px;
+            }
+
+            .startMonthDay{
+                display: flex;
+            }
+            .endMonthDay{
+                display: flex;
+            }
+
+
         /* Mobile view: Show the hamburger menu */
         @media (max-width: 768px) {
             .hamburger {
@@ -373,12 +394,119 @@ $conn->close();
 
     <!-- The Modal for Creating Booking -->
     <div id="bookingModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="background-color: #456288; border-radius: 15px;">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Create a Booking</h2>
             <form name="Form" onsubmit="return createBooking();">
                 <input type="text" name="btitle" placeholder="Booking Title" required><br><br>
                 <input type="text" name="bdescription" placeholder="Booking Description" required><br><br>
+                <div class="dropdown-container">
+                    <div class="startMonthDay">
+                        <select id="startMonth" class="dropdown" name="startMonth">
+                            <option value="" disabled selected>starting month</option>
+                            <option value="01">January</option>
+                            <option value="02">February</option>
+                            <option value="03">March</option>
+                            <option value="04">April</option>
+                            <option value="05">May</option>
+                            <option value="06">June</option>
+                            <option value="07">July</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+
+                        <select id="date" class="dropdown" name="startDay">>
+                            <option value="" disabled selected>starting day</option>
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                            <option value="24">24</option>
+                            <option value="25">25</option>
+                            <option value="26">26</option>
+                            <option value="27">27</option>
+                            <option value="28">28</option>
+                            <option value="29">29</option>
+                            <option value="30">30</option>
+                            <option value="31">31</option>
+                        </select>
+                    </div>
+
+                    <div class="endMonthDay">
+                        <select id="date" class="dropdown" name="endMonth" >
+                            <option value="" disabled selected>ending month</option>
+                            <option value="01">January</option>
+                            <option value="02">February</option>
+                            <option value="03">March</option>
+                            <option value="04">April</option>
+                            <option value="05">May</option>
+                            <option value="06">June</option>
+                            <option value="07">July</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+
+                        <select id="date" class="dropdown" name="endDay" >
+                            <option value="" disabled selected>ending day</option>
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                            <option value="24">24</option>
+                            <option value="25">25</option>
+                            <option value="26">26</option>
+                            <option value="27">27</option>
+                            <option value="28">28</option>
+                            <option value="29">29</option>
+                            <option value="30">30</option>
+                            <option value="31">31</option>
+                        </select>
+                    </div>
+            </div>
                 <input style="background-color: #0088DC;" class="registerButton" type="submit" value="Submit">
             </form>
             <div class="bottomText">Share the booking URL with anyone!</div>
@@ -404,6 +532,16 @@ $conn->close();
             const bookingTitle = document.forms["Form"]["btitle"].value;
             const bookingDescription = document.forms["Form"]["bdescription"].value;
 
+            const bookingStartMonth = document.forms["Form"]["startMonth"].value;
+            const bookingStartDay = document.forms["Form"]["startDay"].value;
+
+            const bookingEndMonth = document.forms["Form"]["endMonth"].value;
+            const bookingEndDay = document.forms["Form"]["endDay"].value;
+
+            const startDatetime = "2024-" + bookingStartMonth + "-" + bookingStartDay + " " + "00:00:00";
+            const endDatetime = "2024-" + bookingEndMonth + "-" + bookingEndDay + " " + "00:00:00";
+     
+
             // Check if data exists before proceeding
             if (!bookingTitle || !bookingDescription) {
                 alert("Please fill in all fields.");
@@ -415,8 +553,8 @@ $conn->close();
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     uid: userId,  // Replace with actual user ID
-                    startdatetime: "2024-12-10 10:00:00",
-                    enddatetime: "2024-12-19 12:00:00",
+                    startdatetime: startDatetime, //"2024-12-10 10:00:00",
+                    enddatetime: endDatetime, //"2024-12-19 12:00:00",
                     bookingtitle: bookingTitle,
                     bookingdescription: bookingDescription
                 })
