@@ -539,7 +539,7 @@ $conn->close();
             const bookingEndDay = document.forms["Form"]["endDay"].value;
 
             const startDatetime = "2024-" + bookingStartMonth + "-" + bookingStartDay + " " + "00:00:00";
-            const endDatetime = "2024-" + bookingEndMonth + "-" + bookingEndDay + " " + "00:00:00";
+            const endDatetime = "2024-" + bookingEndMonth + "-" + bookingEndDay + " " + "23:59:00";
      
 
             // Check if data exists before proceeding
