@@ -169,9 +169,6 @@ $conn->close();
         button:hover {
         background-color: #38C4DB;
     }
-
-
-
     </style>
 
 
@@ -185,9 +182,88 @@ $conn->close();
         <button  onclick="ViewAvailability()">View Availability Requests</button>
     </div>
 <ul id="availability-list"></ul>
+
+<div id="timeslotModal" class="modal" 
+        style="display: none;
+         
+         text-align: center;
+         width: 50%; 
+         margin: auto;
+        
+        ">
+
+
+    <div class="modal-content">
+
+        <span class="close" style = "color: white; cursor: pointer; "onclick="closeModal()">&times;</span>
+
+
+        <!-- <h2>Add New Time Slot</h2> -->
+        <form id="timeslotForm">
+            <input type="text" id="slotTitle" placeholder="Time Slot Title" required><br><br>
+            <input type="text" id="hostName" placeholder="Host Name" required><br><br>
+            <input type="text" id="location" placeholder="Location" required><br><br>
+            <input type="datetime-local" id="startTime" placeholder="Start Time" required><br><br>
+            <input type="datetime-local" id="endTime" placeholder="End Time" required><br><br>
+            <input type="number" id="maxSlots" placeholder="Max Slots" required><br><br>
+            <button type="button" onclick="submitTimeslot()">Add Time Slot</button>
+        </form>
+    </div>
+</div>
+
+
 <script>
     function AddNewTimeslot(){
-        return true;
+        document.getElementById('timeslotModal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('timeslotModal').style.display = 'none';
+    }
+
+
+    const bkurl = "<?php echo htmlspecialchars($ogbookingurl); ?>";
+
+    async function submitTimeslot() {
+        console.log('Booking URL:', bkurl);
+        const slotTitle = document.getElementById('slotTitle').value;
+        const hostName = document.getElementById('hostName').value;
+        const location = document.getElementById('location').value;
+        const startTime = document.getElementById('startTime').value;
+        const endTime = document.getElementById('endTime').value;
+        const maxSlots = document.getElementById('maxSlots').value;
+
+        // Validate inputs
+        if (!slotTitle || !hostName || !location || !startTime || !endTime || !maxSlots) {
+            alert('Please fill in all fields.');
+            return;
+        }
+
+        try {
+            const response = await fetch('../quickmeet_api/apiendpoints.php/timeslot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    bookingurl: bkurl, 
+                    slottitle: slotTitle,
+                    hostname: hostName,
+                    location: location,
+                    startdatetime: startTime,
+                    enddatetime: endTime,
+                    maxslots: maxSlots
+                })
+            });
+
+            if (response.ok) {
+                alert('Time slot added successfully!');
+                closeModal();
+            } else {
+                alert('Failed to add the time slot.');
+            }
+        } catch (error) {
+            console.error('Error adding time slot:', error);
+            alert('An error occurred while adding the time slot.');
+        }
     }
 
     function EditBooking(){
