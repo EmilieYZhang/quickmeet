@@ -13,7 +13,7 @@ VALUES
     ('Julia', 'Davis', 'julia.d', 'julia.davis@mail.mcgill.ca', 'Secure*Pass');
 
 -- Insert dummy data into Booking table
-INSERT INTO Booking (bookingurl, uid, startdatetime, enddatetime, bookingtitle, bookingdescription)
+INSERT INTO Booking (bookingurl, editbookingurl, uid, startdatetime, enddatetime, bookingtitle, bookingdescription)
 VALUES
     ('booking1-url', 1, '2024-12-19 09:00:00', '2024-12-19 17:00:00', 'Meeting with Team', 'Discuss project updates'),
     ('booking2-url', 2, '2024-12-18 10:00:00', '2024-12-17 12:00:00', 'Doctor Appointment', 'Regular check-up'),

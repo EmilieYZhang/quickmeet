@@ -41,7 +41,7 @@ Format: (tablename) Fields: Field_1, Field_2, ..., Field_n\
 **DELETE /quickmeetapi/reservation/{reservationurl}:** delete a specific instance of reservation
 
 ### (AvailabilityRequests) Fields: -rid-, \~bookingurl\~, startdatetime, enddatetime
-**GET /quickmeetapi/availability/{bookingurl}:** return all pending availability requests for a bookingurl\
+**GET /quickmeetapi/availability/{bookingurl}:** return all pending availability requests for a editbookingurl\
 **POST /quickmeetapi/availability:** post availability request with a body containing all fields, return rid\
 **DELETE /quickmeetapi/availability/{rid}:** delete a specific instance of availability request id
 

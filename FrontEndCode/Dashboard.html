@@ -182,6 +182,7 @@
                     <th>#</th>
                     <th>Booking Title</th>
                     <th>Booking URL</th>
+                    <th> </th>
                 </tr>
             </thead>
             <tbody id="current-user-list">
@@ -203,6 +204,7 @@
                         <th>#</th>
                         <th>Booking Title</th>
                         <th>Booking URL</th>
+                        <th> </th>
                     </tr>
                 </thead>
                 <tbody id="past-user-list">
@@ -217,7 +219,7 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Create a Booking</h2>
-            <form name="Form" onsubmit="return myFunction();">
+            <form name="Form" onsubmit="return createBooking();">
                 <input type="text" name="btitle" placeholder="Booking Title" required><br><br>
                 <input type="text" name="bdescription" placeholder="Booking Description" required><br><br>
                 <input style="background-color: #0088DC;" class="registerButton" type="submit" value="Submit">
@@ -228,7 +230,8 @@
 
     <!-- JavaScript for Dynamic Content -->
     <script>
-        const userId = 24; // Hardcoded user ID, replace this with session-based user ID
+        const userId = 1; // Hardcoded user ID, replace this with session-based user ID
+
         const apiEndpoint = `../quickmeet_api/apiendpoints.php/booking/${userId}/userid`;
 
         // Fetch and display user bookings
@@ -254,14 +257,22 @@
                     row.innerHTML = `\
                         <td>${index + 1}</td>\
                         <td>${booking.bookingtitle}</td>\
-                        <td><a href="${booking.bookingurl}" target="_blank">${booking.bookingurl}</a></td>\
+                        <td><a href="http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=${booking.bookingurl}" target="_blank">${booking.bookingurl}</a></td>\
+                        <td><a href="http://localhost/quickmeet/quickmeet_api/editbookingurl.php?url=${booking.editbookingurl}" target="_blank">EDIT</td>
+                    `;
+
+                    const rowPast = document.createElement('tr');
+                    rowPast.innerHTML = `\
+                        <td>${index + 1}</td>\
+                        <td>${booking.bookingtitle}</td>\
+                        <td><a href="http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=${booking.bookingurl}" target="_blank">${booking.bookingurl}</a></td>\
                     `;
 
                     // Append row based on active or past booking date
                     if (targetDate >= currentDate) {
                         activeBookingList.appendChild(row);
                     } else {
-                        pastBookingList.appendChild(row);
+                        pastBookingList.appendChild(rowPast);
                     }
                 });
             })
@@ -278,7 +289,7 @@
         }
 
         // Function to handle form submission and create booking
-        function myFunction() {
+        function createBooking() {
             const bookingTitle = document.forms["Form"]["btitle"].value;
             const bookingDescription = document.forms["Form"]["bdescription"].value;
 
@@ -294,7 +305,7 @@
                 body: JSON.stringify({
                     uid: 1,  // Replace with actual user ID
                     startdatetime: "2024-12-10 10:00:00",
-                    enddatetime: "2024-12-10 12:00:00",
+                    enddatetime: "2024-12-19 12:00:00",
                     bookingtitle: bookingTitle,
                     bookingdescription: bookingDescription
                 })
