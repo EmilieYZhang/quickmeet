@@ -7,14 +7,20 @@ include 'header.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Book Now</title>
 
 
 
     <link href="../FrontEndCode/RegisterCssPho.css" rel="stylesheet">
     <link href="../FrontEndCode/RegisterCssLap.css" rel="stylesheet">
 
-
+    <style>
+	.divForForm input[type="text"] {
+	    width: 100%;
+	    padding: 10px;
+	    box-sizing: border-box;
+	}
+    </style>
 
     <script>
         function checkSearchForm() {
@@ -38,14 +44,12 @@ include 'header.php';
 
 <body style="background-color: #0C3D65;">
 
-
     <div class = "fromDivImgDiv">
         <div class = "divForForm">
             <form name = "Form" style="height: 250px;" onsubmit="return checkSearchForm();">
                     <h1 class="title">Search for your booking!</h1>
                     <div class="subtitle">Paste the booking url you want to search for:</div>
                     <input type="text" name="burl" placeholder="Booking URL" required>
-
                     <input style="background-color: #0088DC;" class="registerButton" type="submit" value="Submit">
 
                     <div class = "bottomText">Create an account to unlock more amazing features!</div>
