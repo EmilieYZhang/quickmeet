@@ -1,43 +1,11 @@
 <?php
-require 'db_connect.php'; // Include database connection
-session_start();
+include 'header.php';
 
-// Enable error reporting for debugging (remove in production)
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Check if the session ticket exists
-if (!isset($_SESSION['ticket'])) {
-    header("Location: ../FrontEndCode/Login.html");
-    exit();
-}
-
-$ticket = $_SESSION['ticket'];
-
-// Validate the ticket
-$stmt = $conn->prepare("SELECT user_id, expiry FROM user_tickets WHERE ticket = ?");
-if ($stmt === false) {
-    die("Database query failed.");
-}
-$stmt->bind_param("s", $ticket);
-$stmt->execute();
-$stmt->bind_result($userId, $expiry);
-$stmt->fetch();
-$stmt->close();
-
-// Check if the ticket is valid and not expired
 if (!$userId || time() > $expiry) {
     session_destroy();
     header("Location: ../FrontEndCode/Login.html");
     exit();
 }
-
-// Extend session expiry
-$newExpiry = time() + 3600; // Extend for 1 more hour
-$updateStmt = $conn->prepare("UPDATE user_tickets SET expiry = ? WHERE ticket = ?");
-$updateStmt->bind_param("is", $newExpiry, $ticket);
-$updateStmt->execute();
-$updateStmt->close();
 
 // Fetch user bookings
 $bookings = [];
@@ -53,7 +21,6 @@ while ($row = $result->fetch_assoc()) {
     $bookings[] = $row;
 }
 $bookingStmt->close();
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -219,15 +186,6 @@ $conn->close();
             display: none;
         }
 
-        .LinksForPhone {
-            display: none;
-        }
-
-        /* Hamburger menu style */
-        .hamburger {
-            display: none;
-            cursor: pointer;
-        }
 
         .dropdown {
                 width: 50%;
@@ -249,69 +207,11 @@ $conn->close();
                 display: flex;
             }
 
-
-        /* Mobile view: Show the hamburger menu */
-        @media (max-width: 768px) {
-            .hamburger {
-                display: block;
-                padding: 10px;
-            }
-
-            .LinksForPhone.show {
-                display: block;
-            }
-
-            .LinksForPhone {
-                display: none;
-                text-align: center;
-                margin-top: 20px;
-            }
-
-            .LinksForPhone a {
-                display: block;
-                padding: 10px;
-                color: white;
-                background-color: #456288;
-                text-decoration: none;
-            }
-
-            .LinksForPhone a:hover {
-                background-color: #2c4568;
-            }
         }
     </style>
 </head>
 <body style="background-color: #0C3D65;">
 
-    <!-- Navbar Section -->
-
-    <!-- Hamburger Icon -->
-    <div class="hamburger" onclick="dropDownMenu()">
-        <div style="display: flex;">
-            <a href="../FrontEndCode/Landing.html"><img src="../FrontEndCode/NewLogoGoodColor.jpg" style="height: 80px;"></a>
-            <a class="hamUnderline" href="#">☰</a>
-        </div>
-    </div>
-
-    <!-- Links for mobile (Hamburger Menu) -->
-    <div class="LinksForPhone">
-        <a href="../FrontEndCode/FAQ.html">FAQ</a>
-        <a href="#">Tutorial</a>
-        <a href="../FrontEndCode/BookNow.html">Book now</a>
-        <a href="logout.php">Logout</a>
-    </div>
-
-    <div class="header">
-        <a href="../FrontEndCode/Landing.html"><img src="../FrontEndCode/NewLogoGoodColor.jpg" style="height: 8vw;"></a>
-        <div class="Links">
-            <a href="../FrontEndCode/FAQ.html">FAQ</a>
-            <a href="#">Tutorial</a>
-            <a href="../FrontEndCode/BookNow.html">Book now</a>
-            <a href="logout.php">Logout</a>
-        </div>
-    </div>
-
-    <!-- Welcome Line -->
     <h2 style="color: white; padding-left: 20px;">Welcome, <?php echo htmlspecialchars($_SESSION['firstName']); ?>!</h2>
 
     <!-- Active Bookings Section -->

@@ -1,14 +1,14 @@
 <?php
 
-// require_once '../config/config.php';
+//require_once '../config/config.php';
 
 // // create a database connection
-// $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+//$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-// // check the connection
-// if ($conn->connect_error) {
-//     die("Connection failed: " . $conn->connect_error);
-// }
+// check the connection
+//if ($conn->connect_error) {
+//   die("Connection failed: " . $conn->connect_error);
+//}
 
 $servername = "localhost";
 $username = "root";

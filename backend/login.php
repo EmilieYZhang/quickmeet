@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Check if user exists and password is correct
     if ($userId && password_verify($password, $hashedPassword)) {
         // Generate a secure session ticket
-        $ticket = bin2hex(random_bytes(32));
+        $ticket = bin2hex(random_bytes(32)); // Generate a 64-character ticket
         $expiry = time() + 3600; // 1-hour expiry
 
         // Store the ticket in the database
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['userId'] = $userId;
         $_SESSION['firstName'] = $firstName;
 
-        // Redirect to dashboard
+        // Redirect to the dashboard
         header("Location: ../backend/dashboard.php");
         exit();
     } else {
