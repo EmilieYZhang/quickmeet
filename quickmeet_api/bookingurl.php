@@ -119,10 +119,166 @@ if ($bookingUrl) {
     <html>
     <head>
         <title>Booking Details</title>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .day-section {
+            margin: 20px 0;
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+            color: #444;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .booking-slot {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e7f3ff;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .outputDiv {
+            display: flex;
+        }
+
+
+    </style>
+
+
     </head>
     <body>
-    <ul id="user-list"></ul>
-    <script>
+    <!-- <ul id="user-list"></ul> -->
+    <!-- <div id="output" class="outputDiv"></div> -->
+
+    <!-- <script>
+        async function listTimeSlots(){
+            const timeslotResponse = await fetch('../quickmeet_api/apiendpoints.php/timeslot/<?php echo $bookingUrl ?>/bookingurl', { method: 'GET' });
+            const timeslots = await timeslotResponse.json();
+            timeslots.forEach(slot =>{
+                console.log(`Host Name: ${slot.hostname}`);
+
+
+
+            })
+
+        }
+        listTimeSlots();
+
+
+    </script> -->
+    <div id="output" class="outputDiv"></div>
+
+<script>
+    async function listTimeSlots() {
+        const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        const outputDiv = document.getElementById('output');
+        const weekBookings = {}; // Structure for organizing time slots by day
+        daysOfWeek.forEach(day => (weekBookings[day] = [])); // Initialize structure
+
+        try {
+            const timeslotResponse = await fetch('../quickmeet_api/apiendpoints.php/timeslot/<?php echo $bookingUrl ?>/bookingurl', {
+                method: 'GET'
+            });
+            const timeslots = await timeslotResponse.json();
+
+            timeslots.forEach(slot => {
+                const startDate = new Date(slot.startdatetime);
+
+                // Adjust the day name to start the week on Monday
+                const dayIndex = (startDate.getDay() + 6) % 7; // Sunday becomes 6, Monday becomes 0
+                const dayName = daysOfWeek[dayIndex];
+
+                // Add time slot info to the corresponding day
+                weekBookings[dayName].push({
+                    title: slot.slottitle,
+                    host: slot.hostname,
+                    location: slot.location,
+                    start: slot.startdatetime,
+                    end: slot.enddatetime,
+                    sid: slot.sid
+                });
+            });
+
+            // Render time slots grouped by day
+            for (const day of daysOfWeek) {
+                const daySection = document.createElement('div');
+                daySection.className = 'day-section';
+                daySection.innerHTML = `<h2>${day}</h2>`;
+
+                // Sort time slots by start time
+                weekBookings[day].sort((a, b) => new Date(a.start) - new Date(b.start));
+
+                if (weekBookings[day].length > 0) {
+                    weekBookings[day].forEach(slot => {
+                        daySection.innerHTML += `
+                            <div class="booking-slot">
+                                <strong>${slot.title}</strong><br>
+                                Host: ${slot.host}<br>
+                                Location: ${slot.location}<br>
+                                ${new Date(slot.start).toLocaleTimeString()} - ${new Date(slot.end).toLocaleTimeString()}<br>
+                                <button onclick="reserveSlot('${slot.sid}')">Reserve</button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    daySection.innerHTML += "<p>No time slots for this day.</p>";
+                }
+                outputDiv.appendChild(daySection);
+            }
+        } catch (error) {
+            console.error('Error fetching time slots:', error);
+            outputDiv.innerHTML = "<p>Error loading time slots. Please try again later.</p>";
+        }
+    }
+
+    async function reserveSlot(sid) {
+        try {
+            const response = await fetch('../quickmeet_api/apiendpoints.php/reservation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sid: sid })
+            });
+
+            if (response.ok) {
+                alert("You have successfully reserved this time slot!");
+            } else {
+                alert("Failed to reserve the slot.");
+            }
+        } catch (error) {
+            console.error("Error reserving slot:", error);
+            alert("An error occurred while reserving the slot.");
+        }
+    }
+
+    listTimeSlots();
+</script>
+
+
+
+
+    <!-- <script>
     console.log('./apiendpoints.php/timeslot/<?php echo $bookingUrl ?>/bookingurl');
     
     fetch('./apiendpoints.php/timeslot/<?php echo $bookingUrl ?>/bookingurl', { method: 'GET' })
@@ -145,7 +301,10 @@ if ($bookingUrl) {
                     });
                 })
                 .catch(error => console.error('Error fetching users:', error));
-    </script>
+    </script> -->
+
+
+
     </body>
     </html>
     <?php
