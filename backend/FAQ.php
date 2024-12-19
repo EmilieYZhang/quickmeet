@@ -17,7 +17,7 @@ include '../backend/header.php';
         .faq-container {
             margin: 40px auto;
             padding: 20px;
-            background-color: #ffffff;
+            background-color: #15182b;
             border-radius: 8px;
             max-width: 800px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -33,9 +33,9 @@ include '../backend/header.php';
         }
 
         .faq-question {
-            font-size: 20px;
-            font-weight: bold;
-            color: #0C3D65;
+            font-size: 18px;
+	    font-family: "Segoe UI"
+            color: #ffffff;
             cursor: pointer;
             margin: 0;
             display: flex;
@@ -51,7 +51,7 @@ include '../backend/header.php';
             margin-top: 10px;
             font-size: 16px;
             line-height: 1.6;
-            color: #555;
+            color: #ffffff;
             display: none;
             padding-left: 20px;
         }
@@ -73,8 +73,10 @@ include '../backend/header.php';
             text-align: center;
             font-size: 28px;
             font-weight: bold;
-            color: #0C3D65;
+	    font-family: "Segoe UI";
+            color: #ffffff;
             margin-bottom: 30px;
+	    margin-top: 30px;
         }
 
     </style>
