@@ -188,7 +188,10 @@ if ($bookingUrl) {
 
 
     </script> -->
-    <div id="output" class="outputDiv"></div>
+
+
+
+    <!-- <div id="output" class="outputDiv"></div>
 
 <script>
     async function listTimeSlots() {
@@ -273,7 +276,109 @@ if ($bookingUrl) {
     }
 
     listTimeSlots();
+</script> -->
+
+<div id="output" class="outputDiv"></div>
+
+<script>
+    async function listTimeSlots() {
+        const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        const outputDiv = document.getElementById('output');
+        const weekBookings = {};
+        daysOfWeek.forEach(day => (weekBookings[day] = []));
+
+        const now = new Date();
+        const currentWeekStart = new Date(now.setDate(now.getDate() - now.getDay() + 1)); // Start of the current week (Monday)
+        const currentWeekEnd = new Date(currentWeekStart);
+        currentWeekEnd.setDate(currentWeekEnd.getDate() + 6); // End of the current week (Sunday)
+        const currentMonth = new Date().getMonth();
+
+        try {
+            const timeslotResponse = await fetch('../quickmeet_api/apiendpoints.php/timeslot/<?php echo $bookingUrl ?>/bookingurl', {
+                method: 'GET'
+            });
+            const timeslots = await timeslotResponse.json();
+
+            timeslots.forEach(slot => {
+                const startDate = new Date(slot.startdatetime);
+
+                // Skip time slots outside the current week or month
+                if (
+                    startDate < currentWeekStart ||
+                    startDate > currentWeekEnd ||
+                    startDate.getMonth() !== currentMonth
+                ) {
+                    return;
+                }
+
+                // Adjust the day name to start the week on Monday
+                const dayIndex = (startDate.getDay() + 6) % 7; // Sunday becomes 6, Monday becomes 0
+                const dayName = daysOfWeek[dayIndex];
+
+                weekBookings[dayName].push({
+                    title: slot.slottitle,
+                    host: slot.hostname,
+                    location: slot.location,
+                    start: slot.startdatetime,
+                    end: slot.enddatetime,
+                    sid: slot.sid
+                });
+            });
+
+            // Render filtered time slots grouped by day
+            for (const day of daysOfWeek) {
+                const daySection = document.createElement('div');
+                daySection.className = 'day-section';
+                daySection.innerHTML = `<h2>${day}</h2>`;
+
+                // Sort time slots by start time
+                weekBookings[day].sort((a, b) => new Date(a.start) - new Date(b.start));
+
+                if (weekBookings[day].length > 0) {
+                    weekBookings[day].forEach(slot => {
+                        daySection.innerHTML += `
+                            <div class="booking-slot">
+                                <strong>${slot.title}</strong><br>
+                                Host: ${slot.host}<br>
+                                Location: ${slot.location}<br>
+                                ${new Date(slot.start).toLocaleTimeString()} - ${new Date(slot.end).toLocaleTimeString()}<br>
+                                <button onclick="reserveSlot('${slot.sid}')">Reserve</button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    daySection.innerHTML += "<p>No bookings available for this day.</p>";
+                }
+                outputDiv.appendChild(daySection);
+            }
+        } catch (error) {
+            console.error('Error fetching time slots:', error);
+            outputDiv.innerHTML = "<p>Error loading time slots. Please try again later.</p>";
+        }
+    }
+
+    async function reserveSlot(sid) {
+        try {
+            const response = await fetch('../quickmeet_api/apiendpoints.php/reservation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sid: sid })
+            });
+
+            if (response.ok) {
+                alert("You have successfully reserved this time slot!");
+            } else {
+                alert("Failed to reserve the slot.");
+            }
+        } catch (error) {
+            console.error("Error reserving slot:", error);
+            alert("An error occurred while reserving the slot.");
+        }
+    }
+
+    listTimeSlots();
 </script>
+
 
 
 
