@@ -132,7 +132,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             } else {
                 echo json_encode(array("error" => "A timeslot with this booking url was not found"));
             }
-        } else{
+        } 
+        ////new code for num of slots in time slots here
+        if ($paramname == 'numopenslots') {
+            $sql = "SELECT numopenslots FROM Timeslot WHERE sid = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $param);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
+                $numopenslots = $result->fetch_assoc();
+                echo json_encode($numopenslots);
+            } else {
+                echo json_encode(array("error" => "A timeslot with this sid was not found"));
+            }
+        } else if ($paramname == 'maxslots') {
+            $sql = "SELECT maxslots FROM Timeslot WHERE sid = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $param);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
+                $maxslots = $result->fetch_assoc();
+                echo json_encode($maxslots);
+            } else {
+                echo json_encode(array("error" => "A timeslot with this sid was not found"));
+            }
+        }
+        ////end of new code for for num of slots in time slots.
+        
+        else{
             $sql = "SELECT * FROM Timeslot WHERE sid = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("i", $param);
@@ -145,7 +174,73 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode(array("error" => "A timeslot with this sid was not found"));
             }
         }
-    } else if ($resource == 'reservation' && $param != "") {
+
+
+    } 
+    ///////////////////////////////////////new codeeee
+    else if ($resource == 'reservation') {
+        if ($param == 'edit') {
+            $url = $input['reservationurl'];
+            $sid = $input['sid'];
+            $notes = $input['notes'];
+    
+            $sql = "UPDATE Reservation
+            SET sid='$sid',
+            notes='$notes'
+            WHERE reservationurl = '$url';";
+    
+            if ($conn->query($sql)) {
+                echo json_encode(array("message" => "The reservation with this url was updated successfully."));
+            } else {
+                echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));
+            }
+        } else {
+            $url = uniqid('reservation_', true);
+            $sid = $input['sid'];
+            $notes = $input['notes'];
+    
+            // Check available slots
+            $checkSlotSql = "SELECT numopenslots FROM Timeslot WHERE sid = ?";
+            $stmt = $conn->prepare($checkSlotSql);
+            $stmt->bind_param("i", $sid);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $slot = $result->fetch_assoc();
+            $stmt->close();
+    
+            if ($slot && $slot['numopenslots'] > 0) {
+                // Create the reservation
+                $sql = "INSERT INTO Reservation (reservationurl, sid, notes)
+                VALUES ('$url', '$sid', '$notes');";
+    
+                if ($conn->query($sql)) {
+                    // Reduce the number of available slots
+                    $updateSlotSql = "UPDATE Timeslot SET numopenslots = numopenslots - 1 WHERE sid = ? AND numopenslots > 0";
+                    $updateStmt = $conn->prepare($updateSlotSql);
+                    $updateStmt->bind_param("i", $sid);
+                    $updateStmt->execute();
+                    $updateStmt->close();
+    
+                    echo json_encode(array(
+                        "message" => "The reservation was created successfully",
+                        "reservation_url" => "http://localhost/quickmeet/quickmeet_api/reservation.php?url=" . urlencode($url)
+                    ));
+                } else {
+                    echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));
+                }
+            } else {
+                echo json_encode(array("error" => "No available slots for this time slot."));
+            }
+        }
+    }
+///////////////////////////// end of new code    
+    
+    
+    
+    
+    
+    
+    else if ($resource == 'reservation' && $param != "") {
         $sql = "SELECT * FROM Reservation WHERE reservationurl = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $param);
@@ -252,6 +347,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             }
         }
     } else if ($resource == 'timeslot'){
+        // new code for time slot maxslots and other handling
+        if ($paramname == 'increment' || $paramname == 'decrement') {
+            $field = $input['field']; // Expected values: 'numopenslots' or 'maxslots'
+            $sid = $input['sid'];
+        
+            // Validate the field
+            if (!in_array($field, ['numopenslots', 'maxslots'])) {
+                echo json_encode(array("error" => "Invalid field specified."));
+                return;
+            }
+        
+            // Determine the operation
+            if ($paramname === 'increment') {
+                $operation = "$field = $field + 1";
+            } else {
+                // Decrement operation
+                if ($field === 'numopenslots') {
+                    $operation = "$field = GREATEST($field - 1, 0)"; // Ensure numopenslots is never less than 0
+                } else {
+                    $operation = "$field = $field - 1"; // maxslots can go below 0 if necessary
+                }
+            }
+        
+            // Perform the update
+            $sql = "UPDATE Timeslot SET $operation WHERE sid = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $sid);
+        
+            if ($stmt->execute() && $stmt->affected_rows > 0) {
+                echo json_encode(array("message" => "$field successfully updated for sid $sid."));
+            } else {
+                echo json_encode(array("error" => "Failed to update $field for sid $sid."));
+            }
+        
+            return;
+        }
+       
+        // end of new code for time slot maxslots and other handling.
+        
         if ($param == 'edit'){
             $sid = $input['sid'];
             $title = $input['slottitle'];
@@ -285,8 +419,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $location = $input['location'];
             $start = $input['startdatetime'];
             $end = $input['enddatetime'];
-            $numslots = $input['numopenslots'];
+            // $numslots = $input['numopenslots'];
             $maxslots = $input['maxslots'];
+            $numslots = $maxslots;
             $sql = "INSERT INTO Timeslot (bookingurl, slottitle, hostname, location, startdatetime, enddatetime, numopenslots, maxslots)
             VALUES ('$url', '$title', '$host', '$location', '$start', '$end', '$numslots', '$maxslots');";
             

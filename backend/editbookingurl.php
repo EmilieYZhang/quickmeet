@@ -250,6 +250,7 @@ $conn->close();
                     location: location,
                     startdatetime: startTime,
                     enddatetime: endTime,
+                    // numopenslots: maxSlots;
                     maxslots: maxSlots
                 })
             });
