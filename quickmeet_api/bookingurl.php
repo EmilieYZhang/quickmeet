@@ -122,6 +122,7 @@ if ($bookingUrl) {
         <style>
         body {
             font-family: Arial, sans-serif;
+            font-family: 
             margin: 20px;
             background-color: #f9f9f9;
         }
@@ -147,6 +148,7 @@ if ($bookingUrl) {
             background-color: #e7f3ff;
             border-radius: 5px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            
         }
         button {
             background-color: #007bff;
@@ -245,7 +247,7 @@ if ($bookingUrl) {
             }
         } catch (error) {
             console.error('Error fetching time slots:', error);
-            outputDiv.innerHTML = "<p>Error loading time slots. Please try again later.</p>";
+            outputDiv.innerHTML = "";
         }
     }
 

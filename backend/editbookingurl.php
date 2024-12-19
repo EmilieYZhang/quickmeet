@@ -218,7 +218,7 @@ $conn->close();
         <button  onclick="ViewAvailability()">View Availability Requests</button>
     </div>
 <ul id="availability-list"></ul>
-
+<!-- this is for add new time -->
 <div id="timeslotModal" class="modal" 
         style="display: none;
          
@@ -244,6 +244,30 @@ $conn->close();
             <input type="datetime-local" id="endTime" placeholder="End Time" required><br><br>
             <input type="number" id="maxSlots" placeholder="Max Slots" required><br><br>
             <button type="button" onclick="submitTimeslot()">Add Time Slot</button>
+        </form>
+    </div>
+</div>
+
+<!-- this is for Edit booking -->
+
+<div id="editBookingModal" class="modal" 
+    style="display: none; 
+           text-align: center; 
+           width: 100%; 
+           margin: auto;">
+    <div class="modal-content" style="position: relative;">
+        <span class="close" 
+            style="color: white; cursor: pointer; position: absolute; top: 5px; right: 10px;" 
+            onclick="closeEditBookingModal()">
+            &times;
+        </span>
+        <form id="editBookingForm">
+            <h3>Edit Booking</h3>
+            <input type="text" id="bookingTitle" placeholder="Booking Title" required><br><br>
+            <textarea id="bookingDescription" placeholder="Description" style="width: 300px; height: 100px;"></textarea><br><br>
+            <input type="datetime-local" id="bookingStartTime" placeholder="Start Time" required><br><br>
+            <input type="datetime-local" id="bookingEndTime" placeholder="End Time" required><br><br>
+            <button type="button" onclick="submitEditBooking()">Save Changes</button>
         </form>
     </div>
 </div>
@@ -304,9 +328,79 @@ $conn->close();
         }
     }
 
-    function EditBooking(){
-        return true;
+// start of script for edit booking
+function EditBooking() {
+        // Fetch the current booking details
+        const bookingTitleInput = document.getElementById('bookingTitle');
+        const bookingDescriptionInput = document.getElementById('bookingDescription');
+        const bookingStartTimeInput = document.getElementById('bookingStartTime');
+        const bookingEndTimeInput = document.getElementById('bookingEndTime');
+
+        //here I fill the modal with the current descriptions etc..
+        fetch(`../quickmeet_api/apiendpoints.php/booking/${bkurl}/bookingurl`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch booking details.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                bookingTitleInput.value = data.bookingtitle || '';
+                bookingDescriptionInput.value = data.bookingdescription || '';
+                bookingStartTimeInput.value = data.startdatetime || '';
+                bookingEndTimeInput.value = data.enddatetime || '';
+                document.getElementById('editBookingModal').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error fetching booking details:', error);
+                alert('Failed to load booking details.');
+            });
     }
+
+    function closeEditBookingModal() {
+        document.getElementById('editBookingModal').style.display = 'none';
+    }
+
+    async function submitEditBooking() {
+        const bookingTitle = document.getElementById('bookingTitle').value;
+        const bookingDescription = document.getElementById('bookingDescription').value;
+        const bookingStartTime = document.getElementById('bookingStartTime').value;
+        const bookingEndTime = document.getElementById('bookingEndTime').value;
+
+        // Validate inputs
+        if (!bookingTitle || !bookingStartTime || !bookingEndTime) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+
+        try {
+            const response = await fetch('../quickmeet_api/apiendpoints.php/booking/edit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    bookingurl: bkurl,
+                    bookingtitle: bookingTitle,
+                    bookingdescription: bookingDescription,
+                    startdatetime: bookingStartTime,
+                    enddatetime: bookingEndTime
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Booking updated successfully!');
+                closeEditBookingModal();
+                location.reload(); // Reload the page
+            } else {
+                alert('Failed to update booking: ' + result.error);
+            }
+        } catch (error) {
+            console.error('Error updating booking:', error);
+            alert('An error occurred while updating the booking.');
+        }
+    }
+    //end of script for edit booking
 
     function ViewAvailability(){
         fetch('../quickmeet_api/apiendpoints.php/availability/<?php echo $ogbookingurl ?>/bookingurl', { method: 'GET' })
