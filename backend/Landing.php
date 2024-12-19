@@ -104,6 +104,12 @@ include '../backend/header.php';  // This will handle session and DB connection
         .logoForPhone{
             display: none;
         }
+	.hamburger {
+	    display: none;
+	}
+ 	.header {
+	    display: block;
+	}
 
     </style>
     <link href="../FrontEndCode/Landing.css" rel="stylesheet">
@@ -115,8 +121,6 @@ include '../backend/header.php';  // This will handle session and DB connection
 
         <img class = "BOOKimg" src="../FrontEndCode/BOOKCoolcolor.jpg">
     </div>
-
-
 
         <div class="calendar">
                 <div class="day">Mon</div>
@@ -130,11 +134,13 @@ include '../backend/header.php';  // This will handle session and DB connection
 
 
     <script src="../FrontEndCode/Landing.js"></script>
+
     <script>
-        function dropDownMenu() {
-            const linksForPhone = document.querySelector(".LinksForPhone");
-            linksForPhone.classList.toggle('show');
-        }
+    function dropDownMenu() {
+        const linksForPhone = document.querySelector(".LinksForPhone");
+        linksForPhone.classList.toggle('show');
+    }
     </script>
+
 </body>
 </html>

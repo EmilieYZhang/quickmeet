@@ -34,7 +34,7 @@ include '../backend/header.php';
 
         .faq-question {
             font-size: 18px;
-	    font-family: "Segoe UI"
+	    font-family: "Segoe UI";
             color: #ffffff;
             cursor: pointer;
             margin: 0;
