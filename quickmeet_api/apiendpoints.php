@@ -134,31 +134,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         } 
         ////new code for num of slots in time slots here
-        if ($paramname == 'numopenslots') {
-            $sql = "SELECT numopenslots FROM Timeslot WHERE sid = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("i", $param);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            if ($result->num_rows > 0) {
-                $numopenslots = $result->fetch_assoc();
-                echo json_encode($numopenslots);
-            } else {
-                echo json_encode(array("error" => "A timeslot with this sid was not found"));
-            }
-        } else if ($paramname == 'maxslots') {
-            $sql = "SELECT maxslots FROM Timeslot WHERE sid = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("i", $param);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            if ($result->num_rows > 0) {
-                $maxslots = $result->fetch_assoc();
-                echo json_encode($maxslots);
-            } else {
-                echo json_encode(array("error" => "A timeslot with this sid was not found"));
-            }
-        }
+        // if ($paramname == 'numopenslots') {
+        //     $sql = "SELECT numopenslots FROM Timeslot WHERE sid = ?";
+        //     $stmt = $conn->prepare($sql);
+        //     $stmt->bind_param("i", $param);
+        //     $stmt->execute();
+        //     $result = $stmt->get_result();
+        //     if ($result->num_rows > 0) {
+        //         $numopenslots = $result->fetch_assoc();
+        //         echo json_encode($numopenslots);
+        //     } else {
+        //         echo json_encode(array("error" => "A timeslot with this sid was not found"));
+        //     }
+        // } else if ($paramname == 'maxslots') {
+        //     $sql = "SELECT maxslots FROM Timeslot WHERE sid = ?";
+        //     $stmt = $conn->prepare($sql);
+        //     $stmt->bind_param("i", $param);
+        //     $stmt->execute();
+        //     $result = $stmt->get_result();
+        //     if ($result->num_rows > 0) {
+        //         $maxslots = $result->fetch_assoc();
+        //         echo json_encode($maxslots);
+        //     } else {
+        //         echo json_encode(array("error" => "A timeslot with this sid was not found"));
+        //     }
+        // }
         ////end of new code for for num of slots in time slots.
         
         else{
@@ -311,7 +311,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
             if ($conn->query($sql)) {
                 echo json_encode(array("message" => "The booking with this url was updated successfully."));
-                error_log("Booking created successfully with ID: $booking_id");
             } else {
                 echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));
             }
@@ -332,111 +331,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $booking_id = $conn->insert_id;
 
                 if($booking_id){
-                    error_log("User ID passed: $uid");
-                    $userEmailQuery = "SELECT email FROM users WHERE id = ?";
-                    $stmt = $conn->prepare($userEmailQuery);
-                    if (!$stmt) {
-                        error_log("Failed to prepare email query: " . $conn->error);
-                        echo json_encode(array("error" => "Internal Server Error"));
-                        exit;
-                    }
-                    error_log("Fetching email for UID: $uid");
-                    $stmt->bind_param("i", $uid);
-                    $stmt->execute();
-                    $result = $stmt->get_result(); 
-
-                    if ($result->num_rows > 0) {
-                        $user = $result->fetch_assoc();
-                        $toEmail = $user['email'];
-                        //error_log("Email fetched for user ID $id: $toEmail");
-
-                        require __DIR__ . '/../backend/email_helper.php';
-
-                        $subject = "Booking Confirmation";
-                        $body = "<h1>Booking Created Successfully</h1>
-                                <p>Your booking with the following details has been created:</p>
-                                 <ul>
-                                    <li><strong>Booking Title:</strong> $title</li>
-                                    <li><strong>Start Date & Time:</strong> $start</li>
-                                    <li><strong>End Date & Time:</strong> $end</li>
-                                    <li><strong>Description:</strong> $description</li>
-                                </ul>
-                                <p>You can manage your booking using the following links:</p>
-                                <p>Booking URL: <a href='http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url) . "'>View Booking</a></p>
-                                <p>Edit URL: <a href='http://localhost/quickmeet/quickmeet_api/editbookingurl.php?url=" . urlencode($editurl) . "'>Edit Booking</a></p>";
-
-
-                                if (sendEmail($toEmail, $subject, $body)) {
-                                    error_log("Email sent successfully to $toEmail");
-                                    echo json_encode(array(
-                                        "message" => "The booking was created successfully, and a confirmation email was sent.",
-                                        "booking_id" => $booking_id,
-                                        "booking_url" => "http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url)
-                                    ));
-                                }
-                                else{ 
-                                    error_log("Failed to send email to $toEmail");
-                                    echo json_encode(array(
-                                    "message" => "The booking was created successfully, but the confirmation email failed to send.",
-                                    "booking_id" => $booking_id,
-                                    "booking_url" => "http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url)
-                                ));
-                            }
-                        } else {
-                            error_log("No email found for user ID $id");
-                            echo json_encode(array(
-                                "message" => "The booking was created, but user email could not be found.",
-                                "booking_id" => $booking_id,
-                                "booking_url" => "http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url)
-                            ));
-                        }
-                    } else {
-                        error_log("Booking creation failed: " . $conn->error);
-                        echo json_encode(array(
-                            "error" => "Error: Unable to retrieve booking ID after insert."
-                        ));
-                    }
+                    echo json_encode(array(
+                        "message" => "The booking was created successfully",
+                        "booking_id" => $booking_id,
+                        "booking_url" => "http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url),
+                        "editbooking_url" => "http://localhost/quickmeet/quickmeet_api/editbookingurl.php?url=" . urlencode($editurl)
+                    ));
                 } else {
-                    echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));
+                    echo json_encode(array(
+                        "error" => "Error: Unable to retrieve booking ID after update."
+                    ));
                 }
+            } else {
+                echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));
             }
+        }
     } else if ($resource == 'timeslot'){
         // new code for time slot maxslots and other handling
-        if ($paramname == 'increment' || $paramname == 'decrement') {
-            $field = $input['field']; // Expected values: 'numopenslots' or 'maxslots'
-            $sid = $input['sid'];
-        
-            // Validate the field
-            if (!in_array($field, ['numopenslots', 'maxslots'])) {
-                echo json_encode(array("error" => "Invalid field specified."));
-                return;
-            }
-        
-            // Determine the operation
-            if ($paramname === 'increment') {
-                $operation = "$field = $field + 1";
-            } else {
-                // Decrement operation
-                if ($field === 'numopenslots') {
-                    $operation = "$field = GREATEST($field - 1, 0)"; // Ensure numopenslots is never less than 0
-                } else {
-                    $operation = "$field = $field - 1"; // maxslots can go below 0 if necessary
-                }
-            }
-        
-            // Perform the update
-            $sql = "UPDATE Timeslot SET $operation WHERE sid = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("i", $sid);
-        
-            if ($stmt->execute() && $stmt->affected_rows > 0) {
-                echo json_encode(array("message" => "$field successfully updated for sid $sid."));
-            } else {
-                echo json_encode(array("error" => "Failed to update $field for sid $sid."));
-            }
-        
-            return;
-        }
        
         // end of new code for time slot maxslots and other handling.
         
