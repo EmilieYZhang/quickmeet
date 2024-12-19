@@ -163,12 +163,48 @@ $conn->close();
             height: 50px;
             cursor: pointer;
             font-size: 15px;
-            font-weight: 600;    
+            font-weight: 600;  
+            border: none;  
         }
 
         button:hover {
-        background-color: #38C4DB;
-    }
+            background-color: #469FF0;
+        }
+
+        .modal {
+            position: fixed; /* Ensures it stays in place relative to the viewport */
+            top: 0;
+            left: 0;
+            width: 100%; /*careful there is inline css for this.*/ 
+            height: 100%; 
+            background-color: rgba(0, 0, 0, 0.5); 
+            z-index: 1000; 
+            display: none; 
+            backdrop-filter: blur(5px);
+
+        }
+        .modal-content{
+            background-color: #0C3D65;
+            border-radius: 8px;
+            width: 500px;
+            margin: auto;
+            padding: 15px 20px;
+            position: relative;
+            top: 20%; /* Push the modal to the vertical center */
+            transform: translateY(-50%); /* Center it vertically */
+            z-index: 1001;
+            text-align: center;
+        }
+
+        input {
+            width: 300px; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            box-sizing: border-box; 
+        }
+
     </style>
 
 
@@ -187,17 +223,18 @@ $conn->close();
         style="display: none;
          
          text-align: center;
-         width: 50%; 
+         width: 100%; 
          margin: auto;
         
         ">
 
 
-    <div class="modal-content">
-
-        <span class="close" style = "color: white; cursor: pointer; "onclick="closeModal()">&times;</span>
-
-
+    <div class="modal-content" style="position: relative;">
+        <span class="close" 
+            style="color: white; cursor: pointer; position: absolute; top: 5px; right: 10px;" 
+            onclick="closeModal()">
+            &times;
+        </span>
         <!-- <h2>Add New Time Slot</h2> -->
         <form id="timeslotForm">
             <input type="text" id="slotTitle" placeholder="Time Slot Title" required><br><br>
@@ -250,6 +287,7 @@ $conn->close();
                     location: location,
                     startdatetime: startTime,
                     enddatetime: endTime,
+                    // numopenslots: maxSlots;
                     maxslots: maxSlots
                 })
             });
