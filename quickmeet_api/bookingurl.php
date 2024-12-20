@@ -165,12 +165,34 @@ if ($bookingUrl) {
             display: flex;
         }
 
+        .email-input input {
+            border: 1px solid #ccc; 
+            border-radius: 20px; 
+            padding: 10px 15px; 
+            width: 33%; 
+            font-size: 16px; 
+            box-sizing: border-box; 
+            margin-top: 20px;
+            outline: none; 
+        }
+        .email-input label {
+            color: white; /* Sets the text color to white */
+            font-size: 16px; /* Adjusts the font size */
+            font-weight: bold; /* Makes the text bold (optional) */
+        }
+
+
 
     </style>
 
 
     </head>
     <body>
+        <br>
+    <div class="email-input">
+            <label for="email">Enter your email if you want to receive a confiramtion :</label> <br>
+            <input type="email" id="email" placeholder="example@example.com" required>
+    </div>
 
 <div id="output" class="outputDiv"></div>
 

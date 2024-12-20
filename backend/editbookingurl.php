@@ -285,48 +285,122 @@ $conn->close();
 
     const bkurl = "<?php echo htmlspecialchars($ogbookingurl); ?>";
 
-    async function submitTimeslot() {
-        console.log('Booking URL:', bkurl);
-        const slotTitle = document.getElementById('slotTitle').value;
-        const hostName = document.getElementById('hostName').value;
-        const location = document.getElementById('location').value;
-        const startTime = document.getElementById('startTime').value;
-        const endTime = document.getElementById('endTime').value;
-        const maxSlots = document.getElementById('maxSlots').value;
+    // old add time slot which is working for single event
+    // async function submitTimeslot() {
+    //     console.log('Booking URL:', bkurl);
+    //     const slotTitle = document.getElementById('slotTitle').value;
+    //     const hostName = document.getElementById('hostName').value;
+    //     const location = document.getElementById('location').value;
+    //     const startTime = document.getElementById('startTime').value;
+    //     const endTime = document.getElementById('endTime').value;
+    //     const maxSlots = document.getElementById('maxSlots').value;
 
-        // Validate inputs
-        if (!slotTitle || !hostName || !location || !startTime || !endTime || !maxSlots) {
-            alert('Please fill in all fields.');
+    //     // Validate inputs
+    //     if (!slotTitle || !hostName || !location || !startTime || !endTime || !maxSlots) {
+    //         alert('Please fill in all fields.');
+    //         return;
+    //     }
+
+    //     try {
+    //         const response = await fetch('../quickmeet_api/apiendpoints.php/timeslot', {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify({
+    //                 bookingurl: bkurl, 
+    //                 slottitle: slotTitle,
+    //                 hostname: hostName,
+    //                 location: location,
+    //                 startdatetime: startTime,
+    //                 enddatetime: endTime,
+    //                 // numopenslots: maxSlots;
+    //                 maxslots: maxSlots
+    //             })
+    //         });
+
+    //         if (response.ok) {
+    //             alert('Time slot added successfully!');
+    //             closeModal();
+    //         } else {
+    //             alert('Failed to add the time slot.');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error adding time slot:', error);
+    //         alert('An error occurred while adding the time slot.');
+    //     }
+    // }
+    //end of old add time slot which is working
+
+    //new timeslot for reccuring add
+    async function submitTimeslot() {
+    console.log('Booking URL:', bkurl);
+    const slotTitle = document.getElementById('slotTitle').value;
+    const hostName = document.getElementById('hostName').value;
+    const location = document.getElementById('location').value;
+    const startTime = document.getElementById('startTime').value;
+    const endTime = document.getElementById('endTime').value;
+    const maxSlots = document.getElementById('maxSlots').value;
+
+    // Validate inputs
+    if (!slotTitle || !hostName || !location || !startTime || !endTime || !maxSlots) {
+        alert('Please fill in all fields.');
+        return;
+    }
+
+    try {
+        // Fetch the booking details to get the booking start and end date
+        const bookingResponse = await fetch(`../quickmeet_api/apiendpoints.php/booking/${bkurl}/bookingurl`);
+        const bookingDetails = await bookingResponse.json();
+
+        if (!bookingResponse.ok) {
+            alert('Failed to fetch booking details.');
             return;
         }
 
-        try {
-            const response = await fetch('../quickmeet_api/apiendpoints.php/timeslot', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    bookingurl: bkurl, 
-                    slottitle: slotTitle,
-                    hostname: hostName,
-                    location: location,
-                    startdatetime: startTime,
-                    enddatetime: endTime,
-                    // numopenslots: maxSlots;
-                    maxslots: maxSlots
-                })
-            });
+        const bookingStart = new Date(bookingDetails.startdatetime);
+        const bookingEnd = new Date(bookingDetails.enddatetime);
 
-            if (response.ok) {
-                alert('Time slot added successfully!');
-                closeModal();
-            } else {
-                alert('Failed to add the time slot.');
+        // Create a recurring schedule
+        const slotStartTime = new Date(startTime);
+        const slotEndTime = new Date(endTime);
+
+        while (slotStartTime <= bookingEnd) {
+            // Skip time slots that are before the booking start date
+            if (slotStartTime >= bookingStart) {
+                // Make a POST request for the current time slot
+                const response = await fetch('../quickmeet_api/apiendpoints.php/timeslot', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        bookingurl: bkurl,
+                        slottitle: slotTitle,
+                        hostname: hostName,
+                        location: location,
+                        startdatetime: slotStartTime.toISOString(),
+                        enddatetime: slotEndTime.toISOString(),
+                        maxslots: maxSlots
+                    })
+                });
+
+                if (!response.ok) {
+                    console.error('Failed to create time slot:', await response.text());
+                    alert('Failed to create one or more time slots.');
+                    return;
+                }
             }
-        } catch (error) {
-            console.error('Error adding time slot:', error);
-            alert('An error occurred while adding the time slot.');
+
+            // Move to the same time next week
+            slotStartTime.setDate(slotStartTime.getDate() + 7);
+            slotEndTime.setDate(slotEndTime.getDate() + 7);
         }
+
+        alert('Recurring time slots added successfully!');
+        closeModal();
+    } catch (error) {
+        console.error('Error adding time slots:', error);
+        alert('An error occurred while adding the time slots.');
     }
+}
+//end of new time slot add
 
 // start of script for edit booking
 function EditBooking() {
