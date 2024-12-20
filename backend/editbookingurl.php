@@ -179,7 +179,7 @@ $conn->close();
         }
 
         input {
-            width: 300px; 
+            width: 70%; 
             padding: 10px; 
             border: 1px solid #ccc; 
             border-radius: 8px; 
@@ -419,7 +419,7 @@ $conn->close();
             <input type="datetime-local" id="startTime" placeholder="Start Time" required><br><br>
             <input type="datetime-local" id="endTime" placeholder="End Time" required><br><br>
             <input type="number" id="maxSlots" placeholder="Max Slots" required min="1"><br><br>
-            <button type="button" onclick="submitTimeslot()">Add Time Slot</button>
+            <button type="button" onclick="submitTimeslot()" style="width: 70%;">Add Time Slot</button>
         </form>
     </div>
 </div>
