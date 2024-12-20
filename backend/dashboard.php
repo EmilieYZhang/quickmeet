@@ -206,8 +206,6 @@ $bookingStmt->close();
             .endMonthDay{
                 display: flex;
             }
-
-        }
     </style>
 </head>
 <body style="background-color: #0C3D65;">
@@ -278,8 +276,8 @@ $bookingStmt->close();
                             echo "<tr>
                                 <td>" . ($index + 1) . "</td>
                                 <td>" . htmlspecialchars($booking['bookingtitle']) . "</td>
-                                <td><a href='" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>" . htmlspecialchars($booking['bookingurl']) . "</a></td>
-                            </tr>";
+                                <td><a href='http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>" . htmlspecialchars($booking['bookingurl']) . "</a></td>
+                                </tr>";
                         }
                     }
 
@@ -302,6 +300,12 @@ $bookingStmt->close();
                 <input type="text" name="bdescription" placeholder="Booking Description" required><br><br>
                 <div class="dropdown-container">
                     <div class="startMonthDay">
+                        <select id="startYear" class="dropdown" name="startYear">
+                            <option value="" disabled selected>starting year</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                        </select>
                         <select id="startMonth" class="dropdown" name="startMonth">
                             <option value="" disabled selected>starting month</option>
                             <option value="01">January</option>
@@ -355,6 +359,12 @@ $bookingStmt->close();
                     </div>
 
                     <div class="endMonthDay">
+                    <select id="endYear" class="dropdown" name="endYear">
+                            <option value="" disabled selected>ending year</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                        </select>
                         <select id="date" class="dropdown" name="endMonth" >
                             <option value="" disabled selected>ending month</option>
                             <option value="01">January</option>
@@ -432,14 +442,16 @@ $bookingStmt->close();
             const bookingTitle = document.forms["Form"]["btitle"].value;
             const bookingDescription = document.forms["Form"]["bdescription"].value;
 
+            const bookingStartYear = document.forms["Form"]["startYear"].value;
             const bookingStartMonth = document.forms["Form"]["startMonth"].value;
             const bookingStartDay = document.forms["Form"]["startDay"].value;
 
+            const bookingEndYear = document.forms["Form"]["endYear"].value;
             const bookingEndMonth = document.forms["Form"]["endMonth"].value;
             const bookingEndDay = document.forms["Form"]["endDay"].value;
 
-            const startDatetime = "2024-" + bookingStartMonth + "-" + bookingStartDay + " " + "00:00:00";
-            const endDatetime = "2024-" + bookingEndMonth + "-" + bookingEndDay + " " + "23:59:00";
+            const startDatetime = bookingStartYear + "-" + bookingStartMonth + "-" + bookingStartDay + " " + "00:00:00";
+            const endDatetime = bookingEndYear + "-" + bookingEndMonth + "-" + bookingEndDay + " " + "23:59:00";
      
 
             // Check if data exists before proceeding
@@ -467,7 +479,7 @@ $bookingStmt->close();
             })
             .then(newBooking => {
                 alert(`Booking created: ${newBooking.booking_id} - ${newBooking.booking_url}`);
-                window.location.href = newBooking.booking_url; // Redirect to the booking URL
+                window.location.href = newBooking.editbooking_url; // Redirect to the booking URL
             })
             .catch(error => {
                 console.error('Error:', error);

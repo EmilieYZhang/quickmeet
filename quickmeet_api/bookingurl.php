@@ -1,4 +1,8 @@
 <?php
+include '../backend/bookingpagesheader.php';
+?>
+
+<?php
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: text/html; charset=utf-8');
 
@@ -32,6 +36,7 @@ if ($conn->connect_error) {
 // ** ---------------- **//
 
 $bookingUrl = $_GET['url'] ?? null;
+$Tnow = time();
 
 if ($bookingUrl) {
     // Fetch the booking details
@@ -56,7 +61,8 @@ if ($bookingUrl) {
         <head>
             <meta charset='UTF-8'>
             <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-            <title>Booking Details</title>
+            <title>Booking Timeslot Reservation</title>
+
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -150,6 +156,22 @@ if ($bookingUrl) {
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             
         }
+        .booking-slot-full {
+            margin: 10px 0;
+            padding: 10px;
+            background-color:rgb(253, 175, 175);
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            
+        }
+        .booking-slot-past {
+            margin: 10px 0;
+            padding: 10px;
+            background-color:rgb(188, 188, 188);
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            
+        }
         button {
             background-color: #007bff;
             color: white;
@@ -180,17 +202,37 @@ if ($bookingUrl) {
             font-size: 16px; /* Adjusts the font size */
             font-weight: bold; /* Makes the text bold (optional) */
         }
+        .modal {
+            position: fixed; /* Ensures it stays in place relative to the viewport */
+            top: 0;
+            left: 0;
+            width: 100%; /*careful there is inline css for this.*/ 
+            height: 100%; 
+            background-color: rgba(0, 0, 0, 0.5); 
+            z-index: 1000; 
+            display: none; 
+            backdrop-filter: blur(5px);
 
-
-
+        }
+        .modal-content{
+            background-color: #0C3D65;
+            border-radius: 8px;
+            width: 500px;
+            margin-top: 50%;
+            margin: auto;
+            padding: 15px 20px;
+            position: relative;
+            top: 50%; /* Push the modal to the vertical center */
+            transform: translateY(-50%); /* Center it vertically */
+            z-index: 1001;
+            text-align: center;
+        }
     </style>
-
-
     </head>
     <body>
         <br>
     <div class="email-input">
-            <label for="email">Enter your email if you want to receive a confiramtion :</label> <br>
+            <label for="email">Enter your email if you want to receive a confirmation :</label> <br>
             <input type="email" id="email" placeholder="example@example.com" required>
     </div>
 
@@ -235,6 +277,8 @@ if ($bookingUrl) {
                     title: slot.slottitle,
                     host: slot.hostname,
                     location: slot.location,
+                    maxslots: slot.maxslots,
+                    numopenslots: slot.numopenslots,
                     start: slot.startdatetime,
                     end: slot.enddatetime,
                     sid: slot.sid
@@ -252,15 +296,42 @@ if ($bookingUrl) {
 
                 if (weekBookings[day].length > 0) {
                     weekBookings[day].forEach(slot => {
-                        daySection.innerHTML += `
-                            <div class="booking-slot">
+                        //const now = time();
+                        console.log(new Date());
+                        console.log(`Past time: ${slot.end}`);
+                        //console.log(now);
+                        if (new Date(slot.end) < new Date()){
+                            daySection.innerHTML += `
+                            <div class="booking-slot-past">
                                 <strong>${slot.title}</strong><br>
                                 Host: ${slot.host}<br>
                                 Location: ${slot.location}<br>
+                                Availability: PAST - ${slot.numopenslots}/${slot.maxslots}<br>
                                 ${new Date(slot.start).toLocaleTimeString()} - ${new Date(slot.end).toLocaleTimeString()}<br>
-                                <button onclick="reserveSlot('${slot.sid}')">Reserve</button>
                             </div>
-                        `;
+                            `;
+                        } else if (slot.numopenslots == 0) {
+                            daySection.innerHTML += `
+                            <div class="booking-slot-full">
+                                <strong>${slot.title}</strong><br>
+                                Host: ${slot.host}<br>
+                                Location: ${slot.location}<br>
+                                Availability: FULL - 0/${slot.maxslots}<br>
+                                ${new Date(slot.start).toLocaleTimeString()} - ${new Date(slot.end).toLocaleTimeString()}<br>
+                            </div>
+                            `;
+                        } else {
+                            daySection.innerHTML += `
+                                <div class="booking-slot">
+                                    <strong>${slot.title}</strong><br>
+                                    Host: ${slot.host}<br>
+                                    Location: ${slot.location}<br>
+                                    Availability: ${slot.numopenslots}/${slot.maxslots}<br>
+                                    ${new Date(slot.start).toLocaleTimeString()} - ${new Date(slot.end).toLocaleTimeString()}<br>
+                                    <button onclick="reserveSlot('${slot.sid}')">Reserve</button>
+                                </div>
+                            `;
+                        }
                     });
                 } else {
                     daySection.innerHTML += "<p>No bookings available for this day.</p>";
@@ -274,61 +345,119 @@ if ($bookingUrl) {
     }
 
     async function reserveSlot(sid) {
-        try {
-            const response = await fetch('../quickmeet_api/apiendpoints.php/reservation', {
+        const toemail = document.getElementById('email').value ?? '';
+        // if yes, reserve        
+        fetch('../quickmeet_api/apiendpoints.php/reservation', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sid: sid })
+                body: JSON.stringify({
+                    sid: sid,
+                    email: toemail,
+                    notes: ""
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok, failed to reserve.');
+                }
+                return response.json();
+            })
+            .then(newReservation => {
+                alert(`Success! Reservation created: ${newReservation.reservation_url}`);
+                window.location.href = newReservation.reservation_url; // Redirect to the reservation URL
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Failed to create booking.");
             });
-
-            if (response.ok) {
-                alert("You have successfully reserved this time slot!");
-            } else {
-                alert("Failed to reserve the slot.");
-            }
-        } catch (error) {
-            console.error("Error reserving slot:", error);
-            alert("An error occurred while reserving the slot.");
-        }
     }
-//     async function reserveSlot(sid, buttonElement) {
-//     try {
-//         const response = await fetch('../quickmeet_api/apiendpoints.php/reservation', {
-//             method: 'POST',
-//             headers: { 'Content-Type': 'application/json' },
-//             body: JSON.stringify({ sid: sid })
-//         });
-
-//         const data = await response.json();
-//         if (response.ok) {
-//             // Locate the parent container of the button
-//             const bookingSlot = buttonElement.parentElement;
-
-//             // Find the "places left" text element
-//             const availableSlotsText = bookingSlot.querySelector('strong:nth-of-type(2)');
-//             let availableSlots = parseInt(availableSlotsText.textContent.split(' ')[0], 10);
-
-//             if (availableSlots > 1) {
-//                 availableSlots -= 1;
-//                 availableSlotsText.textContent = `${availableSlots} places left`;
-//                 alert(data.message);
-//             } else {
-//                 availableSlotsText.textContent = "No places left";
-//                 buttonElement.disabled = true; // Disable the button
-//                 alert("You have successfully reserved the last slot!");
-//             }
-//         } else {
-//             alert(data.error || "Failed to reserve the slot.");
-//         }
-//     } catch (error) {
-//         console.error("Error reserving slot:", error);
-//         alert("An error occurred while reserving the slot.");
-//     }
-// }
-
-
-
     listTimeSlots();
+</script>
+
+<div class = buttons>
+    <button onclick="openRequestAvailability()">Request a Timeslot Availability</button>
+</div>
+
+<div id="requestAvailabilityModal" class="modal" 
+        style="display: none;
+         
+         text-align: center;
+         width: 100%; 
+         margin: auto;
+        
+        ">
+
+
+    <div class="modal-content" style="position: relative;">
+        <span class="close" 
+            style="color: white; cursor: pointer; position: absolute; top: 5px; right: 10px;" 
+            onclick="closeRequestAvailabilityModal()">
+            &times;
+        </span>
+        <!-- <h2>Request Availability </h2> -->
+        <form id="timeslotForm">
+            <h3 style="color: white;">Request New Availability</h3>
+            <input type="datetime-local" id="availstartTime" placeholder="Start Time" required><br><br>
+            <input type="datetime-local" id="availendTime" placeholder="End Time" required><br><br>
+            <button type="button" onclick="submitAvailability()">Send</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function closeRequestAvailabilityModal(){
+        document.getElementById('requestAvailabilityModal').style.display = 'none';
+    }
+
+    function openRequestAvailability(){
+        document.getElementById('requestAvailabilityModal').style.display = 'block';
+    }
+
+    function submitAvailability(){
+        const availStartTime = document.getElementById('availstartTime').value;
+        const availEndTime = document.getElementById('availendTime').value;
+
+        // Validate inputs
+        if (!availStartTime || !availEndTime) {
+            alert('Please fill in all required fields.');
+            return false;
+        }
+
+        // edge case
+        if (availStartTime >= availEndTime){
+            alert('The start date must be before end date.');
+            return false;
+        }
+
+        try {
+            const bkurl = "<?php echo htmlspecialchars($bookingUrl); ?>";
+
+            fetch('../quickmeet_api/apiendpoints.php/availability', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    bookingurl: bkurl,
+                    startdatetime: availStartTime,
+                    enddatetime: availEndTime
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    alert('Failed to send availability request: ' + response.error);
+                }
+                else {
+                    console.log(response);
+                    alert('Availability Request sent successfully!');
+                    closeRequestAvailabilityModal();
+                }
+            })
+        } catch (error) {
+            console.error('Error sending availability request:', error);
+            alert('An error occurred while requesting the timeslot availability.');
+        }
+
+        return false;
+    }
 </script>
 
     </body>

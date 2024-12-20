@@ -154,8 +154,7 @@ if (isset($_SESSION['ticket'])) {
         <div class="Links">
             <a href="../backend/dashboard.php">Dashboard</a>
             <a href="../backend/FAQ.php">FAQ</a>
-            <a href="#">Tutorial</a>
-            <a href="../backend/BookNow.php">Book now</a>
+            <a href="../backend/BookNow.php">Search Booking</a>
             <a href="../backend/logout.php">Logout</a>
         </div>
     <?php else: ?>
@@ -164,8 +163,7 @@ if (isset($_SESSION['ticket'])) {
             <a href="../backend/Register.php">Register</a>
             <a href="../backend/Login.php">Login</a>
             <a href="../backend/FAQ.php">FAQ</a>
-            <a href="#">Tutorial</a>
-            <a href="../backend/BookNow.php">Book now</a>
+            <a href="../backend/BookNow.php">Search Booking</a>
         </div>
     <?php endif; ?>
 </div>
@@ -181,15 +179,15 @@ if (isset($_SESSION['ticket'])) {
     <?php if ($isLoggedIn): ?>
         <a href="../backend/dashboard.php">Dashboard</a>
         <a href="../backend/FAQ.php">FAQ</a>
-        <a href="#">Tutorial</a>
-        <a href="../backend/BookNow.php">Book now</a>
+        
+        <a href="../backend/BookNow.php">Search Booking</a>
         <a href="../backend/logout.php">Logout</a>
     <?php else: ?>
         <a href="../backend/Register.php">Register</a>
         <a href="../backend/Login.php">Login</a>
         <a href="../backend/FAQ.php">FAQ</a>
-        <a href="#">Tutorial</a>
-        <a href="../backend/BookNow.php">Book now</a>
+        
+        <a href="../backend/BookNow.php">Search Booking</a>
     <?php endif; ?>
 </div>
 

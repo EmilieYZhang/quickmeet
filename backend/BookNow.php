@@ -7,9 +7,7 @@ include 'header.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Now</title>
-
-
+    <title>Search Booking</title>
 
     <link href="../FrontEndCode/RegisterCssPho.css" rel="stylesheet">
     <link href="../FrontEndCode/RegisterCssLap.css" rel="stylesheet">

@@ -1,4 +1,7 @@
 <?php
+include 'bookingpagesheader.php';
+?>
+<?php
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: text/html; charset=utf-8');
 
@@ -17,47 +20,13 @@ header('Content-Type: text/html; charset=utf-8');
 // ** ----------------  **//
 
 // ** THIS IS FOR LOCAL HOST **//
-require 'db_connect.php'; // Include database connection
-session_start();
-
-// Enable error reporting for debugging (remove in production)
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Check if the session ticket exists
-if (!isset($_SESSION['ticket'])) {
-    header("Location: ../FrontEndCode/Login.html");
-    exit();
-}
-
-$ticket = $_SESSION['ticket'];
-
-// Validate the ticket
-$stmt = $conn->prepare("SELECT user_id, expiry FROM user_tickets WHERE ticket = ?");
-if ($stmt === false) {
-    die("Database query failed.");
-}
-$stmt->bind_param("s", $ticket);
-$stmt->execute();
-$stmt->bind_result($userId, $expiry);
-$stmt->fetch();
-$stmt->close();
-
-// Check if the ticket is valid and not expired
-if (!$userId || time() > $expiry) {
-    session_destroy();
-    header("Location: ../FrontEndCode/Login.html");
-    exit();
-}
-
-// Extend session expiry
-$newExpiry = time() + 3600; // Extend for 1 more hour
-$updateStmt = $conn->prepare("UPDATE user_tickets SET expiry = ? WHERE ticket = ?");
-$updateStmt->bind_param("is", $newExpiry, $ticket);
-$updateStmt->execute();
-$updateStmt->close();
 
 $bookingUrl = $_GET['url'] ?? null;
+
+if (!$isLoggedIn){
+    header("Location: ../backend/Landing.php");
+    exit();
+}
 
 if ($bookingUrl) {
     // Fetch the booking details
@@ -69,20 +38,16 @@ if ($bookingUrl) {
     if ($result && $result->num_rows > 0) {
         $booking = $result->fetch_assoc();
         $ogbookingurl = $booking['bookingurl'];
+
         // Render the booking page
-
-        // echo "<h1>" . htmlspecialchars($booking['bookingtitle']) . "</h1>";
-        // echo "<p>" . htmlspecialchars($booking['bookingdescription']) . "</p>";
-        // echo "<p>Start: " . htmlspecialchars($booking['startdatetime']) . "</p>";
-        // echo "<p>End: " . htmlspecialchars($booking['enddatetime']) . "</p>";
-
         echo "
         <!DOCTYPE html>
         <html lang='en'>
         <head>
             <meta charset='UTF-8'>
             <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-            <title>Booking Details</title>
+            <title>Edit Booking Details</title>
+
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -131,7 +96,7 @@ if ($bookingUrl) {
                 <p><span class = 'bolder'>Start:</span> " . htmlspecialchars($booking['startdatetime']) . "</p>
                 <p><span class = 'bolder'>End: </span>" . htmlspecialchars($booking['enddatetime']) . "</p>
                 
-                <p><span class = 'bolder'>Full Booking URL:</span> <a href='http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "</a></p>
+                <p><span class = 'bolder'>Full Booking URL:</span> <a href='http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>Link</a></p>
                 
             </div>
         </body>
@@ -186,6 +151,20 @@ $conn->close();
         .modal-content{
             background-color: #0C3D65;
             border-radius: 8px;
+            width: 33%;
+            margin-top: 0%;
+            margin: auto;
+            padding: 80px 20px;
+            position: relative;
+            top: 50%; /* Push the modal to the vertical center */
+            transform: translateY(-50%); /* Center it vertically */
+            z-index: 1001;
+            text-align: center;
+        }
+
+        .lightmodal-content{
+            background-color:rgb(106, 153, 190);
+            border-radius: 8px;
             width: 500px;
             margin-top: 50%;
             margin: auto;
@@ -206,6 +185,17 @@ $conn->close();
             box-sizing: border-box; 
         }
 
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
     </style>
 
 
@@ -213,14 +203,14 @@ $conn->close();
 <body>
 
 <ul id="user-list"></ul>
-    <div class = buttons>
-        <button  onclick="AddNewTimeslot()">Add New Timeslot</button>
-        <button  onclick="EditBooking()">Edit Booking</button>
-        <button  onclick="ViewAvailability()">View Availability Requests</button>
-    </div>
-<ul id="availability-list"></ul>
-<!-- this is for add new time -->
-<div id="timeslotModal" class="modal" 
+<div class = buttons>
+    <button onclick="AddNewTimeslot()">Add New Timeslot</button>
+    <button onclick="EditBooking()">Edit Booking</button>
+    <button onclick="ViewAvailability()">View Availability Requests</button>
+</div>
+
+<!-- this is for viewing availability -->
+<div id="availabilityModal" class="modal" 
         style="display: none;
          
          text-align: center;
@@ -228,8 +218,35 @@ $conn->close();
          margin: auto;
         
         ">
+    <div class="lightmodal-content" style="position: relative;">
+        <span class="close" 
+            style="color: white; cursor: pointer; position: absolute; top: 5px; right: 10px;" 
+            onclick="closeAvailabilityModal()">
+            &times;
+        </span>
+        <!-- <h2>Display availability</h2> -->
+        <table id="availability-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows for availability dynamically appended here -->
+            </tbody>
+        </table>
+    </div>
+</div>
 
-
+<!-- this is for add new time -->
+<div id="timeslotModal" class="modal" 
+        style="display: none;
+         text-align: center;
+         width: 100%; 
+         margin: auto;
+        ">
     <div class="modal-content" style="position: relative;">
         <span class="close" 
             style="color: white; cursor: pointer; position: absolute; top: 5px; right: 10px;" 
@@ -238,12 +255,13 @@ $conn->close();
         </span>
         <!-- <h2>Add New Time Slot</h2> -->
         <form id="timeslotForm">
+            <h3 style="color: white;">New Timeslot</h3>
             <input type="text" id="slotTitle" placeholder="Time Slot Title" required><br><br>
             <input type="text" id="hostName" placeholder="Host Name" required><br><br>
             <input type="text" id="location" placeholder="Location" required><br><br>
             <input type="datetime-local" id="startTime" placeholder="Start Time" required><br><br>
             <input type="datetime-local" id="endTime" placeholder="End Time" required><br><br>
-            <input type="number" id="maxSlots" placeholder="Max Slots" required><br><br>
+            <input type="number" id="maxSlots" placeholder="Max Slots" required min="1"><br><br>
             <button type="button" onclick="submitTimeslot()">Add Time Slot</button>
         </form>
     </div>
@@ -268,7 +286,7 @@ $conn->close();
             <textarea id="bookingDescription" placeholder="Description" style="width: 300px; height: 100px;"></textarea><br><br>
             <input type="datetime-local" id="bookingStartTime" placeholder="Start Time" required><br><br>
             <input type="datetime-local" id="bookingEndTime" placeholder="End Time" required><br><br>
-            <button type="button" onclick="submitEditBooking()">Save Changes</button>
+            <button type='button' onclick="submitEditBooking()">Save Changes</button>
         </form>
     </div>
 </div>
@@ -281,6 +299,10 @@ $conn->close();
 
     function closeModal() {
         document.getElementById('timeslotModal').style.display = 'none';
+    }
+
+    function closeAvailabilityModal(){
+        document.getElementById('availabilityModal').style.display = 'none';
     }
 
 
@@ -333,78 +355,110 @@ $conn->close();
 
     //new timeslot for reccuring add
     async function submitTimeslot() {
-    console.log('Booking URL:', bkurl);
-    const slotTitle = document.getElementById('slotTitle').value;
-    const hostName = document.getElementById('hostName').value;
-    const location = document.getElementById('location').value;
-    const startTime = document.getElementById('startTime').value;
-    const endTime = document.getElementById('endTime').value;
-    const maxSlots = document.getElementById('maxSlots').value;
+        console.log('Booking URL:', bkurl);
+        const slotTitle = document.getElementById('slotTitle').value;
+        const hostName = document.getElementById('hostName').value;
+        const location = document.getElementById('location').value;
+        const startTime = document.getElementById('startTime').value;
+        const endTime = document.getElementById('endTime').value;
+        const maxSlots = document.getElementById('maxSlots').value;
 
-    // Validate inputs
-    if (!slotTitle || !hostName || !location || !startTime || !endTime || !maxSlots) {
-        alert('Please fill in all fields.');
-        return;
-    }
-
-    try {
-        // Fetch the booking details to get the booking start and end date
-        const bookingResponse = await fetch(`../quickmeet_api/apiendpoints.php/booking/${bkurl}/bookingurl`);
-        const bookingDetails = await bookingResponse.json();
-
-        if (!bookingResponse.ok) {
-            alert('Failed to fetch booking details.');
+        // Validate inputs
+        if (!slotTitle || !hostName || !location || !startTime || !endTime || !maxSlots) {
+            alert('Please fill in all fields.');
             return;
         }
 
-        const bookingStart = new Date(bookingDetails.startdatetime);
-        const bookingEnd = new Date(bookingDetails.enddatetime);
+        try {
+            // Fetch the booking details to get the booking start and end date
+            const bookingResponse = await fetch(`../quickmeet_api/apiendpoints.php/booking/${bkurl}/bookingurl`);
+            const bookingDetails = await bookingResponse.json();
 
-        // Create a recurring schedule
-        const slotStartTime = new Date(startTime);
-        const slotEndTime = new Date(endTime);
-
-        while (slotStartTime <= bookingEnd) {
-            // Skip time slots that are before the booking start date
-            if (slotStartTime >= bookingStart) {
-                // Make a POST request for the current time slot
-                const response = await fetch('../quickmeet_api/apiendpoints.php/timeslot', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        bookingurl: bkurl,
-                        slottitle: slotTitle,
-                        hostname: hostName,
-                        location: location,
-                        startdatetime: slotStartTime.toISOString(),
-                        enddatetime: slotEndTime.toISOString(),
-                        maxslots: maxSlots
-                    })
-                });
-
-                if (!response.ok) {
-                    console.error('Failed to create time slot:', await response.text());
-                    alert('Failed to create one or more time slots.');
-                    return;
-                }
+            if (!bookingResponse.ok) {
+                alert('Failed to fetch booking details.');
+                return;
             }
 
-            // Move to the same time next week
-            slotStartTime.setDate(slotStartTime.getDate() + 7);
-            slotEndTime.setDate(slotEndTime.getDate() + 7);
-        }
+            const bookingStart = new Date(bookingDetails.startdatetime);
+            const bookingEnd = new Date(bookingDetails.enddatetime);
 
-        alert('Recurring time slots added successfully!');
-        closeModal();
-    } catch (error) {
-        console.error('Error adding time slots:', error);
-        alert('An error occurred while adding the time slots.');
+            const slotStartTime = new Date(startTime);
+            console.log("I start");
+            console.log(slotStartTime);
+
+            const slotEndTime = new Date(endTime);
+            console.log("I end");
+            console.log(slotEndTime);
+
+            /** ----The code below is taken from the internet for adjusting timestamps for wacky timezones ----**/
+            // source: https://stackoverflow.com/questions/17415579/how-to-iso-8601-format-a-date-with-timezone-offset-in-javascript
+            // Function to format the dates as local versions
+            const localStartTime = slotStartTime.toISOString().slice(0, 19).replace('T', ' ');
+            const localEndTime = slotEndTime.toISOString().slice(0, 19).replace('T', ' ');
+
+            // Adjust to local timezone
+            const offset = slotStartTime.getTimezoneOffset(); // Offset in minutes
+            const adjustedStartTime = new Date(slotStartTime.getTime() - offset * 60 * 1000).toISOString().slice(0, 19).replace('T', ' ');
+            const adjustedEndTime = new Date(slotEndTime.getTime() - offset * 60 * 1000).toISOString().slice(0, 19).replace('T', ' ');
+
+            console.log("Adjusted Start Time (Local):", adjustedStartTime);
+            console.log("Adjusted End Time (Local):", adjustedEndTime);
+            /** -----conclude wacky timezone adjustments----- **/
+
+            //while (slotStartTime <= bookingEnd) {
+                // Skip time slots that are before the booking start date
+                if (slotStartTime >= slotEndTime) {
+                    alert('The start date of the timeslot must be before the end date.');
+                    return;
+                } else if (slotStartTime < bookingStart){
+                    alert('The start time can not be before the booking start time.');
+                    return;
+                } else if (slotEndTime > bookingEnd){
+                    alert('The end time can not be after the booking end time.');
+                    return;
+                } else if (slotStartTime >= bookingStart) {
+                    // Make a POST request for the current time slot
+                    const response = await fetch('../quickmeet_api/apiendpoints.php/timeslot', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            bookingurl: bkurl,
+                            slottitle: slotTitle,
+                            hostname: hostName,
+                            location: location,
+                            startdatetime: adjustedStartTime,
+                            enddatetime: adjustedEndTime,
+                            maxslots: maxSlots
+                        })
+                    });
+                    console.log("just submitted");
+                    if (!response.ok) {
+                        console.error('Failed to create time slot:', await response.text());
+                        alert('Failed to create one or more time slots.');
+                        return;
+                    }
+                    else{
+                        alert('Time slot added successfully!');
+                        closeModal();
+                    }
+                } else {
+                    alert("something else happened");
+                    return;
+                }
+
+                // Move to the same time next week
+        //         slotStartTime.setDate(slotStartTime.getDate() + 7);
+        //         slotEndTime.setDate(slotEndTime.getDate() + 7);
+        //     }
+        } catch (error) {
+            console.error('Error adding time slots:', error);
+            alert('An error occurred while adding the time slots.');
+        }
     }
-}
 //end of new time slot add
 
-// start of script for edit booking
-function EditBooking() {
+    // start of script for edit booking
+    async function EditBooking() {
         // Fetch the current booking details
         const bookingTitleInput = document.getElementById('bookingTitle');
         const bookingDescriptionInput = document.getElementById('bookingDescription');
@@ -445,11 +499,24 @@ function EditBooking() {
         // Validate inputs
         if (!bookingTitle || !bookingStartTime || !bookingEndTime) {
             alert('Please fill in all required fields.');
-            return;
+            return false;
+        }
+
+        // edge case
+        if (bookingStartTime >= bookingEndTime){
+            alert('The start date must be before end date.');
+            return false;
         }
 
         try {
-            const response = await fetch('../quickmeet_api/apiendpoints.php/booking/edit', {
+            console.log(bkurl);
+            console.log(bookingTitle);
+            console.log(bookingDescription);
+            console.log(bookingStartTime);
+            console.log(bookingEndTime);
+            console.log("Entered");
+
+            fetch('../quickmeet_api/apiendpoints.php/booking/edit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -459,21 +526,24 @@ function EditBooking() {
                     startdatetime: bookingStartTime,
                     enddatetime: bookingEndTime
                 })
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                alert('Booking updated successfully!');
-                closeEditBookingModal();
-                location.reload(); // Reload the page
-            } else {
-                alert('Failed to update booking: ' + result.error);
-            }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    alert('Failed to update booking: ' + response.error);
+                }
+                else {
+                    console.log(response);
+                    alert('Booking updated successfully!');
+                    closeEditBookingModal();
+                    location.reload(); // Reload the page
+                }
+            })
         } catch (error) {
             console.error('Error updating booking:', error);
             alert('An error occurred while updating the booking.');
         }
+
+        return false;
     }
     //end of script for edit booking
 
@@ -489,48 +559,69 @@ function EditBooking() {
             })
             .then(slots => {
                 console.log(slots); 
-                const slotList = document.getElementById('availability-list');
-                slotList.innerHTML = '';
 
-                if (slots.error){
-                    const li = document.createElement('li');
-                    li.textContent = "No availability requests received at the moment.";
-                    slotList.appendChild(li);
-                }
-                else{
+                document.getElementById('availabilityModal').style.display = 'block';
+                const tableBody = document.getElementById('availability-table').querySelector('tbody');
+                tableBody.innerHTML = ''; // Clear existing rows
+
+                if (slots.error) {
+                    // Display a message in a single-row table
+                    const row = document.createElement('tr');
+                    const cell = document.createElement('td');
+                    cell.textContent = "No availability requests received at the moment.";
+                    cell.colSpan = 3;
+                    row.appendChild(cell);
+                    tableBody.appendChild(row);
+                } else {
+                    let index = 1;
                     slots.forEach(slot => {
-                        const li = document.createElement('li');
-                        li.textContent = `Start: ${slot.startdatetime} - End: ${slot.enddatetime}`;
-                        slotList.appendChild(li);
+                        const row = document.createElement('tr');
+
+                        const numCell = document.createElement('td');
+                        numCell.textContent = `${index}`;
+                        index = index+1;
+                        row.appendChild(numCell);
+
+                        const startCell = document.createElement('td');
+                        startCell.textContent = slot.startdatetime;
+                        row.appendChild(startCell);
+
+                        const endCell = document.createElement('td');
+                        endCell.textContent = slot.enddatetime;
+                        row.appendChild(endCell);
+
+                        tableBody.appendChild(row);
                     });
                 }
             })
             .catch(error => console.error('Error fetching users:', error));
+        }
+    </script>
+    <script>
+    console.log('../quickmeet_api/apiendpoints.php/timeslot/<?php echo $bookingUrl ?>/bookingurl');
+    
+    function fetchTimeslots(){
+        fetch('../quickmeet_api/apiendpoints.php/timeslot/<?php echo $bookingUrl ?>/bookingurl', { method: 'GET' })
+            .then(response => {
+                    // Check if the response is successful
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    // Attempt to parse JSON
+                    return response.json();
+                })
+                .then(slots => {
+                    console.log("execute GET /apiendpoints.php/slots"); 
+                    const slotList = document.getElementById('user-list');
+                    slotList.innerHTML = '';
+                    slots.forEach(slot => {
+                        const li = document.createElement('li');
+                        li.textContent = `${slot.slottitle} - ${slot.location} - ${slot.hostname} - Start: ${slot.startdatetime} - End: ${slot.enddatetime} - Availability ${slot.numopenslots}`;
+                        slotList.appendChild(li);
+                    });
+                })
+                .catch(error => console.error('Error fetching users:', error));
     }
-</script>
-<script>
-console.log('../quickmeet_api/apiendpoints.php/timeslot/<?php echo $bookingUrl ?>/bookingurl');
-
-fetch('../quickmeet_api/apiendpoints.php/timeslot/<?php echo $bookingUrl ?>/bookingurl', { method: 'GET' })
-        .then(response => {
-                // Check if the response is successful
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                // Attempt to parse JSON
-                return response.json();
-            })
-            .then(slots => {
-                console.log("execute GET /apiendpoints.php/slots"); 
-                const slotList = document.getElementById('user-list');
-                slotList.innerHTML = '';
-                slots.forEach(slot => {
-                    const li = document.createElement('li');
-                    li.textContent = `${slot.slottitle} - ${slot.location} - ${slot.hostname} - Start: ${slot.startdatetime} - End: ${slot.enddatetime} - Availability ${slot.numopenslots}`;
-                    slotList.appendChild(li);
-                });
-            })
-            .catch(error => console.error('Error fetching users:', error));
-</script>
+    </script>
 </body>
 </html>
