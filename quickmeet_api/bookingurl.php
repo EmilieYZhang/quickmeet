@@ -111,6 +111,9 @@ if ($bookingUrl) {
         
         // Add logic to display timeslot options and handle reservations
     } else {
+        echo "<script>
+                document.body.style.backgroundColor = '#0C3D65';
+            </script>";
         echo "<h1>Booking not found</h1>";
     } ?>
     <!DOCTYPE html>
@@ -449,6 +452,7 @@ if ($bookingUrl) {
                     });
                 } else {
                     daySection.innerHTML += "<p>No bookings available <br> for this day.</p>";
+                    
                 }
                 outputDiv.appendChild(daySection);
             }
