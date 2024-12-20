@@ -1,9 +1,9 @@
-# quickmeet
-COMP307 F2024 Project - SOCS Competition
+# quickmeet - team scriptSquad
+### COMP307 F2024 Project - SOCS Competition
 
 URL: 
 
-Project Overview
+## Project Overview
 This booking website simplifies the process of scheduling meetings and appointments. Key features include:
 - Users can create recurring or one-time booking pages and share links for others to reserve time slots.
 - Non-registered users can reserve time slots without needing an account, while registered users can create and manage bookings.
@@ -18,11 +18,14 @@ Serhii Artemenko:
 Japmann Sarinn:	
 Hudanur Kacmaz:
 
-Technologies Used
-Backend: PHP, MySQL (via XAMPP)
-Frontend: HTML, CSS, JavaScript
-Email Service: PHPMailer
+#### Tech stack
+**Backend:** PHP, MySQL (via XAMPP)
 
+**Frontend:** HTML, CSS, JavaScript
+
+**Email Service:** PHPMailer
+
+## Project Directory
 Public Pages
 - Landing
 - Register
@@ -30,16 +33,38 @@ Public Pages
 - FAQ
 - Search Booking
   
-User Features
-Dashboard: Create, view, and manage bookings.
-Bookings Management: Edit time slots, view active and past bookings.
+Private Pages
+- Dashboard: Create, view, and manage bookings.
+- Bookings Management: Edit time slots, view active and past bookings.
+
+## Meeting minimal requirements for SOCS project: 
+Checklist of all the minimal requirements listed by Professor Vybihal
+
+### Public facing web pages: 
+- [x] Landing page
+- [x] Login and register page with a ticket system for security 
+- [x] Book a meeting using URL page 
+
+### Private facing web pages: 
+- [x] Create booking page and create the invite URL.
+- [x] Send a request for a meeting with someone outside their availability page.
+
+### For all users: 
+- [x] Central location page to see all active appointments and history of appointments. 
+- [x] Additional optional features: Availability Request feature - The creator of the regular booking may not be available for a particular date and would need a way to indicate that or remove those dates from the regular booking schedule. 
+
+## Additional/Extra unique features for Quickmeet: 
+### Email API: 
+**Booking confirmation:** A fully-fledged API backend setup with comprehensive documentation 
+![image](https://github.com/user-attachments/assets/c3553e9b-e547-4a12-a430-d9327f7f978d)
 
 
-<ins>Backend Dev Features: (msg emilie on discord if you have questions about the stuff below) </ins>
+**Reservation confirmation** script to run to create all necessary sql database tables
+![image](https://github.com/user-attachments/assets/1fa1c167-ce4b-4ffa-a5b3-a0eb2619b760)
 
+
+### Backend Dev Features: 
 **./apiendpoints.php/:** A fully-fledged API backend setup with comprehensive documentation 
-
-**./apitest.html:** A sample demo of how an api endpoint is used
 
 **createtbl.sql:** script to run to create all necessary sql database tables
 
