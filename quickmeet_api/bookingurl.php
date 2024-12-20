@@ -1,3 +1,4 @@
+<!-- (Serhii Artemenko), (Emilie Yahui Zhang) -->
 <?php
 include '../backend/bookingpagesheader.php';
 ?>
@@ -111,6 +112,7 @@ if ($bookingUrl) {
             </div>
         </body>
         </html>";     
+        
     } else {
         echo "<script>
                 document.body.style.backgroundColor = '#0C3D65';
@@ -316,7 +318,7 @@ if ($bookingUrl) {
             }
 
             .modal-content h3 {
-                font-size: 1rem; /* Smaller heading */
+                font-size: 1rem; 
             }
 
             .modal-content input,
@@ -408,7 +410,7 @@ if ($bookingUrl) {
                 });
             });
 
-            // Render filtered time slots grouped by day
+            // Render the time slots
             for (const day of daysOfWeek) {
                 const daySection = document.createElement('div');
                 daySection.className = 'day-section';
@@ -418,10 +420,8 @@ if ($bookingUrl) {
 
                 if (weekBookings[day].length > 0) {
                     weekBookings[day].forEach(slot => {
-                        //const now = time();
                         console.log(new Date());
                         console.log(`Past time: ${slot.end}`);
-                        //console.log(now);
                         if (new Date(slot.end) < new Date()){
                             daySection.innerHTML += `
                             <div class="booking-slot-past">
@@ -467,6 +467,7 @@ if ($bookingUrl) {
         }
     }
 
+    //reserve a slot. If the user entered an email then send the email
     async function reserveSlot(sid) {
         const toemail = document.getElementById('email').value ?? '';       
         fetch('../quickmeet_api/apiendpoints.php/reservation', {

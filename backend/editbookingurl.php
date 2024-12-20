@@ -1,3 +1,4 @@
+<!-- (Serhii Artemenko), (Emilie Yahui Zhang) -->
 <?php
 include 'bookingpagesheader.php';
 // @author: Emilie Zhang for unique edit booking url generation/routing, history of timeslots display frontend/backend and api calls backend
@@ -102,7 +103,6 @@ if ($bookingUrl) {
             </div>
         </body>
         </html>"; 
-        // Add logic to display timeslot options and handle reservations
     } else {
         echo "<h1>Booking not found</h1>";
     } 
@@ -138,7 +138,7 @@ $conn->close();
         }
 
         .modal {
-            position: fixed; /* Ensures it stays in place relative to the viewport */
+            position: fixed; 
             top: 0;
             left: 0;
             width: 100%; /*careful there is inline css for this.*/ 
@@ -157,7 +157,7 @@ $conn->close();
             margin: auto;
             padding: 80px 20px;
             position: relative;
-            top: 50%; /* Push the modal to the vertical center */
+            top: 50%; 
             transform: translateY(-50%); /* Center it vertically */
             z-index: 1001;
             text-align: center;
@@ -234,9 +234,9 @@ $conn->close();
         }
 
         .timeslot {
-            display: flex; /* Enable flexbox layout */
+            display: flex; 
             align-items: center; /* Vertically align items */
-            justify-content: space-between; /* Space out items */
+            justify-content: space-between; 
             padding: 10px;
             margin: 5px 0;
             border: 1px solid #ddd;
@@ -250,27 +250,27 @@ $conn->close();
 
         .buttons {
             display: flex;
-            gap: 20px; /* Adds space between buttons */
+            gap: 20px; 
             justify-content: center;
             align-items: center;
         }
 
         .buttons button {
-            padding: 10px 15px; /* Optional: Adjust button padding for consistency */
-            font-size: 16px; /* Optional: Make the text size uniform */
-            cursor: pointer; /* Makes buttons more visually interactive */
+            padding: 10px 15px; 
+            font-size: 16px; 
+            cursor: pointer; 
             margin: 50px 0px;
         }
 
         .delete-icon {
             align-self: flex-end; /* Align the icon to the right */
-            width: 20px; /* Size of the icon */
+            width: 20px; 
             height: 20px;
-            cursor: pointer; /* Indicate interactivity */
+            cursor: pointer; 
         }
 
         .delete-icon:hover {
-            filter: brightness(0.8); /* Darken the icon on hover */
+            filter: brightness(0.8); 
         }
 
         @media (max-width: 600px) {
@@ -466,51 +466,6 @@ $conn->close();
 
     const bkurl = "<?php echo htmlspecialchars($ogbookingurl); ?>";
 
-    // old add time slot which is working for single event
-    // async function submitTimeslot() {
-    //     console.log('Booking URL:', bkurl);
-    //     const slotTitle = document.getElementById('slotTitle').value;
-    //     const hostName = document.getElementById('hostName').value;
-    //     const location = document.getElementById('location').value;
-    //     const startTime = document.getElementById('startTime').value;
-    //     const endTime = document.getElementById('endTime').value;
-    //     const maxSlots = document.getElementById('maxSlots').value;
-
-    //     // Validate inputs
-    //     if (!slotTitle || !hostName || !location || !startTime || !endTime || !maxSlots) {
-    //         alert('Please fill in all fields.');
-    //         return;
-    //     }
-
-    //     try {
-    //         const response = await fetch('../quickmeet_api/apiendpoints.php/timeslot', {
-    //             method: 'POST',
-    //             headers: { 'Content-Type': 'application/json' },
-    //             body: JSON.stringify({
-    //                 bookingurl: bkurl, 
-    //                 slottitle: slotTitle,
-    //                 hostname: hostName,
-    //                 location: location,
-    //                 startdatetime: startTime,
-    //                 enddatetime: endTime,
-    //                 // numopenslots: maxSlots;
-    //                 maxslots: maxSlots
-    //             })
-    //         });
-
-    //         if (response.ok) {
-    //             alert('Time slot added successfully!');
-    //             closeModal();
-    //         } else {
-    //             alert('Failed to add the time slot.');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error adding time slot:', error);
-    //         alert('An error occurred while adding the time slot.');
-    //     }
-    // }
-    //end of old add time slot which is working
-
     //new timeslot for reccuring add
     async function submitTimeslot() {
         console.log('Booking URL:', bkurl);
@@ -606,16 +561,11 @@ $conn->close();
                     return;
                 }
 
-                // Move to the same time next week
-        //         slotStartTime.setDate(slotStartTime.getDate() + 7);
-        //         slotEndTime.setDate(slotEndTime.getDate() + 7);
-        //     }
         } catch (error) {
             console.error('Error adding time slots:', error);
             alert('An error occurred while adding the time slots.');
         }
     }
-//end of new time slot add
 
     // start of script for edit booking
     async function EditBooking() {
@@ -705,7 +655,6 @@ $conn->close();
 
         return false;
     }
-    //end of script for edit booking
 
     function ViewAvailability(){
         fetch('../quickmeet_api/apiendpoints.php/availability/<?php echo $ogbookingurl ?>/bookingurl', { method: 'GET' })

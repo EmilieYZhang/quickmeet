@@ -1,9 +1,9 @@
-
+/*(Serhii Artemenko)*/
 @media screen and (min-width: 769px) {
+
     .hamburger{
         display: none;
     }
-
 
     input[type="text"] {
         color: white;

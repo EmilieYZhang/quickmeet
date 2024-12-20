@@ -1,3 +1,4 @@
+<!-- (Serhii Artemenko), (Emilie Yahui Zhang) -->
 <?php
 include '../backend/bookingpagesheader.php';
 ?>
@@ -121,6 +122,7 @@ if ($resUrl) {
                 </div>
             </body>
             </html>"; 
+
         }
         else {
             echo "<h3> Sorry, the timeslot that was created was deleted by the owner and no longer found </h3>";
@@ -153,8 +155,8 @@ if ($resUrl) {
                 margin: auto;
                 padding: 80px 20px;
                 position: relative;
-                top: 50%; /* Push the modal to the vertical center */
-                transform: translateY(-50%); /* Center it vertically.. Just tried a bunch of things*/
+                top: 50%; /* to make modal centered verically */
+                transform: translateY(-50%); 
                 z-index: 1001;
                 text-align: center;
             }
