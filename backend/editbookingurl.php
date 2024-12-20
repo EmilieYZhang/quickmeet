@@ -326,7 +326,7 @@ $conn->close();
                         <div class="timeslot-title">${timeslot.slottitle}</div>
                         <div>${moment(timeslot.startdatetime).format('hh:mm A')} - ${moment(timeslot.enddatetime).format('hh:mm A')}</div>
                         <div>${timeslot.numopenslots}/${timeslot.maxslots}</div>
-                        <img src="bin.png" alt="Delete" class="delete-icon" onclick="deleteTheTimeslot('${timeslot.sid}')">
+                        <img src="bin.png" alt="Delete" class="delete-icon" onclick="deleteTheTimeslot('${timeslot.sid}', ${timeslot.numopenslots}, ${timeslot.maxslots})">
                     `;
                     calendar.appendChild(timeslotDiv);
                 });
@@ -336,8 +336,28 @@ $conn->close();
         // Load the calendar on page load
         loadCalendar();
 
-        function deleteTheTimeslot(timeslot_id){
-            if (confirm("Are you sure you want to delete this booking?")) {}
+        function deleteTheTimeslot(timeslot_id, filled, max){
+            console.log(`Timeslot ID: ${timeslot_id}, Filled: ${filled}, Max: ${max}`);
+            if (confirm("Are you sure you want to delete this timeslot?")) {
+                filled = parseInt(filled);
+                max = parseInt(max);
+                if (filled < max){
+                    alert('Unable to delete this timeslot, people have already reserved.');
+                }
+                else {
+                   fetch(`../quickmeet_api/apiendpoints.php/timeslot/${timeslot_id}`, { method: 'DELETE' })
+                    .then(response => {
+                            // Check if the response is successful
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                                alert('Did not suceed in deleting timeslot');
+                            } else{
+                                alert('Successfully deleted');
+                                window.location.reload(true);
+                            }
+                        }) 
+                }
+            }
         }
     </script>
 <br>

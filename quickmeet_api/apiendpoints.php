@@ -409,12 +409,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     } else if ($resource == 'reservation'){
         if ($param == 'edit'){
             $url = $input['reservationurl'];
-            $sid = $input['sid'];
             $notes = $input['notes'];
 
             $sql = "UPDATE Reservation
-            SET sid='$sid',
-            notes='$notes',
+            SET notes='$notes'
             WHERE reservationurl = '$url';";
 
             if ($conn->query($sql)) {
@@ -537,12 +535,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE'){
             echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));
         }
     } else if ($resource == 'timeslot' && $param != "") {
-        $sql = "DELETE FROM Timeslot WHERE sid = '$param'";
-        if ($conn->query($sql)) {
+        $stmt = $conn->prepare("DELETE FROM Timeslot WHERE sid = ?");
+        
+        $stmt->bind_param("s", $param);
+
+        if ($stmt->execute()) {
             echo json_encode(array("message" => "Timeslot with sid " . $param . " deleted successfully"));
         } else {
-            echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));
+            echo json_encode(array("error" => "Error: " . $stmt->error));
         }
+
+        $stmt->close();
     } else if ($resource == 'reservation' && $param != "") {
         $conn->begin_transaction();
 

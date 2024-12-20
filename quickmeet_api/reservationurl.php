@@ -1,4 +1,8 @@
 <?php
+include '../backend/bookingpagesheader.php';
+?>
+
+<?php
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: text/html; charset=utf-8');
 
@@ -247,10 +251,9 @@ if ($resUrl) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    reservationurl: "<?php echo $resUrl; ?>", 
-                    sid: "<?php echo $res['sid']; ?>", 
+                    reservationurl: <?php echo json_encode($resUrl); ?>, 
                     notes: newNotes
-                    })
+                })
                 });
 
                 const result = await response.json();

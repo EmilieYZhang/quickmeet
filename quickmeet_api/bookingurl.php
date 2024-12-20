@@ -47,14 +47,6 @@ if ($bookingUrl) {
     $result = $stmt->get_result();
     if ($result && $result->num_rows > 0) {
         $booking = $result->fetch_assoc();
-        // Render the booking page
-
-        // echo "<h1>" . htmlspecialchars($booking['bookingtitle']) . "</h1>";
-        // echo "<p>" . htmlspecialchars($booking['bookingdescription']) . "</p>";
-        // echo "<p>Start: " . htmlspecialchars($booking['startdatetime']) . "</p>";
-        // echo "<p>End: " . htmlspecialchars($booking['enddatetime']) . "</p>";
-        
-        // echo "<p>Full Booking URL: <a href='http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "</a></p>";
         echo "
         <!DOCTYPE html>
         <html lang='en'>
@@ -111,7 +103,7 @@ if ($bookingUrl) {
                 <p><span class = 'bolder'>Start:</span> " . htmlspecialchars($booking['startdatetime']) . "</p>
                 <p><span class = 'bolder'>End: </span>" . htmlspecialchars($booking['enddatetime']) . "</p>
                 
-                <p><span class = 'bolder'>Full Booking URL:</span> <a href='http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "</a></p>
+                <p><span class = 'bolder'>Full Booking URL:</span> http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "</p>
                 
             </div>
         </body>
