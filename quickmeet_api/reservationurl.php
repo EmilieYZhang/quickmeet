@@ -1,3 +1,4 @@
+<!-- (Serhii Artemenko), (Emilie Yahui Zhang) -->
 <?php
 include '../backend/bookingpagesheader.php';
 ?>
@@ -54,14 +55,6 @@ if ($resUrl) {
         $result = $stmt->get_result();
         if ($result && $result->num_rows > 0) {
             $restimeslot = $result->fetch_assoc();
-            // echo "<h3>Meeting Details: " . htmlspecialchars($restimeslot['slottitle']) . "</h3>";
-            // echo "<h3>Hostname: " . htmlspecialchars($restimeslot['hostname']) . "</h3>";
-            // echo "<h3>Location: " . htmlspecialchars($restimeslot['location']) . "</h3>";
-            // echo "<h4>Start Time: " . htmlspecialchars($restimeslot['startdatetime']) . "</h4>";
-            // echo "<h4>End Time: " . htmlspecialchars($restimeslot['enddatetime']) . "</h4>";
-            // echo "<h4>Notes: " . htmlspecialchars($res['notes']) . "</h4>";
-            // echo "<h4>Original Booking URL: " . htmlspecialchars("http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($restimeslot['bookingurl'])) . "</h4>";
-            // new html/css
             echo "
             <!DOCTYPE html>
             <html lang='en'>
@@ -129,7 +122,6 @@ if ($resUrl) {
             </body>
             </html>"; 
 
-            //End of new html / css
         }
         else {
             echo "<h3> Sorry, the timeslot that was created was deleted by the owner and no longer found </h3>";
@@ -163,8 +155,8 @@ if ($resUrl) {
                 margin: auto;
                 padding: 80px 20px;
                 position: relative;
-                top: 50%; /* Push the modal to the vertical center */
-                transform: translateY(-50%); /* Center it vertically.. Just tried a bunch of things*/
+                top: 50%; /* to make modal centered verically */
+                transform: translateY(-50%); 
                 z-index: 1001;
                 text-align: center;
             }
