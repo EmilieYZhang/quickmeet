@@ -187,10 +187,11 @@ $conn->close();
             background-color: #0C3D65;
             border-radius: 8px;
             width: 500px;
+            margin-top: 50%;
             margin: auto;
             padding: 15px 20px;
             position: relative;
-            top: 20%; /* Push the modal to the vertical center */
+            top: 50%; /* Push the modal to the vertical center */
             transform: translateY(-50%); /* Center it vertically */
             z-index: 1001;
             text-align: center;
