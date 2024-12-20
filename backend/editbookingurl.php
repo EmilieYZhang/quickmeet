@@ -202,8 +202,146 @@ $conn->close();
 </head>
 <body>
 
-<ul id="user-list"></ul>
-<div class = buttons>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeslot Calendar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        .calendar {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .day-header {
+            font-size: 1.2em;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .timeslot {
+            display: flex; /* Enable flexbox layout */
+            align-items: center; /* Vertically align items */
+            justify-content: space-between; /* Space out items */
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fafafa;
+        }
+
+        .timeslot-title {
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px; /* Adds space between buttons */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .buttons button {
+            padding: 10px 15px; /* Optional: Adjust button padding for consistency */
+            font-size: 16px; /* Optional: Make the text size uniform */
+            cursor: pointer; /* Makes buttons more visually interactive */
+            margin: 50px 0px;
+        }
+
+        .delete-icon {
+            align-self: flex-end; /* Align the icon to the right */
+            width: 20px; /* Size of the icon */
+            height: 20px;
+            cursor: pointer; /* Indicate interactivity */
+        }
+
+        .delete-icon:hover {
+            filter: brightness(0.8); /* Darken the icon on hover */
+        }
+
+        @media (max-width: 600px) {
+            .calendar {
+                padding: 5px;
+            }
+            .day-header {
+                font-size: 1em;
+            }
+            .timeslot {
+                flex-direction: column; /* Stack items vertically */
+                align-items: flex-start; /* Align items to the left */
+            }
+            .delete-icon {
+                align-self: flex-end; /* Align the icon to the right */
+                margin-top: 5px; /* Add spacing for stacked layout */
+            }
+        }
+    </style>
+</head>
+
+    <div id="calendar" class="calendar"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script>
+        // a list to display the current timeslots and their availability
+        async function loadCalendar() {
+            const timeslotResponse = await fetch('../quickmeet_api/apiendpoints.php/timeslot/<?php echo $ogbookingurl ?>/bookingurl', {
+                method: 'GET'
+            });
+            const timeslots = await timeslotResponse.json();
+            console.log(timeslots);
+            // Group the timeslots by date
+            const groupedtimeslots = {};
+            timeslots.forEach(timeslot => {
+                const date = timeslot.startdatetime.split(' ')[0];
+                if (!groupedtimeslots[date]) groupedtimeslots[date] = [];
+                groupedtimeslots[date].push(timeslot);
+            });
+
+            // Display grouped timeslots
+            const calendar = document.getElementById('calendar');
+            calendar.innerHTML = ''; // Clear previous content
+            Object.keys(groupedtimeslots).sort().forEach(date => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'day-header';
+                dayHeader.textContent = moment(date).format('dddd, MMMM D, YYYY');
+                calendar.appendChild(dayHeader);
+
+                groupedtimeslots[date].forEach(timeslot => {
+                    const timeslotDiv = document.createElement('div');
+                    timeslotDiv.className = 'timeslot';
+
+                    timeslotDiv.innerHTML = `
+                        <div class="timeslot-title">${timeslot.slottitle}</div>
+                        <div>${moment(timeslot.startdatetime).format('hh:mm A')} - ${moment(timeslot.enddatetime).format('hh:mm A')}</div>
+                        <div>${timeslot.numopenslots}/${timeslot.maxslots}</div>
+                        <img src="bin.png" alt="Delete" class="delete-icon" onclick="deleteTheTimeslot('${timeslot.sid}')">
+                    `;
+                    calendar.appendChild(timeslotDiv);
+                });
+            });
+        }
+
+        // Load the calendar on page load
+        loadCalendar();
+
+        function deleteTheTimeslot(timeslot_id){
+            if (confirm("Are you sure you want to delete this booking?")) {}
+        }
+    </script>
+<br>
+<div class="buttons">
     <button onclick="AddNewTimeslot()">Add New Timeslot</button>
     <button onclick="EditBooking()">Edit Booking</button>
     <button onclick="ViewAvailability()">View Availability Requests</button>
@@ -440,6 +578,8 @@ $conn->close();
                     else{
                         alert('Time slot added successfully!');
                         closeModal();
+                        window.location.reload(true);
+                        return;
                     }
                 } else {
                     alert("something else happened");

@@ -124,11 +124,10 @@ if ($bookingUrl) {
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Booking Details</title>
-        <style>
+    
+    <style>
         body {
             font-family: Arial, sans-serif;
-            font-family: 
             margin: 20px;
             background-color: #f9f9f9;
         }
@@ -147,30 +146,22 @@ if ($bookingUrl) {
             color: #444;
             border-bottom: 1px solid #ddd;
             padding-bottom: 5px;
+            font-size: 1.5rem;
+        }
+        .booking-slot, .booking-slot-full, .booking-slot-past {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
         .booking-slot {
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #e7f3ff;
-            border-radius: 5px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            
+            background-color: #e7f3ff; /* Available slots */
         }
         .booking-slot-full {
-            margin: 10px 0;
-            padding: 10px;
-            background-color:rgb(253, 175, 175);
-            border-radius: 5px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            
+            background-color: rgb(253, 175, 175); /* Fully booked */
         }
         .booking-slot-past {
-            margin: 10px 0;
-            padding: 10px;
-            background-color:rgb(188, 188, 188);
-            border-radius: 5px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            
+            background-color: rgb(188, 188, 188); /* Past slots */
         }
         button {
             background-color: #007bff;
@@ -183,70 +174,202 @@ if ($bookingUrl) {
         button:hover {
             background-color: #0056b3;
         }
+
+        .calendar-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
         .outputDiv {
             display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Centers the items horizontally */
+        }
+
+        .email-input {
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+            margin: 20px 0; 
+            width: 100%;
         }
 
         .email-input input {
-            border: 1px solid #ccc; 
-            border-radius: 20px; 
-            padding: 10px 15px; 
-            width: 33%; 
-            font-size: 16px; 
-            box-sizing: border-box; 
-            margin-top: 20px;
-            outline: none; 
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            padding: 10px 15px;
+            width: 50%;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
         }
+
         .email-input label {
-            color: white; /* Sets the text color to white */
-            font-size: 16px; /* Adjusts the font size */
-            font-weight: bold; /* Makes the text bold (optional) */
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
         }
+
         .modal {
-            position: fixed; /* Ensures it stays in place relative to the viewport */
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%; /*careful there is inline css for this.*/ 
+            width: 100%; 
             height: 100%; 
             background-color: rgba(0, 0, 0, 0.5); 
             z-index: 1000; 
             display: none; 
             backdrop-filter: blur(5px);
-
         }
-        .modal-content{
+        .modal-content {
             background-color: #0C3D65;
             border-radius: 8px;
-            width: 500px;
-            margin-top: 50%;
+            width: 90%;
+            max-width: 500px;
             margin: auto;
             padding: 15px 20px;
             position: relative;
-            top: 50%; /* Push the modal to the vertical center */
-            transform: translateY(-50%); /* Center it vertically */
+            top: 50%;
+            transform: translateY(-50%); 
             z-index: 1001;
             text-align: center;
         }
+
+        /* Responsive for tablets */
+        @media (max-width: 768px) {
+            body {
+                margin: 10px;
+            }
+
+            .day-section, .booking-slot, .booking-slot-full, .booking-slot-past {
+                flex-direction: column; /* Stack content vertically */
+                width: 70%;
+                justify-content: space-between;
+                align-items: center;
+                margin: 5px 0; /* Reduced the margin */
+                margin-left: 10%;
+            }
+
+            .booking-slot button {
+                align-self: flex-end; /* Move buttons to the bottom */
+                margin-top: 3px;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+            .email-input input {
+                width: 70%; /* Adjust width for tablets and smaller screens */
+            }
+
+            .modal-content {
+            width: 90%; /* More width on smaller screens */
+            padding: 10px 0px;
+            max-width: none; /* Remove max-width for more flexible layout */
+            }
+
+            .modal-content h3 {
+                font-size: 1.2rem;
+            }
+
+            .modal-content input,
+            .modal-content button {
+                font-size: 0.9rem;
+                padding: 8px;
+            }
+
+            .close {
+                font-size: 2rem; /* Adjust close button font size */
+            }
+        }
+
+        /* Responsive for mobile */
+        @media (max-width: 480px) {
+            body {
+                margin: 5px;
+            }
+
+            .booking-slot, .booking-slot-full, .booking-slot-past {
+                padding: 8px;
+            }
+
+            .booking-slot button {
+                font-size: 0.9rem;
+                padding: 4px 8px;
+            }
+
+            h2 {
+                font-size: 1rem;
+            }
+
+            .email-input input {
+                width: 85%; /* Adjust width for mobile screens */
+                padding: 8px 12px; /* Reduce padding on mobile */
+            }
+
+            .modal-content {
+                width: 70%;
+                max-width: none;
+                margin: 10% 0%;
+                padding: 10px 0px;
+                top: 50%;
+                transform: translateY(-50%); 
+                z-index: 1001;
+                float: left;
+            }
+
+            .modal-content h3 {
+                font-size: 1rem; /* Smaller heading */
+            }
+
+            .modal-content input,
+            .modal-content button {
+                font-size: 0.8rem;
+                padding: 6px;
+            }
+
+            .close {
+                font-size: 3rem;
+            }
+        }
     </style>
+
     </head>
     <body>
         <br>
     <div class="email-input">
-            <label for="email">Enter your email if you want to receive a confirmation :</label> <br>
+            <label for="email">Enter your email if you want to receive a confirmation :</label>
             <input type="email" id="email" placeholder="example@example.com" required>
     </div>
+<br>
+<div class="calendar-buttons">
+    <button onclick="listTimeSlots('previous')">Previous Week</button>
+    <button onclick="listTimeSlots('current')">Current Week</button>
+    <button onclick="listTimeSlots('next')">Next Week</button>
+    <button onclick="listTimeSlots('next-next')">Next, next Week</button>
+</div>
 
 <div id="output" class="outputDiv"></div>
 
 <script>
-    async function listTimeSlots() {
+    async function listTimeSlots(weekFilter = 'current') {
         const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
         const outputDiv = document.getElementById('output');
+        outputDiv.innerHTML = ""; // clear previous content
         const weekBookings = {};
         daysOfWeek.forEach(day => (weekBookings[day] = []));
 
         const now = new Date();
         const currentWeekStart = new Date(now.setDate(now.getDate() - now.getDay() + 1)); // Start of the current week (Monday)
+        if (weekFilter === 'previous') {
+            currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+        } else if (weekFilter === 'next') {
+            currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+        } else if (weekFilter === 'next-next') {
+            currentWeekStart.setDate(currentWeekStart.getDate() + 14);
+        }
+
         const currentWeekEnd = new Date(currentWeekStart);
         currentWeekEnd.setDate(currentWeekEnd.getDate() + 6); // End of the current week (Sunday)
         const currentMonth = new Date().getMonth();
@@ -281,7 +404,7 @@ if ($bookingUrl) {
                     numopenslots: slot.numopenslots,
                     start: slot.startdatetime,
                     end: slot.enddatetime,
-                    sid: slot.sid
+                    sid: slot.sid,
                 });
             });
 
@@ -290,7 +413,6 @@ if ($bookingUrl) {
                 const daySection = document.createElement('div');
                 daySection.className = 'day-section';
                 daySection.innerHTML = `<h2>${day}</h2>`;
-
                 // Sort time slots by start time
                 weekBookings[day].sort((a, b) => new Date(a.start) - new Date(b.start));
 
@@ -334,7 +456,7 @@ if ($bookingUrl) {
                         }
                     });
                 } else {
-                    daySection.innerHTML += "<p>No bookings available for this day.</p>";
+                    daySection.innerHTML += "<p>No bookings available <br> for this day.</p>";
                 }
                 outputDiv.appendChild(daySection);
             }
@@ -374,7 +496,7 @@ if ($bookingUrl) {
     listTimeSlots();
 </script>
 
-<div class = buttons>
+<div class="calendar-buttons">
     <button onclick="openRequestAvailability()">Request a Timeslot Availability</button>
 </div>
 
