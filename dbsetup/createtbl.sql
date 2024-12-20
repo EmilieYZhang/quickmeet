@@ -1,4 +1,6 @@
--- Create users table
+-- @author: Emilie Zhang
+-- to create sql tables
+
 CREATE TABLE users (
     id INT(11) AUTO_INCREMENT PRIMARY KEY,            -- Primary Key
     fname VARCHAR(255) NOT NULL,     -- Not nullable
@@ -9,7 +11,6 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create Booking table
 CREATE TABLE Booking (
     bid INT AUTO_INCREMENT PRIMARY KEY,           -- Primary Key
     bookingurl VARCHAR(255) UNIQUE,      -- Unique constraint
@@ -22,7 +23,6 @@ CREATE TABLE Booking (
     FOREIGN KEY (uid) REFERENCES users(id)
 );
 
--- Create Timeslot table
 CREATE TABLE Timeslot (
     sid INT AUTO_INCREMENT PRIMARY KEY,             -- Primary Key
     bookingurl VARCHAR(255),             -- Foreign Key reference to Booking table
@@ -36,7 +36,6 @@ CREATE TABLE Timeslot (
     FOREIGN KEY (bookingurl) REFERENCES Booking(bookingurl)
 );
 
--- Create Reservation table
 CREATE TABLE Reservation (
     reservationurl VARCHAR(255) PRIMARY KEY, -- Primary Key
     sid INT,                               -- Foreign Key reference to Timeslot table
@@ -44,7 +43,6 @@ CREATE TABLE Reservation (
     FOREIGN KEY (sid) REFERENCES Timeslot(sid)
 );
 
--- Create AvailabilityRequests table
 CREATE TABLE AvailabilityRequests (
     rid INT AUTO_INCREMENT PRIMARY KEY,             -- Primary Key
     bookingurl VARCHAR(255),               -- Foreign Key reference to Booking table
@@ -54,10 +52,10 @@ CREATE TABLE AvailabilityRequests (
 );
 
 CREATE TABLE user_tickets (
-    id INT(11) AUTO_INCREMENT PRIMARY KEY,
-    user_id INT(11) NOT NULL, 
-    ticket VARCHAR(64) NOT NULL, 
-    expiry INT(11) NOT NULL,
+    id INT(11) AUTO_INCREMENT PRIMARY KEY, -- Primary Key
+    user_id INT(11) NOT NULL,  -- Not nullable
+    ticket VARCHAR(64) NOT NULL,  -- Not nullable
+    expiry INT(11) NOT NULL, -- Not nullable
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );

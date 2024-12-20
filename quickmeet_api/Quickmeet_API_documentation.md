@@ -1,5 +1,7 @@
 # README for the Quickmeet API
 
+@author: Emilie Zhang
+
 *This API is solely for the purpose of using the Quickmeet application developed by scriptSquad.\
 Will accept json by default.*
 
@@ -45,6 +47,5 @@ Format: (tablename) Fields: Field_1, Field_2, ..., Field_n\
 **POST /quickmeetapi/availability:** post availability request with a body containing all fields, return rid\
 **DELETE /quickmeetapi/availability/{rid}:** delete a specific instance of availability request id
 
-*TODO Hudanur update the following fields for the Users table*
 ### (Users) Fields: -uid-, /email/, password, firstname, lastname
 NO API provided for this, only accessible through login.php and register.php

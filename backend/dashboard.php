@@ -32,7 +32,6 @@ $bookingStmt->close();
 
     <link href="../FrontEndCode/RegisterCssPho.css" rel="stylesheet">
     <link href="../FrontEndCode/RegisterCssLap.css" rel="stylesheet">
-    <link href="../FrontEndCode/RegisterCssDesk.css" rel="stylesheet">
 
     <style>
         /* Modal styles */
@@ -437,7 +436,7 @@ $bookingStmt->close();
             document.getElementById("bookingModal").style.display = "none";
         }
 
-        // Function to handle form submission and create booking
+        // @author: Emilie Zhang for create new booking edge cases and backend
         function createBooking() {
             const bookingTitle = document.forms["Form"]["btitle"].value;
             const bookingDescription = document.forms["Form"]["bdescription"].value;
@@ -452,11 +451,15 @@ $bookingStmt->close();
 
             const startDatetime = bookingStartYear + "-" + bookingStartMonth + "-" + bookingStartDay + " " + "00:00:00";
             const endDatetime = bookingEndYear + "-" + bookingEndMonth + "-" + bookingEndDay + " " + "23:59:00";
-     
 
             // Check if data exists before proceeding
             if (!bookingTitle || !bookingDescription) {
                 alert("Please fill in all fields.");
+                return false;
+            }
+
+            if (startDatetime > endDatetime) {
+                alert("This booking start date can not be after the end date.");
                 return false;
             }
 
@@ -474,6 +477,7 @@ $bookingStmt->close();
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
+                    console.log("Network iddue");
                 }
                 return response.json();
             })

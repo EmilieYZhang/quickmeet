@@ -1,5 +1,6 @@
 <?php
 include 'bookingpagesheader.php';
+// @author: Emilie Zhang for unique edit booking url generation/routing, history of timeslots display frontend/backend and api calls backend
 ?>
 <?php
 header('Access-Control-Allow-Origin: *');
@@ -294,7 +295,7 @@ $conn->close();
     <div id="calendar" class="calendar"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script>
-        // a list to display the current timeslots and their availability
+        // @author: Emilie Zhang for loadCalendar() and deleteTimeslot()
         async function loadCalendar() {
             const timeslotResponse = await fetch('../quickmeet_api/apiendpoints.php/timeslot/<?php echo $ogbookingurl ?>/bookingurl', {
                 method: 'GET'
@@ -309,7 +310,6 @@ $conn->close();
                 groupedtimeslots[date].push(timeslot);
             });
 
-            // Display grouped timeslots
             const calendar = document.getElementById('calendar');
             calendar.innerHTML = ''; // Clear previous content
             Object.keys(groupedtimeslots).sort().forEach(date => {
@@ -326,7 +326,7 @@ $conn->close();
                         <div class="timeslot-title">${timeslot.slottitle}</div>
                         <div>${moment(timeslot.startdatetime).format('hh:mm A')} - ${moment(timeslot.enddatetime).format('hh:mm A')}</div>
                         <div>${timeslot.numopenslots}/${timeslot.maxslots}</div>
-                        <img src="bin.png" alt="Delete" class="delete-icon" onclick="deleteTheTimeslot('${timeslot.sid}', ${timeslot.numopenslots}, ${timeslot.maxslots})">
+                        <img src="../FrontEndCode/Images/bin.png" alt="Delete" class="delete-icon" onclick="deleteTheTimeslot('${timeslot.sid}', ${timeslot.numopenslots}, ${timeslot.maxslots})">
                     `;
                     calendar.appendChild(timeslotDiv);
                 });
@@ -347,7 +347,6 @@ $conn->close();
                 else {
                    fetch(`../quickmeet_api/apiendpoints.php/timeslot/${timeslot_id}`, { method: 'DELETE' })
                     .then(response => {
-                            // Check if the response is successful
                             if (!response.ok) {
                                 throw new Error('Network response was not ok');
                                 alert('Did not suceed in deleting timeslot');
@@ -411,6 +410,7 @@ $conn->close();
             onclick="closeModal()">
             &times;
         </span>
+
         <!-- <h2>Add New Time Slot</h2> -->
         <form id="timeslotForm">
             <h3 style="color: white;">New Timeslot</h3>

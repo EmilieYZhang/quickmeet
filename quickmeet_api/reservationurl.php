@@ -3,6 +3,7 @@ include '../backend/bookingpagesheader.php';
 ?>
 
 <?php
+// @author: Emilie Zhang for backend in delRes(e), saveNotes()
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: text/html; charset=utf-8');
 
@@ -54,14 +55,6 @@ if ($resUrl) {
         $result = $stmt->get_result();
         if ($result && $result->num_rows > 0) {
             $restimeslot = $result->fetch_assoc();
-            // echo "<h3>Meeting Details: " . htmlspecialchars($restimeslot['slottitle']) . "</h3>";
-            // echo "<h3>Hostname: " . htmlspecialchars($restimeslot['hostname']) . "</h3>";
-            // echo "<h3>Location: " . htmlspecialchars($restimeslot['location']) . "</h3>";
-            // echo "<h4>Start Time: " . htmlspecialchars($restimeslot['startdatetime']) . "</h4>";
-            // echo "<h4>End Time: " . htmlspecialchars($restimeslot['enddatetime']) . "</h4>";
-            // echo "<h4>Notes: " . htmlspecialchars($res['notes']) . "</h4>";
-            // echo "<h4>Original Booking URL: " . htmlspecialchars("http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($restimeslot['bookingurl'])) . "</h4>";
-            // new html/css
             echo "
             <!DOCTYPE html>
             <html lang='en'>
@@ -128,8 +121,6 @@ if ($resUrl) {
                 </div>
             </body>
             </html>"; 
-
-            //End of new html / css
         }
         else {
             echo "<h3> Sorry, the timeslot that was created was deleted by the owner and no longer found </h3>";
@@ -138,7 +129,6 @@ if ($resUrl) {
     <!DOCTYPE html>
     <html>
     <head>
-        <title>res Details</title>
         <style>
             .buttons{
                 text-align: center;
@@ -214,10 +204,8 @@ if ($resUrl) {
             </div>
         </div>
 
-    <!-- <p id="demo"></p> -->
-
     <script>
-        function delRes(e) {
+        function delRes(e) { // @author: Emilie Zhang 
             if(!confirm('Are you sure?')) {
                 e.preventDefault();
             }
@@ -243,7 +231,7 @@ if ($resUrl) {
             document.getElementById('editNotesModal').style.display = 'none';
         }
 
-        async function saveNotes(){
+        async function saveNotes(){ // @author: Emilie Zhang
             const newNotes = document.getElementById('newReservationNotes').value;
 
             try {

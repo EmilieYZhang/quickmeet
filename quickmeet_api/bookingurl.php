@@ -3,6 +3,10 @@ include '../backend/bookingpagesheader.php';
 ?>
 
 <?php
+/*
+@author: Emilie Zhang for backend calls to quickmeet api and unique booking url generation and pathing
+*/
+
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: text/html; charset=utf-8');
 
@@ -39,7 +43,6 @@ $bookingUrl = $_GET['url'] ?? null;
 $Tnow = time();
 
 if ($bookingUrl) {
-    // Fetch the booking details
     $sql = "SELECT * FROM Booking WHERE bookingurl = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $bookingUrl);
@@ -108,8 +111,6 @@ if ($bookingUrl) {
             </div>
         </body>
         </html>";     
-        
-        // Add logic to display timeslot options and handle reservations
     } else {
         echo "<script>
                 document.body.style.backgroundColor = '#0C3D65';
@@ -348,6 +349,10 @@ if ($bookingUrl) {
 <div id="output" class="outputDiv"></div>
 
 <script>
+    /*
+        @author: Emilie Zhang for adding dynamic past,current,next week calendar generation functionality. 
+        Colour coding the timeslot based on past, active or full status.
+    */
     async function listTimeSlots(weekFilter = 'current') {
         const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
         const outputDiv = document.getElementById('output');
@@ -463,8 +468,7 @@ if ($bookingUrl) {
     }
 
     async function reserveSlot(sid) {
-        const toemail = document.getElementById('email').value ?? '';
-        // if yes, reserve        
+        const toemail = document.getElementById('email').value ?? '';       
         fetch('../quickmeet_api/apiendpoints.php/reservation', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -482,7 +486,7 @@ if ($bookingUrl) {
             })
             .then(newReservation => {
                 alert(`Success! Reservation created: ${newReservation.reservation_url}`);
-                window.location.href = newReservation.reservation_url; // Redirect to the reservation URL
+                window.location.href = newReservation.reservation_url;
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -492,6 +496,7 @@ if ($bookingUrl) {
     listTimeSlots();
 </script>
 
+<!-- @author: Emilie Zhang for the request availability feature -->
 <div class="calendar-buttons">
     <button onclick="openRequestAvailability()">Request a Timeslot Availability</button>
 </div>
@@ -504,15 +509,13 @@ if ($bookingUrl) {
          margin: auto;
         
         ">
-
-
     <div class="modal-content" style="position: relative;">
         <span class="close" 
             style="color: white; cursor: pointer; position: absolute; top: 5px; right: 10px;" 
             onclick="closeRequestAvailabilityModal()">
             &times;
         </span>
-        <!-- <h2>Request Availability </h2> -->
+        
         <form id="timeslotForm">
             <h3 style="color: white;">Request New Availability</h3>
             <input type="datetime-local" id="availstartTime" placeholder="Start Time" required><br><br>
