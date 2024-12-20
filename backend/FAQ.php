@@ -113,6 +113,30 @@ include '../backend/header.php';
                     <div class="faq-answer">Yes, QuickMeet allows you to schedule meetings with multiple participants. When creating a meeting, simply add multiple email addresses to invite attendees.</div>
                 </div>
 
+		<div class="faq-item">
+                    <div class="faq-question">
+                        How can I create a booking page with my availabilities?
+                        <span class="faq-arrow">▶</span>
+                    </div>
+                    <div class="faq-answer">To create a booking page, go to your dashboard and click the "Create Booking" button. Add a title, description, and date for your booking. It will then be displayed on your dashboard. Click on the booking you created to add time slots and share the link with others.</div>
+                </div>
+
+		<div class="faq-item">
+                    <div class="faq-question">
+                        How will I know the time of my reservation if I am not registered?
+                        <span class="faq-arrow">▶</span>
+                    </div>
+                    <div class="faq-answer">When you book a time slot using the shared URL, you will receive an email confirmation containing all the details of your meeting.</div>
+                </div>
+
+
+		<div class="faq-item">
+                    <div class="faq-question">
+                        What should I do if I am not available during the listed availabilities in the URL provided to me?
+                        <span class="faq-arrow">▶</span>
+                    </div>
+                    <div class="faq-answer">You can send a request to the meeting holder with your possible alternate times. The meeting holder will be notified of your request and can adjust the schedule accordingly.</div>
+                </div>
                 <div class="faq-item">
                     <div class="faq-question">
                         Is QuickMeet available on mobile devices?
