@@ -1,7 +1,7 @@
 <?php
 session_start();
 session_destroy();
-header("Location: ../FrontEndCode/Login.html");
+header("Location: ../backend/Login.php");
 exit();
 ?>
 
