@@ -5,7 +5,8 @@ include '../backend/bookingpagesheader.php';
 
 <?php
 /*
-@author: Emilie Zhang for backend calls to quickmeet api and unique booking url generation and pathing
+@author: Serhii Artemenko for calendar display, timeslot generation call to api backend
+@author: Emilie Zhang for api call verification and unique booking url generation and pathing
 */
 
 header('Access-Control-Allow-Origin: *');
@@ -354,6 +355,7 @@ if ($bookingUrl) {
     /*
         @author: Emilie Zhang for adding dynamic past,current,next week calendar generation functionality. 
         Colour coding the timeslot based on past, active or full status.
+        @author: Serhii Artemenko for calendar
     */
     async function listTimeSlots(weekFilter = 'current') {
         const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];

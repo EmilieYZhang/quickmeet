@@ -4,6 +4,7 @@ include '../backend/bookingpagesheader.php';
 ?>
 
 <?php
+// @author: Serhii Artemenko for frontend rendering
 // @author: Emilie Zhang for backend in delRes(e), saveNotes()
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: text/html; charset=utf-8');
