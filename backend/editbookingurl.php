@@ -302,7 +302,6 @@ $conn->close();
                 method: 'GET'
             });
             const timeslots = await timeslotResponse.json();
-            console.log(timeslots);
             // Group the timeslots by date
             const groupedtimeslots = {};
             timeslots.forEach(timeslot => {
@@ -338,7 +337,6 @@ $conn->close();
         loadCalendar();
 
         function deleteTheTimeslot(timeslot_id, filled, max){
-            console.log(`Timeslot ID: ${timeslot_id}, Filled: ${filled}, Max: ${max}`);
             if (confirm("Are you sure you want to delete this timeslot?")) {
                 filled = parseInt(filled);
                 max = parseInt(max);
@@ -469,7 +467,6 @@ $conn->close();
 
     //new timeslot for reccuring add
     async function submitTimeslot() {
-        console.log('Booking URL:', bkurl);
         const slotTitle = document.getElementById('slotTitle').value;
         const hostName = document.getElementById('hostName').value;
         const location = document.getElementById('location').value;
@@ -497,12 +494,7 @@ $conn->close();
             const bookingEnd = new Date(bookingDetails.enddatetime);
 
             const slotStartTime = new Date(startTime);
-            console.log("I start");
-            console.log(slotStartTime);
-
             const slotEndTime = new Date(endTime);
-            console.log("I end");
-            console.log(slotEndTime);
 
             /** ----The code below is taken from the internet for adjusting timestamps for wacky timezones ----**/
             // source: https://stackoverflow.com/questions/17415579/how-to-iso-8601-format-a-date-with-timezone-offset-in-javascript
@@ -545,7 +537,7 @@ $conn->close();
                             maxslots: maxSlots
                         })
                     });
-                    console.log("just submitted");
+
                     if (!response.ok) {
                         console.error('Failed to create time slot:', await response.text());
                         alert('Failed to create one or more time slots.');
@@ -620,13 +612,6 @@ $conn->close();
         }
 
         try {
-            console.log(bkurl);
-            console.log(bookingTitle);
-            console.log(bookingDescription);
-            console.log(bookingStartTime);
-            console.log(bookingEndTime);
-            console.log("Entered");
-
             fetch('../quickmeet_api/apiendpoints.php/booking/edit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -643,7 +628,6 @@ $conn->close();
                     alert('Failed to update booking: ' + response.error);
                 }
                 else {
-                    console.log(response);
                     alert('Booking updated successfully!');
                     closeEditBookingModal();
                     location.reload(); // Reload the page
@@ -668,7 +652,6 @@ $conn->close();
                 return response.json();
             })
             .then(slots => {
-                console.log(slots); 
 
                 document.getElementById('availabilityModal').style.display = 'block';
                 const tableBody = document.getElementById('availability-table').querySelector('tbody');
@@ -708,8 +691,6 @@ $conn->close();
         }
     </script>
     <script>
-    console.log('../quickmeet_api/apiendpoints.php/timeslot/<?php echo $bookingUrl ?>/bookingurl');
-    
     function fetchTimeslots(){
         fetch('../quickmeet_api/apiendpoints.php/timeslot/<?php echo $bookingUrl ?>/bookingurl', { method: 'GET' })
             .then(response => {
@@ -721,7 +702,7 @@ $conn->close();
                     return response.json();
                 })
                 .then(slots => {
-                    console.log("execute GET /apiendpoints.php/slots"); 
+                    console.log("execute GET /apiendpoints.php/slots to fetch timeslots"); 
                     const slotList = document.getElementById('user-list');
                     slotList.innerHTML = '';
                     slots.forEach(slot => {

@@ -23,7 +23,6 @@ $userid=24; // hardcoded for now, should be == userid from the current session t
 <button onclick="createBooking()">Create Booking</button>
 
 <script>
-console.log('./apiendpoints.php/booking/<?php echo $userid ?>/userid');
 
 fetch('../quickmeet_api/apiendpoints.php/booking/<?php echo $userid ?>/userid', { method: 'GET' })
         .then(response => {
@@ -48,15 +47,10 @@ fetch('../quickmeet_api/apiendpoints.php/booking/<?php echo $userid ?>/userid', 
                     
                     li.textContent = `${booking.bookingtitle} - ${booking.bookingurl} - Start: ${startDate} - End: ${targetDate}`;
 
-                    console.log(targetDate);
-                    console.log(currentDate);
-
                     if (targetDate >= currentDate){
-                        console.log("greater");
                         activeBookingList.appendChild(li);
                     }
                     else {
-                        console.log("less");
                         pastBookingList.appendChild(li);
                     }
                 });

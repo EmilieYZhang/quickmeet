@@ -213,7 +213,6 @@ if ($resUrl) {
                 e.preventDefault();
             }
             else {
-                console.log('./apiendpoints.php/reservation/<?php echo $resUrl ?>');
                 fetch('./apiendpoints.php/reservation/<?php echo $resUrl ?>', { method: 'DELETE' })
                     .then(response => {
                             // Check if the response is successful

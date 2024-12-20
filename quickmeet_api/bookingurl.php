@@ -422,8 +422,6 @@ if ($bookingUrl) {
 
                 if (weekBookings[day].length > 0) {
                     weekBookings[day].forEach(slot => {
-                        console.log(new Date());
-                        console.log(`Past time: ${slot.end}`);
                         if (new Date(slot.end) < new Date()){
                             daySection.innerHTML += `
                             <div class="booking-slot-past">
@@ -570,7 +568,6 @@ if ($bookingUrl) {
                     alert('Failed to send availability request: ' + response.error);
                 }
                 else {
-                    console.log(response);
                     alert('Availability Request sent successfully!');
                     closeRequestAvailabilityModal();
                 }
