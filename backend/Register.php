@@ -43,7 +43,7 @@ include '../backend/header.php';
 
     <div class = "fromDivImgDiv">
         <div class = "divForForm">
-            <form name = "Form" action="../backend/register.php" method="POST" onsubmit="return checkForm();">
+            <form name = "Form" action="../backend/register_backend.php" method="POST" onsubmit="return checkForm();">
                     <h1 class="title">Plan your bookings effortlessly with us!</h1>
                     <div class="subtitle">Let's get started.</div>
                     <input type="text" name="fname" placeholder="First name">

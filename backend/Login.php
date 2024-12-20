@@ -34,7 +34,7 @@ include '../backend/header.php';
 
 <div class = "fromDivImgDiv">
     <div class = "divForForm">
-        <form name = "Form" action="../backend/login.php" method="POST" onsubmit="return checkForm();">
+        <form name = "Form" action="../backend/login_backend.php" method="POST" onsubmit="return checkForm();">
             <h1 class="title">Login</h1>
 
             <input type="text" name="email" placeholder="email" >
