@@ -1,13 +1,10 @@
 <?php
 include "db_connect.php";
-session_start();  // Start the session
+session_start(); 
 
-// Check if the session ticket exists
 if (isset($_SESSION['ticket'])) {
-    // The user is logged in
     $ticket = $_SESSION['ticket'];
 
-    // Validate the ticket in the database
     $stmt = $conn->prepare("SELECT user_id, expiry FROM user_tickets WHERE ticket = ?");
     if ($stmt === false) {
         die("Database query failed.");
@@ -20,17 +17,14 @@ if (isset($_SESSION['ticket'])) {
     $stmt->close();
 
 
-    // Optionally, extend the session expiry if it's valid
     $newExpiry = time() + 3600;  // Extend for 1 more hour
     $updateStmt = $conn->prepare("UPDATE user_tickets SET expiry = ? WHERE ticket = ?");
     $updateStmt->bind_param("is", $newExpiry, $ticket);
     $updateStmt->execute();
     $updateStmt->close();
 
-    // Set a flag to use in the page for logged-in users
     $isLoggedIn = true;
 } else {
-    // If there is no ticket, user is not logged in
     $isLoggedIn = false;
     $conn->close();
 }
