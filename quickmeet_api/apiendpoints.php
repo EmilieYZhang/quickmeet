@@ -2,7 +2,7 @@
 
 /*
 @author: Emilie Zhang for handling api endpoints
-@author: Japmann Sarin 
+@author: Japmann Sarin for POST request and api call
 */
 
 header('Access-Control-Allow-Origin: *');
