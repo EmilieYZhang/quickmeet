@@ -5,7 +5,7 @@ URL: https://www.cs.mcgill.ca/~ezhang19/quickmeet/FrontEndCode/Landing.html
 
 GitHub repo: https://github.com/EmilieYZhang/quickmeet
 
-Youtube Demo Link: 
+Youtube Demo Link: https://youtu.be/RI4wOW7yblo
 
 ## Project Overview
 This booking website simplifies the process of scheduling meetings and appointments. Key features include:
