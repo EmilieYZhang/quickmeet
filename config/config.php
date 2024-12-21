@@ -1,4 +1,5 @@
 <?php
+// @author: Japmann Sarin
 // database settings
 //define('DB_HOST', 'mysql.cs.mcgill.ca');
 //define('DB_USER', 'comp307-hkacma');
