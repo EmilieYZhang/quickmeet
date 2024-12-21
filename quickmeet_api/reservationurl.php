@@ -55,14 +55,6 @@ if ($resUrl) {
         $result = $stmt->get_result();
         if ($result && $result->num_rows > 0) {
             $restimeslot = $result->fetch_assoc();
-            // echo "<h3>Meeting Details: " . htmlspecialchars($restimeslot['slottitle']) . "</h3>";
-            // echo "<h3>Hostname: " . htmlspecialchars($restimeslot['hostname']) . "</h3>";
-            // echo "<h3>Location: " . htmlspecialchars($restimeslot['location']) . "</h3>";
-            // echo "<h4>Start Time: " . htmlspecialchars($restimeslot['startdatetime']) . "</h4>";
-            // echo "<h4>End Time: " . htmlspecialchars($restimeslot['enddatetime']) . "</h4>";
-            // echo "<h4>Notes: " . htmlspecialchars($res['notes']) . "</h4>";
-            // echo "<h4>Original Booking URL: " . htmlspecialchars("https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($restimeslot['bookingurl'])) . "</h4>";
-            // new html/css
             echo "
             <!DOCTYPE html>
             <html lang='en'>
