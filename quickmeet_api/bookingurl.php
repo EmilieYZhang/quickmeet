@@ -21,24 +21,22 @@ $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 // check the connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
-} else {
-    echo "Database connected successfully!";
 }
 // ** ----------------  **//
 
 // ** THIS IS FOR LOCAL HOST **//
-//$servername = "localhost";
-//$username = "root";
-//$password = "";
-//$dbname = "mysql";
+// $servername = "localhost";
+// $username = "root";
+// $password = "";
+// $dbname = "mysql";
 
-// Create connection
-//$conn = new mysqli($servername, $username, $password, $dbname);
+// // Create connection
+// $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
-//if ($conn->connect_error) {
-//    die("Connection failed: " . $conn->connect_error);
-//}
+// // Check connection
+// if ($conn->connect_error) {
+//     die("Connection failed: " . $conn->connect_error);
+// }
 // ** ---------------- **//
 
 $bookingUrl = $_GET['url'] ?? null;
@@ -108,7 +106,7 @@ if ($bookingUrl) {
                 <p><span class = 'bolder'>Start:</span> " . htmlspecialchars($booking['startdatetime']) . "</p>
                 <p><span class = 'bolder'>End: </span>" . htmlspecialchars($booking['enddatetime']) . "</p>
                 
-                <p><span class = 'bolder'>Full Booking URL:</span> https://cs.mcgill.ca/~hkacma/COMP307/booking_tool/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "</p>
+                <p><span class = 'bolder'>Full Booking URL:</span> https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "</p>
                 
             </div>
         </body>
@@ -384,33 +382,35 @@ if ($bookingUrl) {
             });
             const timeslots = await timeslotResponse.json();
 
-            timeslots.forEach(slot => {
-                const startDate = new Date(slot.startdatetime);
+            if (timeslots !== undefined && timeslots !== null && Array.isArray(timeslots)) {
+                timeslots.forEach(slot => {
+                    const startDate = new Date(slot.startdatetime);
 
-                // Skip time slots outside the current week or month
-                if (
-                    startDate < currentWeekStart ||
-                    startDate > currentWeekEnd ||
-                    startDate.getMonth() !== currentMonth
-                ) {
-                    return;
-                }
+                    // Skip time slots outside the current week or month
+                    if (
+                        startDate < currentWeekStart ||
+                        startDate > currentWeekEnd ||
+                        startDate.getMonth() !== currentMonth
+                    ) {
+                        return;
+                    }
 
-                // Adjust the day name to start the week on Monday
-                const dayIndex = (startDate.getDay() + 6) % 7; // Sunday becomes 6, Monday becomes 0
-                const dayName = daysOfWeek[dayIndex];
+                    // Adjust the day name to start the week on Monday
+                    const dayIndex = (startDate.getDay() + 6) % 7; // Sunday becomes 6, Monday becomes 0
+                    const dayName = daysOfWeek[dayIndex];
 
-                weekBookings[dayName].push({
-                    title: slot.slottitle,
-                    host: slot.hostname,
-                    location: slot.location,
-                    maxslots: slot.maxslots,
-                    numopenslots: slot.numopenslots,
-                    start: slot.startdatetime,
-                    end: slot.enddatetime,
-                    sid: slot.sid,
+                    weekBookings[dayName].push({
+                        title: slot.slottitle,
+                        host: slot.hostname,
+                        location: slot.location,
+                        maxslots: slot.maxslots,
+                        numopenslots: slot.numopenslots,
+                        start: slot.startdatetime,
+                        end: slot.enddatetime,
+                        sid: slot.sid,
+                    });
                 });
-            });
+            }
 
             // Render the time slots
             for (const day of daysOfWeek) {
@@ -469,8 +469,10 @@ if ($bookingUrl) {
 
     //reserve a slot. If the user entered an email then send the email
     async function reserveSlot(sid) {
-        const toemail = document.getElementById('email').value ?? '';       
-        fetch('../quickmeet_api/apiendpoints.php/reservation', {
+        const toemail = document.getElementById('email').value ?? '';
+
+        // try {
+            const response = await fetch('../quickmeet_api/apiendpoints.php/reservation', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -478,22 +480,27 @@ if ($bookingUrl) {
                     email: toemail,
                     notes: ""
                 })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok, failed to reserve.');
-                }
-                return response.json();
-            })
-            .then(newReservation => {
-                alert(`Success! Reservation created: ${newReservation.reservation_url}`);
-                window.location.href = newReservation.reservation_url;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("Failed to create booking.");
             });
+
+            if (!response.ok) {
+                console.warn('Reservation API responded with a non-OK status.');
+                alert("Reservation failed. Please try again later.");
+                return null;
+            }
+
+            const newReservation = await response.json();
+        
+            if (newReservation.error) {
+                console.error('API returned an error:', newReservation.error);
+                alert(`Error: ${newReservation.error}`);
+                return null;
+            }
+
+            alert(`Success! Reservation created: ${newReservation.reservation_url}`);
+            window.location.href = newReservation.reservation_url;
+            return newReservation; 
     }
+
     listTimeSlots();
 </script>
 

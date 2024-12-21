@@ -9,17 +9,15 @@ header('Access-Control-Allow-Origin: *');
 header('Content-Type: text/html; charset=utf-8');
 
 // ** THIS IS FOR MIMI SERVER HOST **//
-// require_once '../config/config.php';
+require_once '../config/config.php';
 
-// // create a connection to the MySQL database
-// $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+// create a connection to the MySQL database
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-// // check the connection
-// if ($conn->connect_error) {
-//     die("Connection failed: " . $conn->connect_error);
-// } else {
-//     echo "Database connected successfully!";
-// }
+// check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 // ** ----------------  **//
 
 // ** THIS IS FOR LOCAL HOST **//
@@ -99,7 +97,7 @@ if ($bookingUrl) {
                 <p><span class = 'bolder'>Start:</span> " . htmlspecialchars($booking['startdatetime']) . "</p>
                 <p><span class = 'bolder'>End: </span>" . htmlspecialchars($booking['enddatetime']) . "</p>
                 
-                <p><span class = 'bolder'>Full Booking URL:</span> <a href='https://cs.mcgill.ca/~hkacma/COMP307/booking_tool/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>Link</a></p>
+                <p><span class = 'bolder'>Full Booking URL:</span> <a href='https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>Link</a></p>
                 
             </div>
         </body>
@@ -293,7 +291,7 @@ $conn->close();
     </style>
 </head>
 
-    <div id="calendar" class="calendar"></div>
+    <div id="calendar" class="calendar">You currently have no timeslots, please add a new Timeslot.</div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script>
         // @author: Emilie Zhang for loadCalendar() and deleteTimeslot()
@@ -301,39 +299,42 @@ $conn->close();
             const timeslotResponse = await fetch('../quickmeet_api/apiendpoints.php/timeslot/<?php echo $ogbookingurl ?>/bookingurl', {
                 method: 'GET'
             });
+            
             const timeslots = await timeslotResponse.json();
-            // Group the timeslots by date
-            const groupedtimeslots = {};
-            timeslots.forEach(timeslot => {
-                const date = timeslot.startdatetime.split(' ')[0];
-                if (!groupedtimeslots[date]) groupedtimeslots[date] = [];
-                groupedtimeslots[date].push(timeslot);
-            });
 
-            const calendar = document.getElementById('calendar');
-            calendar.innerHTML = ''; // Clear previous content
-            Object.keys(groupedtimeslots).sort().forEach(date => {
-                const dayHeader = document.createElement('div');
-                dayHeader.className = 'day-header';
-                dayHeader.textContent = moment(date).format('dddd, MMMM D, YYYY');
-                calendar.appendChild(dayHeader);
-
-                groupedtimeslots[date].forEach(timeslot => {
-                    const timeslotDiv = document.createElement('div');
-                    timeslotDiv.className = 'timeslot';
-
-                    timeslotDiv.innerHTML = `
-                        <div class="timeslot-title">${timeslot.slottitle}</div>
-                        <div>${moment(timeslot.startdatetime).format('hh:mm A')} - ${moment(timeslot.enddatetime).format('hh:mm A')}</div>
-                        <div>${timeslot.numopenslots}/${timeslot.maxslots}</div>
-                        <img src="../FrontEndCode/Images/bin.png" alt="Delete" class="delete-icon" onclick="deleteTheTimeslot('${timeslot.sid}', ${timeslot.numopenslots}, ${timeslot.maxslots})">
-                    `;
-                    calendar.appendChild(timeslotDiv);
+            if (timeslots !== undefined && timeslots !== null && Array.isArray(timeslots)) {
+                const groupedtimeslots = {};
+                timeslots.forEach(timeslot => {
+                    const date = timeslot.startdatetime.split(' ')[0];
+                    if (!groupedtimeslots[date]) groupedtimeslots[date] = [];
+                    groupedtimeslots[date].push(timeslot);
                 });
-            });
+
+
+                const calendar = document.getElementById('calendar');
+                calendar.innerHTML = '';
+                Object.keys(groupedtimeslots).sort().forEach(date => {
+                    const dayHeader = document.createElement('div');
+                    dayHeader.className = 'day-header';
+                    dayHeader.textContent = moment(date).format('dddd, MMMM D, YYYY');
+                    calendar.appendChild(dayHeader);
+
+                    groupedtimeslots[date].forEach(timeslot => {
+                        const timeslotDiv = document.createElement('div');
+                        timeslotDiv.className = 'timeslot';
+
+                        timeslotDiv.innerHTML = `
+                            <div class="timeslot-title">${timeslot.slottitle}</div>
+                            <div>${moment(timeslot.startdatetime).format('hh:mm A')} - ${moment(timeslot.enddatetime).format('hh:mm A')}</div>
+                            <div>${timeslot.numopenslots}/${timeslot.maxslots}</div>
+                            <img src="bin.png" alt="Delete" class="delete-icon" onclick="deleteTheTimeslot('${timeslot.sid}', ${timeslot.numopenslots}, ${timeslot.maxslots})">
+                        `;
+                        calendar.appendChild(timeslotDiv);
+                    });
+                });
+            }
         }
 
-        // Load the calendar on page load
         loadCalendar();
 
         function deleteTheTimeslot(timeslot_id, filled, max){
@@ -641,7 +642,8 @@ $conn->close();
         return false;
     }
 
-    function ViewAvailability(){
+    async function ViewAvailability(){
+        console.log("Inside viewing");
         fetch('../quickmeet_api/apiendpoints.php/availability/<?php echo $ogbookingurl ?>/bookingurl', { method: 'GET' })
         .then(response => {
                 // Check if the response is successful
@@ -687,7 +689,7 @@ $conn->close();
                     });
                 }
             })
-            .catch(error => console.error('Error fetching users:', error));
+            .catch(error => console.error('Error parsing availability JSON:', error));
         }
     </script>
     <script>

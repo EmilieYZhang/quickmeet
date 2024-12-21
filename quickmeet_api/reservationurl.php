@@ -18,24 +18,22 @@ $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 // check the connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
-} else {
-    echo "Database connected successfully!";
 }
 // ** ----------------  **//
 
 // ** THIS IS FOR LOCAL HOST **//
-//$servername = "localhost";
-//$username = "root";
-//$password = "";
-//$dbname = "mysql";
+// $servername = "localhost";
+// $username = "root";
+// $password = "";
+// $dbname = "mysql";
 
-// Create connection
-//$conn = new mysqli($servername, $username, $password, $dbname);
+// // Create connection
+// $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
-//if ($conn->connect_error) {
-//    die("Connection failed: " . $conn->connect_error);
-//}
+// // Check connection
+// if ($conn->connect_error) {
+//     die("Connection failed: " . $conn->connect_error);
+// }
 // ** ---------------- **//
 
 $resUrl = $_GET['url'] ?? null;
@@ -116,7 +114,7 @@ if ($resUrl) {
                     <p><span class = 'bolder'>Start Time: </span>" . htmlspecialchars($restimeslot['enddatetime']) . "</p>
                     <p><span class = 'bolder'>Notes: </span>" . "</p>
                     <p>". htmlspecialchars($res['notes']) ."</p>
-                    <p><span class = 'bolder'>Original Booking URL: </span> " . htmlspecialchars("https://cs.mcgill.ca/~hkacma/COMP307/booking_tool/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($restimeslot['bookingurl'])) . "</p>
+                    <p><span class = 'bolder'>Original Booking URL: </span> " . htmlspecialchars("https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($restimeslot['bookingurl'])) . "</p>
                     
                     
                     

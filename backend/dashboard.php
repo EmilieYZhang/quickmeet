@@ -235,8 +235,8 @@ $bookingStmt->close();
                         echo "<tr>
                             <td>" . ($index + 1) . "</td>
                             <td>" . htmlspecialchars($booking['bookingtitle']) . "</td>
-                            <td><a href='https://cs.mcgill.ca/~hkacma/COMP307/booking_tool/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>" . htmlspecialchars($booking['bookingurl']) . "</a></td>
-                            <td><a href='https://cs.mcgill.ca/~hkacma/COMP307/booking_tool/quickmeet/backend/editbookingurl.php?url=" . htmlspecialchars($booking['editbookingurl']) . "' target='_blank'> EDIT</td>
+                            <td><a href='https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>" . htmlspecialchars($booking['bookingurl']) . "</a></td>
+                            <td><a href='https://www.cs.mcgill.ca/~ezhang19/quickmeet/backend/editbookingurl.php?url=" . htmlspecialchars($booking['editbookingurl']) . "' target='_blank'> EDIT</td>
                             </tr>";
                     }
                 }
@@ -275,7 +275,7 @@ $bookingStmt->close();
                             echo "<tr>
                                 <td>" . ($index + 1) . "</td>
                                 <td>" . htmlspecialchars($booking['bookingtitle']) . "</td>
-                                <td><a href='https://cs.mcgill.ca/~hkacma/COMP307/booking_tool/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>" . htmlspecialchars($booking['bookingurl']) . "</a></td>
+                                <td><a href='https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>" . htmlspecialchars($booking['bookingurl']) . "</a></td>
                                 </tr>";
                         }
                     }
@@ -436,8 +436,8 @@ $bookingStmt->close();
             document.getElementById("bookingModal").style.display = "none";
         }
 
-        // @author: Emilie Zhang for create new booking edge cases and backend
-        function createBooking() {
+        // Function to handle form submission and create booking
+        async function createBooking() {
             const bookingTitle = document.forms["Form"]["btitle"].value;
             const bookingDescription = document.forms["Form"]["bdescription"].value;
 
@@ -463,34 +463,32 @@ $bookingStmt->close();
                 return false;
             }
 
-            fetch('https://cs.mcgill.ca/~hkacma/COMP307/booking_tool/quickmeet/quickmeet_api/apiendpoints.php/booking', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    uid: userId,  // Replace with actual user ID
-                    startdatetime: startDatetime, //"2024-12-10 10:00:00",
-                    enddatetime: endDatetime, //"2024-12-19 12:00:00",
-                    bookingtitle: bookingTitle,
-                    bookingdescription: bookingDescription
-                })
-            })
-            .then(response => {
+            try {
+                const response = await fetch('../quickmeet_api/apiendpoints.php/booking', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        uid: userId,  // Replace with actual user ID
+                        startdatetime: startDatetime, //"2024-12-10 10:00:00",
+                        enddatetime: endDatetime, //"2024-12-19 12:00:00",
+                        bookingtitle: bookingTitle,
+                        bookingdescription: bookingDescription
+                    })
+                });
+
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Failed to create booking');
                 }
-                return response.json();
-            })
-            .then(newBooking => {
+
+                const newBooking = await response.json();
                 alert(`Booking created: ${newBooking.booking_id} - ${newBooking.booking_url}`);
                 window.location.href = newBooking.editbooking_url; // Redirect to the booking URL
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("Failed to create booking.");
-            });
-
-            return false; // Prevent form submission from refreshing the page
+            } catch (error) {
+                console.error('Error creating booking:', error);
+            }
+            window.location.reload(true);
         }
+
 
         // Toggle visibility of past bookings
         function togglePastBookings() {

@@ -25,10 +25,10 @@ include 'header.php';
         function checkSearchForm() {
             const burl = document.forms["Form"]["burl"];
 
-            const bURLRegex = /http:\/\/localhost\/quickmeet\/quickmeet_api\/bookingurl\.php\?url=.+$/;
-
+            const bURLRegex = /^https:\/\/www\.cs\.mcgill\.ca\/~ezhang19\/quickmeet\/quickmeet_api\/bookingurl\.php\?url=.+$/;
+            
             if (!bURLRegex.test(burl.value)) {
-                alert("Please enter a valid Booking URL (e.g., starting with https://cs.mcgill.ca/~hkacma/COMP307/booking_tool/quickmeet/quickmeet_api/bookingurl.php?url=).");
+                alert("Please enter a valid Booking URL (e.g., starting with https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/bookingurl.php?url=).");
                 return false; // Prevent form submission
             }
 

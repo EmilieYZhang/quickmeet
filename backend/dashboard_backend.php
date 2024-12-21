@@ -24,38 +24,37 @@ $userid=24; // hardcoded for now, should be == userid from the current session t
 
 <script>
 
-fetch('../quickmeet_api/apiendpoints.php/booking/<?php echo $userid ?>/userid', { method: 'GET' })
-        .then(response => {
-                // Check if the response is successful
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                // Attempt to parse JSON
-                return response.json();
-            })
-            .then(bookings => {
-                const activeBookingList = document.getElementById('current-user-list');
-                activeBookingList.innerHTML = '';
-                const pastBookingList = document.getElementById('past-user-list');
-                pastBookingList.innerHTML = '';
-                bookings.forEach(booking => {
-                    const li = document.createElement('li');
-                    const startDate = new Date(booking.startdatetime.replace(' ', 'T'));
-                    const targetDate = new Date(booking.enddatetime.replace(' ', 'T'));
-                    // Get the current timestamp
-                    const currentDate = new Date();
-                    
-                    li.textContent = `${booking.bookingtitle} - ${booking.bookingurl} - Start: ${startDate} - End: ${targetDate}`;
+const getbookingRequest = await fetch('../quickmeet_api/apiendpoints.php/booking/<?php echo $userid ?>/userid', { method: 'GET' });
+            
+const bookings = await getbookingRequest.json();
 
-                    if (targetDate >= currentDate){
-                        activeBookingList.appendChild(li);
-                    }
-                    else {
-                        pastBookingList.appendChild(li);
-                    }
-                });
-            })
-            .catch(error => console.error('Error fetching users:', error));
+if (bookings !== undefined && bookings !== null && Array.isArray(bookings)) {
+    const activeBookingList = document.getElementById('current-user-list');
+    activeBookingList.innerHTML = '';
+    const pastBookingList = document.getElementById('past-user-list');
+    pastBookingList.innerHTML = '';
+    bookings.forEach(booking => {
+        const li = document.createElement('li');
+        const startDate = new Date(booking.startdatetime.replace(' ', 'T'));
+        const targetDate = new Date(booking.enddatetime.replace(' ', 'T'));
+        // Get the current timestamp
+        const currentDate = new Date();
+        
+        li.textContent = `${booking.bookingtitle} - ${booking.bookingurl} - Start: ${startDate} - End: ${targetDate}`;
+
+        console.log(targetDate);
+        console.log(currentDate);
+
+        if (targetDate >= currentDate){
+            console.log("greater");
+            activeBookingList.appendChild(li);
+        }
+        else {
+            console.log("less");
+            pastBookingList.appendChild(li);
+        }
+    });
+}
 </script>
 <script>
     function createBooking() {
