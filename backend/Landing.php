@@ -1,4 +1,7 @@
 <?php
+
+//@author: Hudanur Kacmaz
+
 include "db_connect.php";
 session_start(); 
 
@@ -73,7 +76,6 @@ if (isset($_SESSION['ticket'])) {
         .date {
             font-size: 17px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* border-radius: 50%; */
         }
 
         .current-day {
@@ -84,13 +86,6 @@ if (isset($_SESSION['ticket'])) {
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
         }
 
-
-        /* a {
-            margin-right: 5vw;
-            color: #808998;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 18px;
-        } */
         a {
         margin-right: 60px;
         color: #808998;

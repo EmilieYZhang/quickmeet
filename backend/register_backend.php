@@ -1,5 +1,7 @@
 <?php
 
+//@author: Hudanur Kacmaz
+
 require 'db_connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -9,17 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     $password = trim($_POST['password']);
 
-    // validate required fields
     if (empty($fname) || empty($lname) || empty($email) || empty($password)) {
         $error_message = "Please fill out all required fields.";
     }
 
-    // validate McGill email format
     if (!filter_var($email, FILTER_VALIDATE_EMAIL) || !preg_match('/@(?:mcgill\.ca|mail\.mcgill\.ca)$/', $email)) {
         $error_message = "Invalid McGill email address.";
     }
 
-    // check if email is already registered
     if (!isset($error_message)) { 
         $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
@@ -27,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = $stmt->get_result();
         
         if ($result->num_rows > 0) {
-            // email already exists
             $error_message = "Email address is already registered. Please go to Login page.";
         }
         
@@ -41,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        // insert user into the database
         $stmt = $conn->prepare("INSERT INTO users (fname, lname, username, email, password) VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param("sssss", $fname, $lname, $username, $email, $hashedPassword);
 

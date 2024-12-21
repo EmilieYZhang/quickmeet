@@ -2,6 +2,8 @@
 include '../backend/header.php'; 
 ?>
 
+//@author: Hudanur Kacmaz
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +15,6 @@ include '../backend/header.php';
     <link href="../FrontEndCode/RegisterCssLap.css" rel="stylesheet">
 
     <style>
-        /* FAQ Section Styling */
         .faq-container {
             margin: 40px auto;
             padding: 20px;
@@ -163,16 +164,13 @@ include '../backend/header.php';
             linksForPhone.classList.toggle('show');
         }
 
-        // Toggle FAQ Answer visibility
         document.querySelectorAll('.faq-question').forEach((question) => {
             question.addEventListener('click', () => {
                 const answer = question.nextElementSibling;
                 const arrow = question.querySelector('.faq-arrow');
 
-                // Toggle answer visibility
                 answer.classList.toggle('show');
 
-                // Rotate arrow
                 arrow.classList.toggle('rotate');
             });
         });

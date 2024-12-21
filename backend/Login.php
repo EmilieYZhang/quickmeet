@@ -1,4 +1,7 @@
 <?php
+
+//@author: Hudanur Kacmaz
+
 include '../backend/header.php'; 
 ?>
 
@@ -18,7 +21,6 @@ include '../backend/header.php';
             const email = document.forms["Form"]["email"].value;
             const password = document.forms["Form"]["password"].value;
             
-            // Check if any field is empty
             if (email.length === 0  || password.length === 0) {
                 alert("Please fill in all fields.");
                 return false; // Prevent form submission

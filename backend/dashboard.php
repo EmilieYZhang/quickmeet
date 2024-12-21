@@ -1,13 +1,14 @@
 <?php
 include 'header.php';
 
+//@author: Hudanur Kacmaz and Emilie Zhang
+
 if (!$userId || time() > $expiry) {
     session_destroy();
     header("Location: ../FrontEndCode/Login.html");
     exit();
 }
 
-// Fetch user bookings
 $bookings = [];
 $bookingStmt = $conn->prepare("SELECT * FROM Booking WHERE uid = ?");
 if ($bookingStmt === false) {
@@ -423,20 +424,17 @@ $bookingStmt->close();
     </div>
 
     <script>
-        const userId = <?php echo htmlspecialchars($userId); ?>; // Hardcoded user ID, replace this with session-based user ID
+        const userId = <?php echo htmlspecialchars($userId); ?>; 
         const apiEndpoint = `https://cs.mcgill.ca/~hkacma/COMP307/booking_tool/quickmeet/quickmeet_api/apiendpoints.php/booking/${userId}/userid`;
 
-        // Function to show the modal for booking
         function showModal() {
             document.getElementById("bookingModal").style.display = "block";
         }
 
-        // Function to close the modal
         function closeModal() {
             document.getElementById("bookingModal").style.display = "none";
         }
 
-        // Function to handle form submission and create booking
         async function createBooking() {
             const bookingTitle = document.forms["Form"]["btitle"].value;
             const bookingDescription = document.forms["Form"]["bdescription"].value;
@@ -452,7 +450,6 @@ $bookingStmt->close();
             const startDatetime = bookingStartYear + "-" + bookingStartMonth + "-" + bookingStartDay + " " + "00:00:00";
             const endDatetime = bookingEndYear + "-" + bookingEndMonth + "-" + bookingEndDay + " " + "23:59:00";
 
-            // Check if data exists before proceeding
             if (!bookingTitle || !bookingDescription) {
                 alert("Please fill in all fields.");
                 return false;
@@ -490,13 +487,11 @@ $bookingStmt->close();
         }
 
 
-        // Toggle visibility of past bookings
         function togglePastBookings() {
             const pastBookingsSection = document.getElementById('past-bookings-section');
             pastBookingsSection.classList.toggle('hidden');
         }
 
-        // Dropdown menu for mobile view
         function dropDownMenu() {
             const linksForPhone = document.querySelector(".LinksForPhone");
             linksForPhone.classList.toggle('show');

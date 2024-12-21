@@ -1,4 +1,7 @@
 <?php
+
+//@author:Hudanur Kacmaz
+
 include '../backend/header.php';  
 ?>
 
@@ -20,13 +23,11 @@ include '../backend/header.php';
             const email = document.forms["Form"]["email"];
             const password = document.forms["Form"]["password"].value;
             
-            // Check if any field is empty
             if (fname.length === 0 || lname.length === 0  || email.length === 0  || password.length === 0) {
                 alert("Please fill in all required fields.");
                 return false; // Prevent form submission
             }
 
-	    //Validate McGill email address
 	    const mcgillEmailRegex = /.+@mcgill\.ca|.+@mail\.mcgill\.ca/;
     	    if (!mcgillEmailRegex.test(email.value)) {
         	alert("Please enter a valid McGill email address (e.g., john.durant@mail.mcgill.ca).");
