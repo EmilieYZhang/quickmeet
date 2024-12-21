@@ -2,6 +2,7 @@
 ### COMP307 F2024 Project - SOCS Competition
 
 URL: https://www.cs.mcgill.ca/~ezhang19/quickmeet/backend/Landing.php
+GitHub repo: https://github.com/EmilieYZhang/quickmeet
 
 ## Project Overview
 This booking website simplifies the process of scheduling meetings and appointments. Key features include:
