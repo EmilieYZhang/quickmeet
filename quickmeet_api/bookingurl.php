@@ -5,7 +5,7 @@ include '../backend/bookingpagesheader.php';
 
 <?php
 /*
-@author: Serhii Artemenko for calendar display, timeslot generation call to api backend
+@author: Serhii Artemenko for calendar display, timeslot generation call to api backend, and reservation backend calls.
 @author: Emilie Zhang for api call verification and unique booking url generation and pathing
 */
 

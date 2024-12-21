@@ -1,75 +1,5 @@
+/*@author (Serhii, Artemenko)*/
 @media screen and (max-width: 768px){
-
-    /* .hamburger{
-        
-
-    }
-    .cross {
-        display: none;
-    }
-
-    .hamUnderline{
-        font-size: 35px;
-        text-decoration: none;
-
-    }
-
-    .LinksForPhone.show {
-        display: block;
- 
-
-    }
-    .hamUnderline:hover{
-        color: aqua;
-    }
-
-    .header {
-        display: none;
-    }
-
-
-    .Links {
-        position: absolute;
-        top: 6vh;
-        right: 0vh;
-    }
-
-    
-    .LinksForPhone{
-        display: none;
-        width: 100%;
-        margin: auto;
-        background-color: #15182B;
-        
-    }
-    .LP{
-        display: block;
-        width: 20%;
-        margin: auto;
-        font-size: 18px;
-
-
-    }
-
-    .LP:hover{
-        display: block;
-        width: 20%;
-        margin: auto;
-
-
-    }
-
-    a {
-        display: block;
-        color: #808998;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-size: 18px;
-        text-decoration: none;
-        
-    } */
-
-    /*END OF HEADER CSS*/
-
 
     input[type="text"] {
         color: white;
@@ -161,7 +91,6 @@
 
     }
 
-    /*New css //////////////////////////////////////////////////////////////////////*/
 
     form.show{
         margin: auto;

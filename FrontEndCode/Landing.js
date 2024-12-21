@@ -1,4 +1,4 @@
-/*(Serhii Artemenko)*/
+/*@author (Serhii Artemenko)*/
 //Just displays a calendar with the current day highlighted.
 const calendarEl = document.querySelector('.calendar');
 

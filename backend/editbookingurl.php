@@ -2,7 +2,7 @@
 <?php
 include 'bookingpagesheader.php';
 // @author: Emilie Zhang for unique edit booking url generation/routing, history of timeslots display frontend/backend and api calls backend
-// @author: Serhii Artemenko for frontend interactions, css display and template api calls
+// @author: Serhii Artemenko for frontend interactions, css display and template api calls (e.g. Edit booking )
 ?>
 <?php
 header('Access-Control-Allow-Origin: *');
