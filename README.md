@@ -1,6 +1,11 @@
 # quickmeet - team scriptSquad
 ### COMP307 F2024 Project - SOCS Competition
 
+Emilie Yahui Zhang, 261034013
+Japmann Sarin, 260960022
+Hudanur Kacmaz, 260916425
+Serhii Artemenko, 261117145
+
 URL: https://www.cs.mcgill.ca/~ezhang19/quickmeet/FrontEndCode/Landing.html
 
 GitHub repo: https://github.com/EmilieYZhang/quickmeet
