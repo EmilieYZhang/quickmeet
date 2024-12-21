@@ -23,7 +23,6 @@ $userid=24; // hardcoded for now, should be == userid from the current session t
 <button onclick="createBooking()">Create Booking</button>
 
 <script>
-console.log('./apiendpoints.php/booking/<?php echo $userid ?>/userid');
 
 const getbookingRequest = await fetch('../quickmeet_api/apiendpoints.php/booking/<?php echo $userid ?>/userid', { method: 'GET' });
             

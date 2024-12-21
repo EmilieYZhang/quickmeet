@@ -1,7 +1,7 @@
 <?php
 session_start();
 session_destroy();
-header("Location: ../backend/Login.php");
+header("Location: ../FrontEndCode/Landing.html");
 exit();
 ?>
 

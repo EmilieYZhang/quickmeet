@@ -1,6 +1,14 @@
 <?php
-header('Access-Control-Allow-Origin: *');
-header('Content-Type: application/json');
+
+/*
+@author: Emilie Zhang for handling api endpoints
+@author: Japmann Sarin for POST request and api call
+*/
+
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -117,7 +125,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode(array("error" => "A timeslot with this booking url was not found"));
             }
         } 
-        ////new code for num of slots in time slots here
         else if ($paramname == 'numopenslots') {
             $sql = "SELECT numopenslots, maxslots FROM Timeslot WHERE sid = ?";
             $stmt = $conn->prepare($sql);
@@ -131,8 +138,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode(array("error" => "A timeslot with this sid was not found"));
             }
         }
-        ////end of new code for for num of slots in time slots.
-        
         else{
             $sql = "SELECT * FROM Timeslot WHERE sid = ?";
             $stmt = $conn->prepare($sql);
@@ -193,9 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             echo json_encode(array("error" => "Availability requests with this bookingurl was not found"));
         }
-    }
-    //////////////////here new code starts
-    else if ($resource == 'booking' && $param == "") {
+    } else if ($resource == 'booking' && $param == "") {
             // Fetch all bookings
             $sql = "SELECT * FROM Booking";
             $result = $conn->query($sql);
@@ -210,7 +213,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode(array("error" => "No bookings found"));
             }
         }
-    ///////////////////here new code ends
     else {
         echo json_encode(array("error" => "Invalid endpoint"));
     }
@@ -273,7 +275,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     if ($result->num_rows > 0) {
                         $user = $result->fetch_assoc();
                         $toEmail = $user['email'];
-                        //error_log("Email fetched for user ID $id: $toEmail");
 
                         require __DIR__ . '/../backend/email_helper.php';
 
@@ -329,7 +330,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             }
         }
     } else if ($resource == 'timeslot'){
-        // new code for time slot maxslots and other handling
         if ($param == 'editnumslots'){
             $sid = $input['sid'];
             $numslots = $input['numopenslots'];
@@ -346,7 +346,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 echo json_encode(array("error" => "Error: " . $sql . "<br>" . $conn->error));
             }
         }
-        // end of new code for time slot maxslots and other handling.
         
         else if ($param == 'edit'){
             $sid = $input['sid'];
@@ -582,7 +581,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE'){
             $conn->commit();
 
         } catch (Exception $e) {
-            // rollback in case an intermediate step fails, ie. no open spots
             $conn->rollback();
             echo "Transaction failed: " . $e->getMessage();
         }

@@ -1,3 +1,5 @@
+# @author: Emilie Zhang for url redirection
+
 # <Directory "/home/.../public_html">
 #     AllowOverride All
 #     Require all granted

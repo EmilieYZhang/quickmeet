@@ -1,5 +1,8 @@
+<!-- (Serhii Artemenko), (Emilie Yahui Zhang) -->
 <?php
 include 'bookingpagesheader.php';
+// @author: Emilie Zhang for unique edit booking url generation/routing, history of timeslots display frontend/backend and api calls backend
+// @author: Serhii Artemenko for frontend interactions, css display and template api calls (e.g. Edit booking )
 ?>
 <?php
 header('Access-Control-Allow-Origin: *');
@@ -99,7 +102,6 @@ if ($bookingUrl) {
             </div>
         </body>
         </html>"; 
-        // Add logic to display timeslot options and handle reservations
     } else {
         echo "<h1>Booking not found</h1>";
     } 
@@ -135,7 +137,7 @@ $conn->close();
         }
 
         .modal {
-            position: fixed; /* Ensures it stays in place relative to the viewport */
+            position: fixed; 
             top: 0;
             left: 0;
             width: 100%; /*careful there is inline css for this.*/ 
@@ -154,7 +156,7 @@ $conn->close();
             margin: auto;
             padding: 80px 20px;
             position: relative;
-            top: 50%; /* Push the modal to the vertical center */
+            top: 50%; 
             transform: translateY(-50%); /* Center it vertically */
             z-index: 1001;
             text-align: center;
@@ -175,7 +177,7 @@ $conn->close();
         }
 
         input {
-            width: 300px; 
+            width: 70%; 
             padding: 10px; 
             border: 1px solid #ccc; 
             border-radius: 8px; 
@@ -231,9 +233,9 @@ $conn->close();
         }
 
         .timeslot {
-            display: flex; /* Enable flexbox layout */
+            display: flex; 
             align-items: center; /* Vertically align items */
-            justify-content: space-between; /* Space out items */
+            justify-content: space-between; 
             padding: 10px;
             margin: 5px 0;
             border: 1px solid #ddd;
@@ -247,27 +249,27 @@ $conn->close();
 
         .buttons {
             display: flex;
-            gap: 20px; /* Adds space between buttons */
+            gap: 20px; 
             justify-content: center;
             align-items: center;
         }
 
         .buttons button {
-            padding: 10px 15px; /* Optional: Adjust button padding for consistency */
-            font-size: 16px; /* Optional: Make the text size uniform */
-            cursor: pointer; /* Makes buttons more visually interactive */
+            padding: 10px 15px; 
+            font-size: 16px; 
+            cursor: pointer; 
             margin: 50px 0px;
         }
 
         .delete-icon {
             align-self: flex-end; /* Align the icon to the right */
-            width: 20px; /* Size of the icon */
+            width: 20px; 
             height: 20px;
-            cursor: pointer; /* Indicate interactivity */
+            cursor: pointer; 
         }
 
         .delete-icon:hover {
-            filter: brightness(0.8); /* Darken the icon on hover */
+            filter: brightness(0.8); 
         }
 
         @media (max-width: 600px) {
@@ -292,7 +294,7 @@ $conn->close();
     <div id="calendar" class="calendar">You currently have no timeslots, please add a new Timeslot.</div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script>
-        // a list to display the current timeslots and their availability
+        // @author: Emilie Zhang for loadCalendar() and deleteTimeslot()
         async function loadCalendar() {
             const timeslotResponse = await fetch('../quickmeet_api/apiendpoints.php/timeslot/<?php echo $ogbookingurl ?>/bookingurl', {
                 method: 'GET'
@@ -301,7 +303,6 @@ $conn->close();
             const timeslots = await timeslotResponse.json();
 
             if (timeslots !== undefined && timeslots !== null && Array.isArray(timeslots)) {
-                // Group the timeslots by date
                 const groupedtimeslots = {};
                 timeslots.forEach(timeslot => {
                     const date = timeslot.startdatetime.split(' ')[0];
@@ -309,9 +310,9 @@ $conn->close();
                     groupedtimeslots[date].push(timeslot);
                 });
 
-                // Display grouped timeslots
+
                 const calendar = document.getElementById('calendar');
-                calendar.innerHTML = ''; // Clear previous content
+                calendar.innerHTML = '';
                 Object.keys(groupedtimeslots).sort().forEach(date => {
                     const dayHeader = document.createElement('div');
                     dayHeader.className = 'day-header';
@@ -337,7 +338,6 @@ $conn->close();
         loadCalendar();
 
         function deleteTheTimeslot(timeslot_id, filled, max){
-            console.log(`Timeslot ID: ${timeslot_id}, Filled: ${filled}, Max: ${max}`);
             if (confirm("Are you sure you want to delete this timeslot?")) {
                 filled = parseInt(filled);
                 max = parseInt(max);
@@ -347,7 +347,6 @@ $conn->close();
                 else {
                    fetch(`../quickmeet_api/apiendpoints.php/timeslot/${timeslot_id}`, { method: 'DELETE' })
                     .then(response => {
-                            // Check if the response is successful
                             if (!response.ok) {
                                 throw new Error('Network response was not ok');
                                 alert('Did not suceed in deleting timeslot');
@@ -411,6 +410,7 @@ $conn->close();
             onclick="closeModal()">
             &times;
         </span>
+
         <!-- <h2>Add New Time Slot</h2> -->
         <form id="timeslotForm">
             <h3 style="color: white;">New Timeslot</h3>
@@ -420,7 +420,7 @@ $conn->close();
             <input type="datetime-local" id="startTime" placeholder="Start Time" required><br><br>
             <input type="datetime-local" id="endTime" placeholder="End Time" required><br><br>
             <input type="number" id="maxSlots" placeholder="Max Slots" required min="1"><br><br>
-            <button type="button" onclick="submitTimeslot()">Add Time Slot</button>
+            <button type="button" onclick="submitTimeslot()" style="width: 70%;">Add Time Slot</button>
         </form>
     </div>
 </div>
@@ -466,54 +466,8 @@ $conn->close();
 
     const bkurl = "<?php echo htmlspecialchars($ogbookingurl); ?>";
 
-    // old add time slot which is working for single event
-    // async function submitTimeslot() {
-    //     console.log('Booking URL:', bkurl);
-    //     const slotTitle = document.getElementById('slotTitle').value;
-    //     const hostName = document.getElementById('hostName').value;
-    //     const location = document.getElementById('location').value;
-    //     const startTime = document.getElementById('startTime').value;
-    //     const endTime = document.getElementById('endTime').value;
-    //     const maxSlots = document.getElementById('maxSlots').value;
-
-    //     // Validate inputs
-    //     if (!slotTitle || !hostName || !location || !startTime || !endTime || !maxSlots) {
-    //         alert('Please fill in all fields.');
-    //         return;
-    //     }
-
-    //     try {
-    //         const response = await fetch('../quickmeet_api/apiendpoints.php/timeslot', {
-    //             method: 'POST',
-    //             headers: { 'Content-Type': 'application/json' },
-    //             body: JSON.stringify({
-    //                 bookingurl: bkurl, 
-    //                 slottitle: slotTitle,
-    //                 hostname: hostName,
-    //                 location: location,
-    //                 startdatetime: startTime,
-    //                 enddatetime: endTime,
-    //                 // numopenslots: maxSlots;
-    //                 maxslots: maxSlots
-    //             })
-    //         });
-
-    //         if (response.ok) {
-    //             alert('Time slot added successfully!');
-    //             closeModal();
-    //         } else {
-    //             alert('Failed to add the time slot.');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error adding time slot:', error);
-    //         alert('An error occurred while adding the time slot.');
-    //     }
-    // }
-    //end of old add time slot which is working
-
     //new timeslot for reccuring add
     async function submitTimeslot() {
-        console.log('Booking URL:', bkurl);
         const slotTitle = document.getElementById('slotTitle').value;
         const hostName = document.getElementById('hostName').value;
         const location = document.getElementById('location').value;
@@ -541,12 +495,7 @@ $conn->close();
             const bookingEnd = new Date(bookingDetails.enddatetime);
 
             const slotStartTime = new Date(startTime);
-            console.log("I start");
-            console.log(slotStartTime);
-
             const slotEndTime = new Date(endTime);
-            console.log("I end");
-            console.log(slotEndTime);
 
             /** ----The code below is taken from the internet for adjusting timestamps for wacky timezones ----**/
             // source: https://stackoverflow.com/questions/17415579/how-to-iso-8601-format-a-date-with-timezone-offset-in-javascript
@@ -589,7 +538,7 @@ $conn->close();
                             maxslots: maxSlots
                         })
                     });
-                    console.log("just submitted");
+
                     if (!response.ok) {
                         console.error('Failed to create time slot:', await response.text());
                         alert('Failed to create one or more time slots.');
@@ -606,16 +555,11 @@ $conn->close();
                     return;
                 }
 
-                // Move to the same time next week
-        //         slotStartTime.setDate(slotStartTime.getDate() + 7);
-        //         slotEndTime.setDate(slotEndTime.getDate() + 7);
-        //     }
         } catch (error) {
             console.error('Error adding time slots:', error);
             alert('An error occurred while adding the time slots.');
         }
     }
-//end of new time slot add
 
     // start of script for edit booking
     async function EditBooking() {
@@ -669,13 +613,6 @@ $conn->close();
         }
 
         try {
-            console.log(bkurl);
-            console.log(bookingTitle);
-            console.log(bookingDescription);
-            console.log(bookingStartTime);
-            console.log(bookingEndTime);
-            console.log("Entered");
-
             fetch('../quickmeet_api/apiendpoints.php/booking/edit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -692,7 +629,6 @@ $conn->close();
                     alert('Failed to update booking: ' + response.error);
                 }
                 else {
-                    console.log(response);
                     alert('Booking updated successfully!');
                     closeEditBookingModal();
                     location.reload(); // Reload the page
@@ -705,7 +641,6 @@ $conn->close();
 
         return false;
     }
-    //end of script for edit booking
 
     async function ViewAvailability(){
         console.log("Inside viewing");
@@ -719,7 +654,6 @@ $conn->close();
                 return response.json();
             })
             .then(slots => {
-                console.log("Here are the slots"); 
 
                 document.getElementById('availabilityModal').style.display = 'block';
                 const tableBody = document.getElementById('availability-table').querySelector('tbody');
@@ -759,8 +693,6 @@ $conn->close();
         }
     </script>
     <script>
-    console.log('../quickmeet_api/apiendpoints.php/timeslot/<?php echo $bookingUrl ?>/bookingurl');
-    
     function fetchTimeslots(){
         fetch('../quickmeet_api/apiendpoints.php/timeslot/<?php echo $bookingUrl ?>/bookingurl', { method: 'GET' })
             .then(response => {
@@ -772,7 +704,7 @@ $conn->close();
                     return response.json();
                 })
                 .then(slots => {
-                    console.log("execute GET /apiendpoints.php/slots"); 
+                    console.log("execute GET /apiendpoints.php/slots to fetch timeslots"); 
                     const slotList = document.getElementById('user-list');
                     slotList.innerHTML = '';
                     slots.forEach(slot => {

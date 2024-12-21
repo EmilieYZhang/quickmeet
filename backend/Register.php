@@ -64,7 +64,7 @@ include '../backend/header.php';
         </div>
 
         <div class = "divForSittingPers"> 
-            <img class = "personImg" src="../FrontEndCode/SittingPersonGoodColorSmaller.jpg">
+            <img class = "personImg" src="../FrontEndCode/Images/SittingPersonGoodColorSmaller.jpg">
         </div>
     </div>
 

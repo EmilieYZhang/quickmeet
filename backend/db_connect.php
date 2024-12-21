@@ -1,7 +1,10 @@
 <?php
 
 require_once '../config/config.php';
+require_once '../config/config.php';
 
+// create a database connection
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 // create a database connection
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 

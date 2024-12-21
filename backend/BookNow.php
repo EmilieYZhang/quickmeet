@@ -3,6 +3,7 @@ include 'header.php';
 ?>
 
 <!DOCTYPE html>
+<!-- @author: Emilie Zhang -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,7 +24,6 @@ include 'header.php';
     <script>
         function checkSearchForm() {
             const burl = document.forms["Form"]["burl"];
-            //Validate McGill email address
 
             const bURLRegex = /^https:\/\/www\.cs\.mcgill\.ca\/~ezhang19\/quickmeet\/quickmeet_api\/bookingurl\.php\?url=.+$/;
             
@@ -38,10 +38,7 @@ include 'header.php';
     </script>
 </head>
 
-
-
 <body style="background-color: #0C3D65;">
-
     <div class = "fromDivImgDiv">
         <div class = "divForForm">
             <form name = "Form" style="height: 250px;" onsubmit="return checkSearchForm();">
@@ -52,11 +49,10 @@ include 'header.php';
 
                     <div class = "bottomText">Create an account to unlock more amazing features!</div>
             </form>
-
         </div>
 
         <div class = "divForSittingPers">
-            <img class = "personImg" src="../FrontEndCode/SittingPersonGoodColorSmaller.jpg">
+            <img class = "personImg" src="../FrontEndCode/Images/SittingPersonGoodColorSmaller.jpg">
         </div>
     </div>
 
@@ -69,8 +65,5 @@ include 'header.php';
             form.classList.toggle('show');
         }
     </script>
-
-
-
 </body>
 </html>

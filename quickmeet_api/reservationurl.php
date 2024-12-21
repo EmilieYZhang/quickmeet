@@ -1,8 +1,11 @@
+<!-- (Serhii Artemenko), (Emilie Yahui Zhang) -->
 <?php
 include '../backend/bookingpagesheader.php';
 ?>
 
 <?php
+// @author: Serhii Artemenko for frontend rendering of edit notes.
+// @author: Emilie Zhang for backend in delRes(e), saveNotes()
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: text/html; charset=utf-8');
 
@@ -127,7 +130,6 @@ if ($resUrl) {
             </body>
             </html>"; 
 
-            //End of new html / css
         }
         else {
             echo "<h3> Sorry, the timeslot that was created was deleted by the owner and no longer found </h3>";
@@ -136,7 +138,6 @@ if ($resUrl) {
     <!DOCTYPE html>
     <html>
     <head>
-        <title>res Details</title>
         <style>
             .buttons{
                 text-align: center;
@@ -161,8 +162,8 @@ if ($resUrl) {
                 margin: auto;
                 padding: 80px 20px;
                 position: relative;
-                top: 50%; /* Push the modal to the vertical center */
-                transform: translateY(-50%); /* Center it vertically.. Just tried a bunch of things*/
+                top: 50%; /* to make modal centered verically */
+                transform: translateY(-50%); 
                 z-index: 1001;
                 text-align: center;
             }
@@ -212,15 +213,12 @@ if ($resUrl) {
             </div>
         </div>
 
-    <!-- <p id="demo"></p> -->
-
     <script>
-        function delRes(e) {
+        function delRes(e) { // @author: Emilie Zhang 
             if(!confirm('Are you sure?')) {
                 e.preventDefault();
             }
             else {
-                console.log('./apiendpoints.php/reservation/<?php echo $resUrl ?>');
                 fetch('./apiendpoints.php/reservation/<?php echo $resUrl ?>', { method: 'DELETE' })
                     .then(response => {
                             // Check if the response is successful
@@ -241,7 +239,7 @@ if ($resUrl) {
             document.getElementById('editNotesModal').style.display = 'none';
         }
 
-        async function saveNotes(){
+        async function saveNotes(){ // @author: Emilie Zhang
             const newNotes = document.getElementById('newReservationNotes').value;
 
             try {

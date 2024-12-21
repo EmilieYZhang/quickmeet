@@ -1,4 +1,6 @@
--- TODO: Hudanur to edit below, Insert dummy data into Users table
+-- @author: Emilie Zhang
+-- to be used after droptbl.sql and createtbl.sql
+
 INSERT INTO users (fname, lname, username, email, password)
 VALUES
     ('Alice', 'Smith', 'alice123', 'alice.smith@mail.mcgill.ca', 'password123'),
@@ -12,19 +14,14 @@ VALUES
     ('Ian', 'Adams', 'ian.adams', 'ian.adams@mail.mcgill.ca', 'Adams@MCG1'),
     ('Julia', 'Davis', 'julia.d', 'julia.davis@mail.mcgill.ca', 'Secure*Pass');
 
--- Insert dummy data into Booking table
 INSERT INTO Booking (bookingurl, editbookingurl, uid, startdatetime, enddatetime, bookingtitle, bookingdescription)
 VALUES
-    ('booking1-url', 1, '2024-12-19 09:00:00', '2024-12-19 17:00:00', 'Meeting with Team', 'Discuss project updates'),
-    ('booking2-url', 2, '2024-12-18 10:00:00', '2024-12-17 12:00:00', 'Doctor Appointment', 'Regular check-up'),
-    ('booking3-url', 3, '2024-12-18 14:00:00', '2024-12-18 16:00:00', 'Workshop on SQL', 'Learn advanced SQL techniques');
-    -- ('booking4-url', 2, '2024-12-19 09:30:00', '2024-12-18 11:30:00', 'Client Call', 'Discuss project requirements'),
-    -- ('booking5-url', 2, '2024-12-20 13:00:00', '2024-12-10 15:00:00', 'Team Workshop', 'Brainstorming session for marketing strategies'),
-    -- ('booking6-url', 3, '2024-12-20 08:00:00', '2024-12-19 10:00:00', 'Morning Yoga Session', 'Guided yoga class for relaxation'),
-    -- ('booking7-url', 3, '2024-12-21 15:00:00', '2024-12-20 17:00:00', 'Coding Bootcamp', 'Learn JavaScript fundamentals'),
-    -- ('booking8-url', 3, '2024-12-21 12:00:00', '2024-12-20 14:00:00', 'Lunch Meeting', 'Meet with investor to discuss funding opportunities');
+    ('booking1-url', 'editbooking1-url', 1, '2024-12-19 09:00:00', '2024-12-19 17:00:00', 'Meeting with Team', 'Discuss project updates'),
+    ('booking2-url', 'editbooking2-url', 2, '2024-12-18 10:00:00', '2024-12-27 12:00:00', 'Doctor Appointment', 'Regular check-up'),
+    ('booking3-url', 'editbooking3-url', 3, '2024-12-18 14:00:00', '2024-12-28 16:00:00', 'Workshop on SQL', 'Learn advanced SQL techniques'),
+    ('booking4-url', 'editbooking4-url', 2, '2024-12-19 09:30:00', '2024-12-28 11:30:00', 'Client Call', 'Discuss project requirements'),
+    ('booking5-url', 'editbooking5-url', 2, '2024-12-20 13:00:00', '2024-12-20 15:00:00', 'Team Workshop', 'Brainstorming session for marketing strategies');
 
--- Insert dummy data into Timeslot table
 INSERT INTO Timeslot (bookingurl, slottitle, hostname, location, startdatetime, enddatetime, numopenslots, maxslots)
 VALUES
     ('booking1-url', 'Slot 1 - Morning', 'Host 1', 'Room A', '2024-12-19 09:00:00', '2024-12-10 10:00:00', 10, 20),
@@ -34,14 +31,12 @@ VALUES
     ('booking2-url', 'Slot 2 - Afternoon', 'Host 2', 'Room B', '2024-12-17 10:00:00', '2024-12-11 12:00:00', 5, 10),
     ('booking3-url', 'Slot 3 - Evening', 'Host 3', 'Room C', '2024-12-18 14:00:00', '2024-12-12 16:00:00', 3, 5);
 
--- Insert dummy data into Reservation table
 INSERT INTO Reservation (reservationurl, sid, notes)
 VALUES
     ('reservation1-url', 1, 'Registered for the meeting'),
     ('reservation2-url', 2, 'Attending for check-up'),
     ('reservation3-url', 3, 'Signed up for the SQL workshop');
 
--- Insert dummy data into AvailabilityRequests table
 INSERT INTO AvailabilityRequests (bookingurl, startdatetime, enddatetime)
 VALUES
     ('booking1-url', '2024-12-10 08:00:00', '2024-12-10 09:00:00'),

@@ -38,7 +38,7 @@ if (isset($_SESSION['ticket'])) {
 
 <!-- HTML Header Content -->
 <div class="header">
-    <a href="../backend/Landing.php"><img src="../FrontEndCode/NewLogoGoodColor.jpg" style="height: 8vw;"></a>
+    <a href="../backend/Landing.php"><img src="../FrontEndCode/Images/NewLogoGoodColor.jpg" style="height: 8vw;"></a>
     
     <?php if ($isLoggedIn): ?>
         <!-- Logged-in user header -->
@@ -62,7 +62,7 @@ if (isset($_SESSION['ticket'])) {
 <!-- Mobile/Responsive Menu -->
 <div class="hamburger" onclick="dropDownMenu()">
     <div style="display: flex;">
-        <a href="../backend/Landing.php"><img src="../FrontEndCode/NewLogoGoodColor.jpg" style="height: 80px;"></a>
+        <a href="../backend/Landing.php"><img src="../FrontEndCode/Images/NewLogoGoodColor.jpg" style="height: 80px;"></a>
         <a class="hamUnderline" href="#">☰</a>
     </div>
 </div>

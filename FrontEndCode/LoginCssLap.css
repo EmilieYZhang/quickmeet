@@ -1,4 +1,4 @@
-
+/*@author (Serhii Artemenko)*/
 @media screen and (min-width: 769px) {
     .hamburger{
         display: none;
@@ -28,7 +28,7 @@
     input[type="submit"] {
         margin: 10px 0px;
         width: 100%;
-        background-color: #0088DC; /* bluish*/
+        background-color: #0088DC;
         color: white;              
         padding: 10px 20px;        
         border: none;             

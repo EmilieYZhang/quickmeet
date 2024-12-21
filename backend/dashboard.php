@@ -424,7 +424,7 @@ $bookingStmt->close();
 
     <script>
         const userId = <?php echo htmlspecialchars($userId); ?>; // Hardcoded user ID, replace this with session-based user ID
-        const apiEndpoint = `../quickmeet_api/apiendpoints.php/booking/${userId}/userid`;
+        const apiEndpoint = `https://cs.mcgill.ca/~hkacma/COMP307/booking_tool/quickmeet/quickmeet_api/apiendpoints.php/booking/${userId}/userid`;
 
         // Function to show the modal for booking
         function showModal() {
@@ -451,11 +451,15 @@ $bookingStmt->close();
 
             const startDatetime = bookingStartYear + "-" + bookingStartMonth + "-" + bookingStartDay + " " + "00:00:00";
             const endDatetime = bookingEndYear + "-" + bookingEndMonth + "-" + bookingEndDay + " " + "23:59:00";
-     
 
             // Check if data exists before proceeding
             if (!bookingTitle || !bookingDescription) {
                 alert("Please fill in all fields.");
+                return false;
+            }
+
+            if (startDatetime > endDatetime) {
+                alert("This booking start date can not be after the end date.");
                 return false;
             }
 

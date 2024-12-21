@@ -1,8 +1,14 @@
+<!-- (Serhii Artemenko), (Emilie Yahui Zhang) -->
 <?php
 include '../backend/bookingpagesheader.php';
 ?>
 
 <?php
+/*
+@author: Serhii Artemenko for calendar display, timeslot generation call to api backend, and reservation backend calls.
+@author: Emilie Zhang for api call verification and unique booking url generation and pathing
+*/
+
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: text/html; charset=utf-8');
 
@@ -37,7 +43,6 @@ $bookingUrl = $_GET['url'] ?? null;
 $Tnow = time();
 
 if ($bookingUrl) {
-    // Fetch the booking details
     $sql = "SELECT * FROM Booking WHERE bookingurl = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $bookingUrl);
@@ -107,8 +112,10 @@ if ($bookingUrl) {
         </body>
         </html>";     
         
-        // Add logic to display timeslot options and handle reservations
     } else {
+        echo "<script>
+                document.body.style.backgroundColor = '#0C3D65';
+            </script>";
         echo "<h1>Booking not found</h1>";
     } ?>
     <!DOCTYPE html>
@@ -310,7 +317,7 @@ if ($bookingUrl) {
             }
 
             .modal-content h3 {
-                font-size: 1rem; /* Smaller heading */
+                font-size: 1rem; 
             }
 
             .modal-content input,
@@ -343,6 +350,11 @@ if ($bookingUrl) {
 <div id="output" class="outputDiv"></div>
 
 <script>
+    /*
+        @author: Emilie Zhang for adding dynamic past,current,next week calendar generation functionality. 
+        Colour coding the timeslot based on past, active or full status.
+        @author: Serhii Artemenko for calendar
+    */
     async function listTimeSlots(weekFilter = 'current') {
         const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
         const outputDiv = document.getElementById('output');
@@ -400,7 +412,7 @@ if ($bookingUrl) {
                 });
             }
 
-            // Render filtered time slots grouped by day
+            // Render the time slots
             for (const day of daysOfWeek) {
                 const daySection = document.createElement('div');
                 daySection.className = 'day-section';
@@ -410,10 +422,6 @@ if ($bookingUrl) {
 
                 if (weekBookings[day].length > 0) {
                     weekBookings[day].forEach(slot => {
-                        //const now = time();
-                        console.log(new Date());
-                        console.log(`Past time: ${slot.end}`);
-                        //console.log(now);
                         if (new Date(slot.end) < new Date()){
                             daySection.innerHTML += `
                             <div class="booking-slot-past">
@@ -449,6 +457,7 @@ if ($bookingUrl) {
                     });
                 } else {
                     daySection.innerHTML += "<p>No bookings available <br> for this day.</p>";
+                    
                 }
                 outputDiv.appendChild(daySection);
             }
@@ -458,6 +467,7 @@ if ($bookingUrl) {
         }
     }
 
+    //reserve a slot. If the user entered an email then send the email
     async function reserveSlot(sid) {
         const toemail = document.getElementById('email').value ?? '';
 
@@ -494,6 +504,7 @@ if ($bookingUrl) {
     listTimeSlots();
 </script>
 
+<!-- @author: Emilie Zhang for the request availability feature -->
 <div class="calendar-buttons">
     <button onclick="openRequestAvailability()">Request a Timeslot Availability</button>
 </div>
@@ -506,15 +517,13 @@ if ($bookingUrl) {
          margin: auto;
         
         ">
-
-
     <div class="modal-content" style="position: relative;">
         <span class="close" 
             style="color: white; cursor: pointer; position: absolute; top: 5px; right: 10px;" 
             onclick="closeRequestAvailabilityModal()">
             &times;
         </span>
-        <!-- <h2>Request Availability </h2> -->
+        
         <form id="timeslotForm">
             <h3 style="color: white;">Request New Availability</h3>
             <input type="datetime-local" id="availstartTime" placeholder="Start Time" required><br><br>
@@ -566,7 +575,6 @@ if ($bookingUrl) {
                     alert('Failed to send availability request: ' + response.error);
                 }
                 else {
-                    console.log(response);
                     alert('Availability Request sent successfully!');
                     closeRequestAvailabilityModal();
                 }

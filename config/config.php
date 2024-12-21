@@ -1,5 +1,8 @@
 <?php
+// @author: Japmann Sarin
+// database settings
 // Database settings
+
 if (!defined('DB_HOST')) {
     define('DB_HOST', 'mysql.cs.mcgill.ca');
 }
@@ -33,5 +36,5 @@ if (!defined('MAIL_PORT')) {
 }
 
 // Set the default timezone for the app
-//date_default_timezone_set('America/Toronto');
+date_default_timezone_set('America/Toronto');
 ?>
