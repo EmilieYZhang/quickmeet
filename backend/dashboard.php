@@ -1,7 +1,7 @@
 <?php
 include 'header.php';
 
-//@author: Hudanur Kacmaz and Emilie Zhang
+//@author: Hudanur Kacmaz, Emilie Zhang and Serhii (for the form)
 
 if (!$userId || time() > $expiry) {
     session_destroy();
