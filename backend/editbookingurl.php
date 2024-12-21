@@ -99,7 +99,7 @@ if ($bookingUrl) {
                 <p><span class = 'bolder'>Start:</span> " . htmlspecialchars($booking['startdatetime']) . "</p>
                 <p><span class = 'bolder'>End: </span>" . htmlspecialchars($booking['enddatetime']) . "</p>
                 
-                <p><span class = 'bolder'>Full Booking URL:</span> <a href='http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>Link</a></p>
+                <p><span class = 'bolder'>Full Booking URL:</span> <a href='https://cs.mcgill.ca/~hkacma/COMP307/booking_tool/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>Link</a></p>
                 
             </div>
         </body>

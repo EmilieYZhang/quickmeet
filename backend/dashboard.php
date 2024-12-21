@@ -235,8 +235,8 @@ $bookingStmt->close();
                         echo "<tr>
                             <td>" . ($index + 1) . "</td>
                             <td>" . htmlspecialchars($booking['bookingtitle']) . "</td>
-                            <td><a href='http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>" . htmlspecialchars($booking['bookingurl']) . "</a></td>
-                            <td><a href='http://localhost/quickmeet/backend/editbookingurl.php?url=" . htmlspecialchars($booking['editbookingurl']) . "' target='_blank'> EDIT</td>
+                            <td><a href='https://cs.mcgill.ca/~hkacma/COMP307/booking_tool/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>" . htmlspecialchars($booking['bookingurl']) . "</a></td>
+                            <td><a href='https://cs.mcgill.ca/~hkacma/COMP307/booking_tool/quickmeet/backend/editbookingurl.php?url=" . htmlspecialchars($booking['editbookingurl']) . "' target='_blank'> EDIT</td>
                             </tr>";
                     }
                 }
@@ -275,7 +275,7 @@ $bookingStmt->close();
                             echo "<tr>
                                 <td>" . ($index + 1) . "</td>
                                 <td>" . htmlspecialchars($booking['bookingtitle']) . "</td>
-                                <td><a href='http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>" . htmlspecialchars($booking['bookingurl']) . "</a></td>
+                                <td><a href='https://cs.mcgill.ca/~hkacma/COMP307/booking_tool/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "' target='_blank'>" . htmlspecialchars($booking['bookingurl']) . "</a></td>
                                 </tr>";
                         }
                     }
@@ -424,7 +424,7 @@ $bookingStmt->close();
 
     <script>
         const userId = <?php echo htmlspecialchars($userId); ?>; // Hardcoded user ID, replace this with session-based user ID
-        const apiEndpoint = `../quickmeet_api/apiendpoints.php/booking/${userId}/userid`;
+        const apiEndpoint = `https://cs.mcgill.ca/~hkacma/COMP307/booking_tool/quickmeet/quickmeet_api/apiendpoints.php/booking/${userId}/userid`;
 
         // Function to show the modal for booking
         function showModal() {
@@ -463,7 +463,7 @@ $bookingStmt->close();
                 return false;
             }
 
-            fetch('../quickmeet_api/apiendpoints.php/booking', {
+            fetch('https://cs.mcgill.ca/~hkacma/COMP307/booking_tool/quickmeet/quickmeet_api/apiendpoints.php/booking', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
