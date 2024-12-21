@@ -1,7 +1,7 @@
 # quickmeet - team scriptSquad
 ### COMP307 F2024 Project - SOCS Competition
 
-URL: [https://www.cs.mcgill.ca/~ezhang19/quickmeet/backend/Landing.php](https://www.cs.mcgill.ca/~ezhang19/quickmeet/FrontEndCode/Landing.html)
+URL: https://www.cs.mcgill.ca/~ezhang19/quickmeet/FrontEndCode/Landing.html
 
 GitHub repo: https://github.com/EmilieYZhang/quickmeet
 
