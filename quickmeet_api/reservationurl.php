@@ -7,32 +7,30 @@ header('Access-Control-Allow-Origin: *');
 header('Content-Type: text/html; charset=utf-8');
 
 // ** THIS IS FOR MIMI SERVER HOST **//
-// require_once '../config/config.php';
+require_once '../config/config.php';
 
-// // create a connection to the MySQL database
-// $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+// create a connection to the MySQL database
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-// // check the connection
-// if ($conn->connect_error) {
-//     die("Connection failed: " . $conn->connect_error);
-// } else {
-//     echo "Database connected successfully!";
-// }
-// ** ----------------  **//
-
-// ** THIS IS FOR LOCAL HOST **//
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "mysql";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
+// check the connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+// ** ----------------  **//
+
+// ** THIS IS FOR LOCAL HOST **//
+// $servername = "localhost";
+// $username = "root";
+// $password = "";
+// $dbname = "mysql";
+
+// // Create connection
+// $conn = new mysqli($servername, $username, $password, $dbname);
+
+// // Check connection
+// if ($conn->connect_error) {
+//     die("Connection failed: " . $conn->connect_error);
+// }
 // ** ---------------- **//
 
 $resUrl = $_GET['url'] ?? null;
@@ -60,7 +58,7 @@ if ($resUrl) {
             // echo "<h4>Start Time: " . htmlspecialchars($restimeslot['startdatetime']) . "</h4>";
             // echo "<h4>End Time: " . htmlspecialchars($restimeslot['enddatetime']) . "</h4>";
             // echo "<h4>Notes: " . htmlspecialchars($res['notes']) . "</h4>";
-            // echo "<h4>Original Booking URL: " . htmlspecialchars("http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($restimeslot['bookingurl'])) . "</h4>";
+            // echo "<h4>Original Booking URL: " . htmlspecialchars("https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($restimeslot['bookingurl'])) . "</h4>";
             // new html/css
             echo "
             <!DOCTYPE html>
@@ -121,7 +119,7 @@ if ($resUrl) {
                     <p><span class = 'bolder'>Start Time: </span>" . htmlspecialchars($restimeslot['enddatetime']) . "</p>
                     <p><span class = 'bolder'>Notes: </span>" . "</p>
                     <p>". htmlspecialchars($res['notes']) ."</p>
-                    <p><span class = 'bolder'>Original Booking URL: </span> " . htmlspecialchars("http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($restimeslot['bookingurl'])) . "</p>
+                    <p><span class = 'bolder'>Original Booking URL: </span> " . htmlspecialchars("https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($restimeslot['bookingurl'])) . "</p>
                     
                     
                     

@@ -5,32 +5,30 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // ** THIS IS FOR MIMI SERVER HOST **//
-// require_once '../config/config.php';
+require_once '../config/config.php';
 
-// // create a connection to the MySQL database
-// $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+// create a connection to the MySQL database
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-// // check the connection
-// if ($conn->connect_error) {
-//     die("Connection failed: " . $conn->connect_error);
-// } else {
-//     echo "Database connected successfully!";
-// }
-// ** ----------------  **//
-
-// ** THIS IS FOR LOCAL HOST **//
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "mysql";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
+// check the connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+// ** ----------------  **//
+
+// ** THIS IS FOR LOCAL HOST **//
+// $servername = "localhost";
+// $username = "root";
+// $password = "";
+// $dbname = "mysql";
+
+// // Create connection
+// $conn = new mysqli($servername, $username, $password, $dbname);
+
+// // Check connection
+// if ($conn->connect_error) {
+//     die("Connection failed: " . $conn->connect_error);
+// }
 // ** ---------------- **//
 
 // read the api endpoint
@@ -38,15 +36,15 @@ $request = $_SERVER['REQUEST_URI'];
 $uriSegments = explode('/', $request);
 
 // check endpoint
-if (isset($uriSegments[4])) {
-    $resource = $uriSegments[4]; // 'users', 'booking', 'timeslot', 'reservations' or 'availability'
+if (isset($uriSegments[5])) {
+    $resource = $uriSegments[5]; // 'users', 'booking', 'timeslot', 'reservations' or 'availability'
     $param ="";
     $paramname = "";
-    if(isset($uriSegments[5])){
-        $param = $uriSegments[5];
-    }
     if(isset($uriSegments[6])){
-        $paramname = $uriSegments[6];
+        $param = $uriSegments[6];
+    }
+    if(isset($uriSegments[7])){
+        $paramname = $uriSegments[7];
     } else {
         $paramname = "default";
     }
@@ -289,8 +287,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                                     <li><strong>Description:</strong> $description</li>
                                 </ul>
                                 <p>You can manage your booking using the following links:</p>
-                                <p>Booking URL: <a href='http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url) . "'>View Booking</a></p>
-                                <p>Edit URL: <a href='http://localhost/quickmeet/backend/editbookingurl.php?url=" . urlencode($editurl) . "'>Edit Booking</a></p>";
+                                <p>Booking URL: <a href='https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url) . "'>View Booking</a></p>
+                                <p>Edit URL: <a href='https://www.cs.mcgill.ca/~ezhang19/quickmeet/backend/editbookingurl.php?url=" . urlencode($editurl) . "'>Edit Booking</a></p>";
 
 
                                 if (sendEmail($toEmail, $subject, $body)) {
@@ -298,8 +296,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                                     echo json_encode(array(
                                         "message" => "The booking was created successfully, and a confirmation email was sent.",
                                         "booking_id" => $booking_id,
-                                        "booking_url" => "http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url),
-                                        "editbooking_url" => "http://localhost/quickmeet/backend/editbookingurl.php?url=" . urlencode($editurl)
+                                        "booking_url" => "https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url),
+                                        "editbooking_url" => "https://www.cs.mcgill.ca/~ezhang19/quickmeet/backend/editbookingurl.php?url=" . urlencode($editurl)
                                     ));
                                 }
                                 else{ 
@@ -307,8 +305,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                                     echo json_encode(array(
                                     "message" => "The booking was created successfully, but the confirmation email failed to send.",
                                     "booking_id" => $booking_id,
-                                    "booking_url" => "http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url),
-                                    "editbooking_url" => "http://localhost/quickmeet/backend/editbookingurl.php?url=" . urlencode($editurl)
+                                    "booking_url" => "https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url),
+                                    "editbooking_url" => "https://www.cs.mcgill.ca/~ezhang19/quickmeet/backend/editbookingurl.php?url=" . urlencode($editurl)
                                 ));
                             }
                     } else {
@@ -316,8 +314,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         echo json_encode(array(
                             "message" => "The booking was created, but user email could not be found.",
                             "booking_id" => $booking_id,
-                            "booking_url" => "http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url),
-                            "editbooking_url" => "http://localhost/quickmeet/backend/editbookingurl.php?url=" . urlencode($editurl)
+                            "booking_url" => "https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/bookingurl.php?url=" . urlencode($url),
+                            "editbooking_url" => "https://www.cs.mcgill.ca/~ezhang19/quickmeet/backend/editbookingurl.php?url=" . urlencode($editurl)
                         ));
                     }
                 } else {
@@ -469,21 +467,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                                     <li><strong>End Date & Time:</strong> $t_enddatetime</li>
                                 </ul>
                             <p>You can manage your new reservation using the following link:</p>
-                            <p>Reservation URL: <a href='http://localhost/quickmeet/quickmeet_api/reservationurl.php?url=" . urlencode($url) . "'>Reservation Link</a></p>";
+                            <p>Reservation URL: <a href='https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/reservationurl.php?url=" . urlencode($url) . "'>Reservation Link</a></p>";
 
 
                             if ($toEmail!="" && sendEmail($toEmail, $subject, $body)) {
                                 error_log("Email sent successfully to $toEmail");
                                 echo json_encode(array(
                                     "message" => "The booking was created successfully, and a confirmation email was sent.",
-                                    "reservation_url" => "http://localhost/quickmeet/quickmeet_api/reservationurl.php?url=" . urlencode($url)
+                                    "reservation_url" => "https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/reservationurl.php?url=" . urlencode($url)
                                 ));
                             }
                             else{ 
                                 error_log("Failed to send email to $toEmail");
                                 echo json_encode(array(
                                 "message" => "The reservation was created successfully, but the confirmation email failed to send.",
-                                "reservation_url" => "http://localhost/quickmeet/quickmeet_api/reservationurl.php?url=" . urlencode($url)
+                                "reservation_url" => "https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/reservationurl.php?url=" . urlencode($url)
                             ));
                         }
                 } else {
@@ -494,7 +492,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             } catch (Exception $e) {
                 // rollback in case an intermediate step fails, ie. no open spots
                 $conn->rollback();
-                echo "Transaction failed: " . $e->getMessage();
+                echo json_encode(['error' => 'Transaction failed: ' . $e->getMessage()]);          
             }
         }
     } else if ($resource == 'availability'){

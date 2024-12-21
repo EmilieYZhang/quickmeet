@@ -25,10 +25,10 @@ include 'header.php';
             const burl = document.forms["Form"]["burl"];
             //Validate McGill email address
 
-            const bURLRegex = /http:\/\/localhost\/quickmeet\/quickmeet_api\/bookingurl\.php\?url=.+$/;
-
+            const bURLRegex = /^https:\/\/www\.cs\.mcgill\.ca\/~ezhang19\/quickmeet\/quickmeet_api\/bookingurl\.php\?url=.+$/;
+            
             if (!bURLRegex.test(burl.value)) {
-                alert("Please enter a valid Booking URL (e.g., starting with http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=).");
+                alert("Please enter a valid Booking URL (e.g., starting with https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/bookingurl.php?url=).");
                 return false; // Prevent form submission
             }
 

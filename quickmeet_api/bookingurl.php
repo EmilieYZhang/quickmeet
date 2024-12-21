@@ -7,32 +7,30 @@ header('Access-Control-Allow-Origin: *');
 header('Content-Type: text/html; charset=utf-8');
 
 // ** THIS IS FOR MIMI SERVER HOST **//
-// require_once '../config/config.php';
+require_once '../config/config.php';
 
-// // create a connection to the MySQL database
-// $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+// create a connection to the MySQL database
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-// // check the connection
-// if ($conn->connect_error) {
-//     die("Connection failed: " . $conn->connect_error);
-// } else {
-//     echo "Database connected successfully!";
-// }
-// ** ----------------  **//
-
-// ** THIS IS FOR LOCAL HOST **//
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "mysql";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
+// check the connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+// ** ----------------  **//
+
+// ** THIS IS FOR LOCAL HOST **//
+// $servername = "localhost";
+// $username = "root";
+// $password = "";
+// $dbname = "mysql";
+
+// // Create connection
+// $conn = new mysqli($servername, $username, $password, $dbname);
+
+// // Check connection
+// if ($conn->connect_error) {
+//     die("Connection failed: " . $conn->connect_error);
+// }
 // ** ---------------- **//
 
 $bookingUrl = $_GET['url'] ?? null;
@@ -103,7 +101,7 @@ if ($bookingUrl) {
                 <p><span class = 'bolder'>Start:</span> " . htmlspecialchars($booking['startdatetime']) . "</p>
                 <p><span class = 'bolder'>End: </span>" . htmlspecialchars($booking['enddatetime']) . "</p>
                 
-                <p><span class = 'bolder'>Full Booking URL:</span> http://localhost/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "</p>
+                <p><span class = 'bolder'>Full Booking URL:</span> https://www.cs.mcgill.ca/~ezhang19/quickmeet/quickmeet_api/bookingurl.php?url=" . htmlspecialchars($booking['bookingurl']) . "</p>
                 
             </div>
         </body>
@@ -372,33 +370,35 @@ if ($bookingUrl) {
             });
             const timeslots = await timeslotResponse.json();
 
-            timeslots.forEach(slot => {
-                const startDate = new Date(slot.startdatetime);
+            if (timeslots !== undefined && timeslots !== null && Array.isArray(timeslots)) {
+                timeslots.forEach(slot => {
+                    const startDate = new Date(slot.startdatetime);
 
-                // Skip time slots outside the current week or month
-                if (
-                    startDate < currentWeekStart ||
-                    startDate > currentWeekEnd ||
-                    startDate.getMonth() !== currentMonth
-                ) {
-                    return;
-                }
+                    // Skip time slots outside the current week or month
+                    if (
+                        startDate < currentWeekStart ||
+                        startDate > currentWeekEnd ||
+                        startDate.getMonth() !== currentMonth
+                    ) {
+                        return;
+                    }
 
-                // Adjust the day name to start the week on Monday
-                const dayIndex = (startDate.getDay() + 6) % 7; // Sunday becomes 6, Monday becomes 0
-                const dayName = daysOfWeek[dayIndex];
+                    // Adjust the day name to start the week on Monday
+                    const dayIndex = (startDate.getDay() + 6) % 7; // Sunday becomes 6, Monday becomes 0
+                    const dayName = daysOfWeek[dayIndex];
 
-                weekBookings[dayName].push({
-                    title: slot.slottitle,
-                    host: slot.hostname,
-                    location: slot.location,
-                    maxslots: slot.maxslots,
-                    numopenslots: slot.numopenslots,
-                    start: slot.startdatetime,
-                    end: slot.enddatetime,
-                    sid: slot.sid,
+                    weekBookings[dayName].push({
+                        title: slot.slottitle,
+                        host: slot.hostname,
+                        location: slot.location,
+                        maxslots: slot.maxslots,
+                        numopenslots: slot.numopenslots,
+                        start: slot.startdatetime,
+                        end: slot.enddatetime,
+                        sid: slot.sid,
+                    });
                 });
-            });
+            }
 
             // Render filtered time slots grouped by day
             for (const day of daysOfWeek) {
@@ -460,8 +460,9 @@ if ($bookingUrl) {
 
     async function reserveSlot(sid) {
         const toemail = document.getElementById('email').value ?? '';
-        // if yes, reserve        
-        fetch('../quickmeet_api/apiendpoints.php/reservation', {
+
+        // try {
+            const response = await fetch('../quickmeet_api/apiendpoints.php/reservation', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -469,22 +470,27 @@ if ($bookingUrl) {
                     email: toemail,
                     notes: ""
                 })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok, failed to reserve.');
-                }
-                return response.json();
-            })
-            .then(newReservation => {
-                alert(`Success! Reservation created: ${newReservation.reservation_url}`);
-                window.location.href = newReservation.reservation_url; // Redirect to the reservation URL
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("Failed to create booking.");
             });
+
+            if (!response.ok) {
+                console.warn('Reservation API responded with a non-OK status.');
+                alert("Reservation failed. Please try again later.");
+                return null;
+            }
+
+            const newReservation = await response.json();
+        
+            if (newReservation.error) {
+                console.error('API returned an error:', newReservation.error);
+                alert(`Error: ${newReservation.error}`);
+                return null;
+            }
+
+            alert(`Success! Reservation created: ${newReservation.reservation_url}`);
+            window.location.href = newReservation.reservation_url;
+            return newReservation; 
     }
+
     listTimeSlots();
 </script>
 
